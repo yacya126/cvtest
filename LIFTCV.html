@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lift and CV Information and Calculation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .table-cell {
+            padding: 1rem;
+            border: 1px solid #d1d5db; /* Tailwind's gray-300 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-8">
+    <div class="flex flex-col items-stretch justify-center gap-8 w-full max-w-full lg:max-w-4xl">
+        <div class="p-6 bg-white rounded-xl shadow-xl w-full">
+            <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">Lift and CV Information and Calculation</h1>
+            
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr>
+                        <th colspan="3" class="table-cell bg-gray-200 text-gray-800 text-lg font-semibold text-center">Lift Basic Information</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="table-cell bg-white text-gray-800 font-medium">Lift type</td>
+                        <td class="table-cell bg-white text-gray-800 font-medium text-center">CV</td>
+                        <td class="table-cell text-gray-600"></td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell bg-white text-gray-800 font-medium">Lifting speed</td>
+                        <td id="liftingSpeed-1" contenteditable="true" class="table-cell bg-green-200 cursor-pointer hover:bg-green-300 transition-colors duration-200 text-gray-800 font-medium text-center">1</td>
+                        <td class="table-cell text-gray-600">m/s</td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell bg-white text-gray-800 font-medium">Lifting acce.</td>
+                        <td id="liftingAcce-1" contenteditable="true" class="table-cell bg-green-200 cursor-pointer hover:bg-green-300 transition-colors duration-200 text-gray-800 font-medium text-center">0.5</td>
+                        <td class="table-cell text-gray-600">m/s²</td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell bg-white text-gray-800 font-medium">Racking layer spacing</td>
+                        <td id="rackingLayerSpacing-1" contenteditable="true" class="table-cell bg-green-200 cursor-pointer hover:bg-green-300 transition-colors duration-200 text-gray-800 font-medium text-center">2500</td>
+                        <td class="table-cell text-gray-600">mm</td>
+                    </tr>
+                    <tr>
+                        <th colspan="3" class="table-cell bg-gray-200 text-gray-800 text-lg font-semibold text-center">Lifter</th>
+                    </tr>
+                    <tr>
+                        <td class="table-cell bg-white text-gray-800 font-medium">The distance from acceletation to max. speed</td>
+                        <td id="lifterSpeedResult-1" class="table-cell bg-stone-300 text-gray-800 font-medium text-center"></td>
+                        <td class="table-cell bg-white text-gray-800 font-medium text-center">mm</td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell bg-white text-gray-800 font-medium">The distance from max.speed acceletation to stop</td>
+                        <td id="lifterPowerResult-1" class="table-cell bg-stone-300 text-gray-800 font-medium text-center"></td>
+                        <td class="table-cell bg-white text-gray-800 font-medium text-center">mm</td>
+                    </tr>
+                    <tr>
+                        <th colspan="3" class="table-cell bg-gray-200 text-gray-800 text-lg font-semibold text-center">CV Base Information</th>
+                    </tr>
+                    <tr>
+                        <td class="table-cell bg-white text-gray-800 font-medium">CV speed with loading</td>
+                        <td id="liftingSpeed-2" contenteditable="true" class="table-cell bg-green-200 cursor-pointer hover:bg-green-300 transition-colors duration-200 text-gray-800 font-medium text-center">0.266</td>
+                        <td class="table-cell text-gray-600">m/s</td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell bg-white text-gray-800 font-medium">CV acce. with loading</td>
+                        <td id="liftingAcce-2" contenteditable="true" class="table-cell bg-green-200 cursor-pointer hover:bg-green-300 transition-colors duration-200 text-gray-800 font-medium text-center">0.3</td>
+                        <td class="table-cell text-gray-600">m/s²</td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell bg-white text-gray-800 font-medium">CV speed without loading</td>
+                        <td id="speedResult-2" class="table-cell bg-stone-300 text-gray-800 font-medium text-center"></td>
+                        <td class="table-cell bg-white text-gray-800 font-medium text-center">mm</td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell bg-white text-gray-800 font-medium">CV acce. without loading</td>
+                        <td id="acceResult-2" class="table-cell bg-stone-300 text-gray-800 font-medium text-center"></td>
+                        <td class="table-cell bg-white text-gray-800 font-medium text-center">mm</td>
+                    </tr>
+                    <tr>
+                        <th colspan="3" class="table-cell bg-gray-200 text-gray-800 text-lg font-semibold text-center">CV</th>
+                    </tr>
+                    <tr>
+                        <td class="table-cell bg-white text-gray-800 font-medium">The distance from acceletation to max. speed within loading</td>
+                        <td id="distAccelLoad" class="table-cell bg-stone-300 text-gray-800 font-medium text-center"></td>
+                        <td class="table-cell bg-white text-gray-800 font-medium text-center">mm</td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell bg-white text-gray-800 font-medium">The distance from max.speed acceletation to stop within loading</td>
+                        <td id="distStopLoad" class="table-cell bg-stone-300 text-gray-800 font-medium text-center"></td>
+                        <td class="table-cell bg-white text-gray-800 font-medium text-center">mm</td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell bg-white text-gray-800 font-medium">The distance from acceletation to max. speed without loading</td>
+                        <td id="distAccelNoLoad" class="table-cell bg-stone-300 text-gray-800 font-medium text-center"></td>
+                        <td class="table-cell bg-white text-gray-800 font-medium text-center">mm</td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell bg-white text-gray-800 font-medium">The distance from max.speed acceletation to stop without loading</td>
+                        <td id="distStopNoLoad" class="table-cell bg-stone-300 text-gray-800 font-medium text-center"></td>
+                        <td class="table-cell bg-white text-gray-800 font-medium text-center">mm</td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell bg-white text-gray-800 font-medium">The avg. distance of in or out lift</td>
+                        <td id="avgDistance" contenteditable="true" class="table-cell bg-green-200 cursor-pointer hover:bg-green-300 transition-colors duration-200 text-gray-800 font-medium text-center">2</td>
+                        <td class="table-cell bg-white text-gray-800 font-medium text-center">m</td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell bg-white text-gray-800 font-medium">The time of in or out lift with load</td>
+                        <td id="timeLoad" class="table-cell bg-red-200 text-gray-800 font-medium text-center"></td>
+                        <td class="table-cell bg-white text-gray-800 font-medium text-center">s</td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell bg-white text-gray-800 font-medium">The time of in or out lift without loading</td>
+                        <td id="timeNoLoad" class="table-cell bg-red-200 text-gray-800 font-medium text-center"></td>
+                        <td class="table-cell bg-white text-gray-800 font-medium text-center">s</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="p-6 bg-white rounded-xl shadow-xl w-full">
+            <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">Lifting Height and Time</h1>
+            
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr>
+                        <th class="table-cell bg-gray-200 text-gray-800 font-semibold text-center">From</th>
+                        <th class="table-cell bg-gray-200 text-gray-800 font-semibold text-center">To</th>
+                        <th class="table-cell bg-gray-200 text-gray-800 font-semibold text-center">Lifting height (m)</th>
+                        <th class="table-cell bg-gray-200 text-gray-800 font-semibold text-center">Lifting time (s)</th>
+                    </tr>
+                </thead>
+                <tbody id="liftingTimeTableBody">
+                    </tbody>
+            </table>
+        </div>
+        
+        <div class="p-6 bg-white rounded-xl shadow-xl w-full">
+            <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">Lift efficiency</h1>
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr>
+                        <th class="table-cell bg-gray-200 text-gray-800 font-semibold text-center">No.</th>
+                        <th class="table-cell bg-gray-200 text-gray-800 font-semibold text-center">Item</th>
+                        <th class="table-cell bg-gray-200 text-gray-800 font-semibold text-center">Qty.</th>
+                        <th class="table-cell bg-gray-200 text-gray-800 font-semibold text-center">Unit</th>
+                        <th class="table-cell bg-gray-200 text-gray-800 font-semibold text-center">Remark</th>
+                    </tr>
+                </thead>
+                <tbody id="efficiencyTableBody">
+                    <tr>
+                        <td class="table-cell text-gray-800 text-center">1</td>
+                        <td class="table-cell text-gray-800">Lifting levels</td>
+                        <td id="liftingLevels" contenteditable="true" class="table-cell bg-green-200 cursor-pointer hover:bg-green-300 transition-colors duration-200 text-gray-800 text-center">9</td>
+                        <td class="table-cell text-gray-800">levels</td>
+                        <td class="table-cell text-gray-600">take the 2/3 level of the max. level in the calculation</td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell text-gray-800 text-center">2</td>
+                        <td class="table-cell text-gray-800">Lifting time</td>
+                        <td id="liftingTimeEff" class="table-cell text-gray-800 text-center"></td>
+                        <td class="table-cell text-gray-800">s</td>
+                        <td class="table-cell text-gray-600"></td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell text-gray-800 text-center">3</td>
+                        <td class="table-cell text-gray-800">time of going into the lift</td>
+                        <td id="timeLoadEff" class="table-cell text-gray-800 text-center"></td>
+                        <td class="table-cell text-gray-800">s</td>
+                        <td class="table-cell text-gray-600">With Load / CV type Exluding the lock time</td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell text-gray-800 text-center">4</td>
+                        <td class="table-cell text-gray-800">time of going out the lift</td>
+                        <td id="timeNoLoadEff" class="table-cell text-gray-800 text-center"></td>
+                        <td class="table-cell text-gray-800">s</td>
+                        <td class="table-cell text-gray-600">Without Load / CV type Exluding the lock time</td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell text-gray-800 text-center">5</td>
+                        <td class="table-cell text-gray-800">pick and drop off time</td>
+                        <td id="pickDropTime" class="table-cell text-gray-800 text-center">0</td>
+                        <td class="table-cell text-gray-800">s</td>
+                        <td class="table-cell text-gray-600"></td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell text-gray-800 text-center">6</td>
+                        <td class="table-cell text-gray-800">Descending time</td>
+                        <td id="descendingTime" class="table-cell text-gray-800 text-center"></td>
+                        <td class="table-cell text-gray-800">s</td>
+                        <td class="table-cell text-gray-600">Without load</td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell text-gray-800 text-center">7</td>
+                        <td class="table-cell text-gray-800">Electrical delay time*3</td>
+                        <td id="elecDelay" class="table-cell text-gray-800 text-center">3</td>
+                        <td class="table-cell text-gray-800">s</td>
+                        <td class="table-cell text-gray-600">In one cycle, there would be three interactions for the electrical control (in out and return) Single electrical delay time:1s Single postion lock time:3s</td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell text-gray-800 text-center">8</td>
+                        <td class="table-cell text-gray-800">Position lock*3</td>
+                        <td id="posLock" class="table-cell text-gray-800 text-center">9</td>
+                        <td class="table-cell text-gray-800">s</td>
+                        <td class="table-cell text-gray-600"></td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell text-gray-800 text-center">9</td>
+                        <td class="table-cell text-gray-800">waiting time</td>
+                        <td id="waitingTime" class="table-cell text-gray-800 text-center">15</td>
+                        <td class="table-cell text-gray-800">s</td>
+                        <td class="table-cell text-gray-600">Waiting time, experienced data</td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell text-gray-800 text-center">10</td>
+                        <td class="table-cell text-gray-800">efficiency</td>
+                        <td id="efficiencyRate" contenteditable="true" class="table-cell bg-green-200 cursor-pointer hover:bg-green-300 transition-colors duration-200 text-gray-800 text-center">85</td>
+                        <td class="table-cell text-gray-800">%</td>
+                        <td class="table-cell text-gray-600">1-2 shift：Utilization rate (%) (稼动率) 85% 3 shift：80%</td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell text-gray-800 text-center">11</td>
+                        <td class="table-cell text-gray-800">cycle time</td>
+                        <td id="cycleTime" class="table-cell text-gray-800 text-center"></td>
+                        <td class="table-cell text-gray-800">s</td>
+                        <td class="table-cell text-gray-600"></td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell text-gray-800 text-center">12</td>
+                        <td class="table-cell text-gray-800">Pallet lifting Performance</td>
+                        <td id="palletLiftingPerformance" class="table-cell text-gray-800 text-center"></td>
+                        <td class="table-cell text-gray-800">pph</td>
+                        <td class="table-cell text-gray-600"></td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell text-gray-800 text-center">13</td>
+                        <td class="table-cell text-gray-800">throughput requirement</td>
+                        <td id="throughputRequirement" contenteditable="true" class="table-cell bg-green-200 cursor-pointer hover:bg-green-300 transition-colors duration-200 text-gray-800 text-center">413</td>
+                        <td class="table-cell text-gray-800">pph</td>
+                        <td class="table-cell text-gray-600"></td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell text-gray-800 text-center">14</td>
+                        <td class="table-cell text-gray-800">QTY of lift</td>
+                        <td id="qtyOfLift" class="table-cell bg-red-200 text-gray-800 text-center"></td>
+                        <td class="table-cell text-gray-800"></td>
+                        <td class="table-cell text-gray-600"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-xl w-full">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Rack and Lifter Illustration</h2>
+            <img src="LIFTCV.png" alt="Illustration of rack and lifter" class="max-w-full h-auto mb-6">
+            <a href="homepage.html" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200">返回菜单</a>
+        </div>
+
+    </div>
+    <script>
+        // ============== Main Calculation Logic ==============
+        // Get the input and output cells for the first table
+        const liftingSpeedCell1 = document.getElementById('liftingSpeed-1');
+        const liftingAcceCell1 = document.getElementById('liftingAcce-1');
+        const rackingLayerSpacingCell1 = document.getElementById('rackingLayerSpacing-1');
+        const lifterSpeedResultCell1 = document.getElementById('lifterSpeedResult-1');
+        const lifterPowerResultCell1 = document.getElementById('lifterPowerResult-1');
+
+        // Get the input and output cells for the second table and its extensions
+        const liftingSpeedCell2 = document.getElementById('liftingSpeed-2');
+        const liftingAcceCell2 = document.getElementById('liftingAcce-2');
+        const speedResultCell2 = document.getElementById('speedResult-2');
+        const acceResultCell2 = document.getElementById('acceResult-2');
+        const distAccelLoadCell = document.getElementById('distAccelLoad');
+        const distStopLoadCell = document.getElementById('distStopLoad');
+        const distAccelNoLoadCell = document.getElementById('distAccelNoLoad');
+        const distStopNoLoadCell = document.getElementById('distStopNoLoad');
+        const avgDistanceCell = document.getElementById('avgDistance');
+        const timeLoadCell = document.getElementById('timeLoad');
+        const timeNoLoadCell = document.getElementById('timeNoLoad');
+
+        // Get the body for the dynamic table
+        const liftingTimeTableBody = document.getElementById('liftingTimeTableBody');
+        const liftingTimeTableRows = document.getElementsByClassName('lifting-time-row');
+
+        // Get the input and output cells for the third table (Lift efficiency)
+        const liftingLevelsCell = document.getElementById('liftingLevels');
+        const liftingTimeEffCell = document.getElementById('liftingTimeEff');
+        const timeLoadEffCell = document.getElementById('timeLoadEff');
+        const timeNoLoadEffCell = document.getElementById('timeNoLoadEff');
+        const pickDropTimeCell = document.getElementById('pickDropTime');
+        const descendingTimeCell = document.getElementById('descendingTime');
+        const elecDelayCell = document.getElementById('elecDelay');
+        const posLockCell = document.getElementById('posLock');
+        const waitingTimeCell = document.getElementById('waitingTime');
+        const efficiencyRateCell = document.getElementById('efficiencyRate');
+        const cycleTimeCell = document.getElementById('cycleTime');
+        const palletLiftingPerformanceCell = document.getElementById('palletLiftingPerformance');
+        const throughputRequirementCell = document.getElementById('throughputRequirement');
+        const qtyOfLiftCell = document.getElementById('qtyOfLift');
+
+
+        /**
+         * Calculates and updates the values for the first set of tables.
+         */
+        function updateCalculations1() {
+            // Retrieve values from the editable cells, defaulting to 0 if not a number
+            const liftingSpeed = parseFloat(liftingSpeedCell1.textContent) || 0;
+            const liftingAcce = parseFloat(liftingAcceCell1.textContent) || 0;
+
+            // Excel formulas were a bit ambiguous, so these are based on common physics formulas.
+            const lifterSpeedSum = (liftingSpeed * liftingSpeed) / (2 * liftingAcce) * 1000;
+            lifterSpeedResultCell1.textContent = lifterSpeedSum.toFixed(2);
+
+            const lifterPowerSum = (liftingSpeed * liftingSpeed) / (2 * liftingAcce) * 1000;
+            lifterPowerResultCell1.textContent = lifterPowerSum.toFixed(2);
+
+            // After updating the first table, call the function for the dynamic table.
+            updateLiftingTimeTable();
+            updateCalculations3();
+        }
+
+        /**
+         * Calculates and updates the values for the second set of tables.
+         */
+        function updateCalculations2() {
+            // Retrieve values from the editable cells, defaulting to 0 if not a number
+            const liftingSpeed = parseFloat(liftingSpeedCell2.textContent) || 0;
+            const liftingAcce = parseFloat(liftingAcceCell2.textContent) || 0;
+            
+            // Sync content to the corresponding gray cells
+            speedResultCell2.textContent = liftingSpeed.toFixed(3);
+            acceResultCell2.textContent = liftingAcce.toFixed(3);
+
+            // Calculate the values for the white cells in the extended table
+            const calculatedValue = (liftingSpeed * liftingSpeed) / (2 * liftingAcce) * 1000;
+            distAccelLoadCell.textContent = calculatedValue.toFixed(3);
+            distStopLoadCell.textContent = calculatedValue.toFixed(3);
+
+            // Assuming 'without loading' values are the same as 'with loading' for now
+            distAccelNoLoadCell.textContent = calculatedValue.toFixed(3);
+            distStopNoLoadCell.textContent = calculatedValue.toFixed(3);
+
+            // Get new input values for the time calculations
+            const distAccelLoad = parseFloat(distAccelLoadCell.textContent) || 0;
+            const distAccelNoLoad = parseFloat(distAccelNoLoadCell.textContent) || 0;
+            const avgDistance = parseFloat(avgDistanceCell.textContent) || 0;
+            const liftingSpeed2 = parseFloat(liftingSpeedCell2.textContent) || 0;
+            const liftingAcce2 = parseFloat(liftingAcceCell2.textContent) || 0;
+
+            // Calculate "the time of in or out lift with load"
+            let timeLoadValue = 0;
+            const accelDistanceLoad = distAccelLoad / 1000;
+            if (avgDistance > (accelDistanceLoad * 2)) {
+                timeLoadValue = (avgDistance - accelDistanceLoad * 2) / liftingSpeed2 + (liftingSpeed2 / liftingAcce2) * 2;
+            } else {
+                timeLoadValue = Math.sqrt(avgDistance / liftingAcce2) * 2;
+            }
+            timeLoadCell.textContent = timeLoadValue.toFixed(3);
+
+            // Calculate "the time of in or out lift without loading"
+            let timeNoLoadValue = 0;
+            const accelDistanceNoLoad = distAccelNoLoad / 1000;
+            // Assuming 'without loading' speed and acceleration are the same for now
+            const liftingSpeedWithoutLoad = liftingSpeed2; 
+            const liftingAcceWithoutLoad = liftingAcce2;
+            if (avgDistance > (accelDistanceNoLoad * 2)) {
+                timeNoLoadValue = (avgDistance - accelDistanceNoLoad * 2) / liftingSpeedWithoutLoad + (liftingSpeedWithoutLoad / liftingAcceWithoutLoad) * 2;
+            } else {
+                timeNoLoadValue = Math.sqrt(avgDistance / liftingAcceWithoutLoad) * 2;
+            }
+            timeNoLoadCell.textContent = timeNoLoadValue.toFixed(3);
+
+            // After updating the second table, call the function for the third table.
+            updateCalculations3();
+        }
+
+        /**
+         * Calculates and updates the "Lifting Height and Time" table.
+         */
+        function updateLiftingTimeTable() {
+            // Clear existing table content
+            liftingTimeTableBody.innerHTML = '';
+
+            // Get required parameters for calculation
+            const rackingLayerSpacing = parseFloat(rackingLayerSpacingCell1.textContent) || 0;
+            const lifterPowerResult = parseFloat(lifterPowerResultCell1.textContent) || 0;
+            const liftingSpeed = parseFloat(liftingSpeedCell1.textContent) || 0;
+            const liftingAcce = parseFloat(liftingAcceCell1.textContent) || 0;
+
+            // Loop to generate 24 rows of data
+            for (let a = 2; a <= 25; a++) {
+                const tr = document.createElement('tr');
+                tr.classList.add('lifting-time-row');
+
+                // Column 1: from
+                let td1 = document.createElement('td');
+                td1.classList.add('table-cell', 'text-gray-800', 'text-center');
+                td1.textContent = '1';
+
+                // Column 2: to
+                let td2 = document.createElement('td');
+                td2.classList.add('table-cell', 'text-gray-800', 'text-center');
+                td2.textContent = a;
+
+                // Column 3: lifting height(m)
+                let td3 = document.createElement('td');
+                td3.classList.add('table-cell', 'text-gray-800', 'text-center');
+                const liftingHeight = (a - 1) * rackingLayerSpacing / 1000;
+                td3.textContent = liftingHeight.toFixed(3);
+
+                // Column 4: Lifting time(s)
+                let td4 = document.createElement('td');
+                td4.classList.add('table-cell', 'text-gray-800', 'text-center');
+                td4.id = `liftingTime-${a}`; // Add an ID for easy lookup
+                let liftingTime;
+                
+                // Calculation based on an assumed formula
+                const lifterDistanceInMeters = lifterPowerResult / 1000;
+                if (liftingHeight > (lifterDistanceInMeters * 2)) {
+                    liftingTime = (liftingHeight - lifterDistanceInMeters * 2) / liftingSpeed + (liftingSpeed / liftingAcce) * 2;
+                } else {
+                    liftingTime = Math.sqrt((liftingHeight / 2) / (liftingAcce / 2)) * 2;
+                }
+                
+                td4.textContent = liftingTime.toFixed(3);
+
+                // Append all cells to the row
+                tr.appendChild(td1);
+                tr.appendChild(td2);
+                tr.appendChild(td3);
+                tr.appendChild(td4);
+
+                // Append the row to the table body
+                liftingTimeTableBody.appendChild(tr);
+            }
+        }
+
+        /**
+         * Calculates and updates the values for the third table (Lift efficiency).
+         */
+        function updateCalculations3() {
+            // Get user input for lifting levels
+            const liftingLevels = parseFloat(liftingLevelsCell.textContent) || 0;
+
+            // 2. Lifting time
+            // Find the corresponding "Lifting time(s)" from the "Lifting Height and Time" table
+            const liftingTimeFromTable = document.getElementById(`liftingTime-${liftingLevels}`);
+            if (liftingTimeFromTable) {
+                const liftingTimeEff = parseFloat(liftingTimeFromTable.textContent) || 0;
+                liftingTimeEffCell.textContent = liftingTimeEff.toFixed(3);
+                descendingTimeCell.textContent = liftingTimeEff.toFixed(3);
+            } else {
+                liftingTimeEffCell.textContent = 'N/A';
+                descendingTimeCell.textContent = 'N/A';
+            }
+
+            // 3. time of going into the lift
+            const timeLoadValue = parseFloat(timeLoadCell.textContent) || 0;
+            timeLoadEffCell.textContent = timeLoadValue.toFixed(3);
+            
+            // 4. time of going out the lift
+            const timeNoLoadValue = parseFloat(timeNoLoadCell.textContent) || 0;
+            timeNoLoadEffCell.textContent = timeNoLoadValue.toFixed(3);
+
+            // 5. pick and drop off time
+            // Fixed value: 0
+            pickDropTimeCell.textContent = '0';
+            
+            // 6. Descending time - same as lifting time
+            const liftingTimeEffValue = parseFloat(liftingTimeEffCell.textContent) || 0;
+            descendingTimeCell.textContent = liftingTimeEffValue.toFixed(3);
+
+            // 7. Electrical delay time*3
+            // Fixed value: 3
+            elecDelayCell.textContent = '3';
+
+            // 8. Position lock*3
+            // Fixed value: 9
+            posLockCell.textContent = '9';
+            
+            // 9. waiting time
+            // Fixed value: 15
+            waitingTimeCell.textContent = '15';
+
+            // 10. efficiency
+            const efficiencyRate = parseFloat(efficiencyRateCell.textContent) || 0;
+
+            // 11. cycle time
+            // Sum of 2 to 10
+            const cycleTimeValue = (liftingTimeEffValue + timeLoadValue + timeNoLoadValue + 0 + liftingTimeEffValue + 3 + 9 + 15)/efficiencyRate*100;
+            cycleTimeCell.textContent = cycleTimeValue.toFixed(2);
+
+            // 12. Pallet lifting Performance
+            // Formula: 3600 / (cycle time)
+            const palletLiftingPerformanceValue = Math.floor(3600 / cycleTimeValue);
+            palletLiftingPerformanceCell.textContent = palletLiftingPerformanceValue;
+            
+            // 13. throughput requirement
+            const throughputRequirement = parseFloat(throughputRequirementCell.textContent) || 0;
+
+            // 14. QTY of lift
+            // Formula: throughput requirement / Pallet lifting Performance
+            const qtyOfLiftValue = Math.ceil(throughputRequirement / palletLiftingPerformanceValue);
+            qtyOfLiftCell.textContent = qtyOfLiftValue;
+        }
+
+        // Add event listeners to the editable cells to trigger recalculations
+        liftingSpeedCell1.addEventListener('input', updateCalculations1);
+        liftingAcceCell1.addEventListener('input', updateCalculations1);
+        rackingLayerSpacingCell1.addEventListener('input', updateCalculations1);
+        liftingSpeedCell2.addEventListener('input', updateCalculations2);
+        liftingAcceCell2.addEventListener('input', updateCalculations2);
+        avgDistanceCell.addEventListener('input', updateCalculations2);
+        liftingLevelsCell.addEventListener('input', updateCalculations3);
+        efficiencyRateCell.addEventListener('input', updateCalculations3);
+        throughputRequirementCell.addEventListener('input', updateCalculations3);
+
+        // Run all calculations once the page is loaded to display initial values
+        window.addEventListener('load', () => {
+            updateCalculations1();
+            updateCalculations2();
+            updateCalculations3();
+        });
+    </script>
+</body>
+</html>
