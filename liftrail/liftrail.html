@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>升降机与PS信息计算（已优化）</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* -- 组件类定义 -- */
+        /* 卡片容器 */
+        .card {
+            @apply p-6 bg-white rounded-xl shadow-xl w-full;
+        }
+        /* 主标题 */
+        .main-title {
+            @apply text-2xl font-bold text-center mb-6 text-gray-800;
+        }
+        /* 表格头（分组） */
+        .th-group {
+            @apply p-4 border border-gray-300 bg-gray-200 text-gray-800 text-lg font-semibold text-center;
+        }
+        /* 表格头（普通） */
+        .th-simple {
+            @apply p-4 border border-gray-300 bg-gray-200 text-gray-800 font-semibold text-center;
+        }
+        /* 单元格 - 标签 */
+        .td-label {
+            @apply p-4 border border-gray-300 bg-white text-gray-800 font-medium;
+        }
+        /* 单元格 - 居中标签 */
+        .td-label-centered {
+            @apply p-4 border border-gray-300 bg-white text-gray-800 font-medium text-center;
+        }
+        /* 单元格 - 输入 */
+        .td-input {
+            @apply p-4 border border-gray-300 bg-green-200 cursor-pointer hover:bg-green-300 transition-colors duration-200 text-gray-800 font-medium text-center;
+        }
+        /* 单元格 - 自选输入 */
+        .td-select {
+            @apply p-4 bg-green-200 cursor-pointer hover:bg-green-300 transition-colors duration-200 text-gray-800 font-medium text-center w-full h-full;
+        }
+        /* 单元格 - 中间结果 */
+        .td-display {
+            @apply p-4 border border-gray-300 bg-yellow-300 text-gray-800 font-medium text-center;
+        }
+        /* 单元格 - 重要计算结果 */
+        .td-calc {
+            @apply p-4 border border-gray-300 bg-red-200 text-gray-800 font-medium text-center;
+        }
+        /* 主按钮 */
+        .btn-primary {
+            @apply bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-8">
+    <div class="flex flex-col items-stretch justify-center gap-8 w-full max-w-full lg:max-w-4xl">
+        <!-- 第一个卡片：基础信息与计算 -->
+        <div class="card">
+            <h1 class="main-title">Lift Rail</h1>
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr>
+                        <th colspan="3" class="th-group">Lift basic Information</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="td-label">Lift type</td>
+                        <td class="td-label-centered">Rail</td>
+                        <td class="td-label-centered"></td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">Lifting speed</td>
+                        <td id="liftingSpeed-1" contenteditable="true" class="td-input">1</td>
+                        <td class="td-label-centered">m/s</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">Lifting acce.</td>
+                        <td id="liftingAcce-1" contenteditable="true" class="td-input">0.5</td>
+                        <td class="td-label-centered">m/s²</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">Racking layer spacing</td>
+                        <td id="rackingLayerSpacing-1" contenteditable="true" class="td-input">2100</td>
+                        <td class="td-label-centered">mm</td>
+                    </tr>
+                    <tr>
+                        <th colspan="3" class="th-group">Lifter</th>
+                    </tr>
+                    <tr>
+                        <td class="td-label">The distance from acceletation to max. speed</td>
+                        <td id="lifterSpeedResult-1" class="td-label-centered"></td>
+                        <td class="td-label-centered">mm</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">The distance from max.speed acceletation to stop</td>
+                        <td id="lifterPowerResult-1" class="td-label-centered"></td>
+                        <td class="td-label-centered">mm</td>
+                    </tr>
+                    <tr>
+                        <th colspan="3" class="th-group">PS Base Information</th>
+                    </tr>
+
+
+                    
+                    <tr>
+                        <td class="td-label">PS Type</td>
+                        <td>
+                            <select class="td-select" id="ps-selector">
+                                <option value="PS1500A" selected>PS1500A</option>
+                                <option value="PS1500B">PS1500B</option>
+                                <option value="PS1500C">PS1500C</option>
+                                <option value="PS1500AC">PS1500AC</option>
+                                <option value="PS1500BC">PS1500BC</option>
+                                <option value="PS1500BD">PS1500BD</option>
+                            </select>
+                        </td>
+                        <td class="td-label-centered"></td>
+                    </tr>
+
+
+                    <tr>
+                        <td class="td-label">PS speed with loading</td>
+                        <td id="liftingSpeed-2" class="td-label-centered">1.2</td>
+                        <td class="td-label-centered">m/s</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">PS acce. with loading</td>
+                        <td id="liftingAcce-2" class="td-label-centered">0.3</td>
+                        <td class="td-label-centered">m/s²</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">PS speed without loading</td>
+                        <td id="speedResult-2" class="td-label-centered">1.5</td>
+                        <td class="td-label-centered">mm</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">PS acce. without loading</td>
+                        <td id="acceResult-2" class="td-label-centered"></td>
+                        <td class="td-label-centered">mm</td>
+                    </tr>
+
+
+                    <tr>
+                        <th colspan="3" class="th-group">PS</th>
+                    </tr>
+                    <tr>
+                        <td class="td-label">The distance from acceletation to max. speed within loading</td>
+                        <td id="distAccelLoad" class="td-label-centered"></td>
+                        <td class="td-label-centered">mm</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">The distance from max.speed acceletation to stop within loading</td>
+                        <td id="distStopLoad" class="td-label-centered"></td>
+                        <td class="td-label-centered">mm</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">The distance from acceletation to max. speed without loading</td>
+                        <td id="distAccelNoLoad" class="td-label-centered"></td>
+                        <td class="td-label-centered">mm</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">The distance from max.speed acceletation to stop within loading</td>
+                        <td id="distStopNoLoad" class="td-label-centered"></td>
+                        <td class="td-label-centered">mm</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">the avg. distance of in or out lift</td>
+                        <td id="avgDistance" contenteditable="true" class="td-input">2</td>
+                        <td class="td-label-centered">m</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">the time of in or out lift with load</td>
+                        <td id="timeLoad" class="td-display"></td>
+                        <td class="td-label-centered">s</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">the time of in or out lift without loading</td>
+                        <td id="timeNoLoad" class="td-display"></td>
+                        <td class="td-label-centered">s</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 第二个卡片：轨道式提升机的参数-->
+
+        <div class="card">
+            <h1 class="main-title">PS acce. without loading</h1>
+            <table class="w-full border-collapse" id="PSinformation">
+                <thead>
+                    <tr>
+                        <th class="th-simple">Type.</th>
+                        <th class="th-simple">Qty.</th>
+                        <th class="th-simple">Unit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="td-label">PS1500A</th>
+                        <th class="td-label-centered">2</th>
+                        <th class="td-label-centered">m/s²</th>
+                    </tr>
+                    <tr>
+                        <th class="td-label">PS1500B</th>
+                        <th class="td-label-centered">2</th>
+                        <th class="td-label-centered">m/s²</th>
+                    </tr>
+                    <tr>
+                        <th class="td-label">PS1500C</th>
+                        <th class="td-label-centered">2</th>
+                        <th class="td-label-centered">m/s²</th>
+                    </tr>
+                    <tr>
+                        <th class="td-label">PS1500AC</th>
+                        <th class="td-label-centered">1</th>
+                        <th class="td-label-centered">m/s²</th>
+                    </tr>
+                    <tr>
+                        <th class="td-label">PS1500BC</th>
+                        <th class="td-label-centered">1</th>
+                        <th class="td-label-centered">m/s²</th>
+                    </tr>
+                    <tr>
+                        <th class="td-label">PS1500BD</th>
+                        <th class="td-label-centered">2</th>
+                        <th class="td-label-centered">m/s²</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <!-- 第三个卡片：提升高度与时间 -->
+        <div class="card">
+            <h1 class="main-title">Lifting Height and time</h1>
+
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr>
+                        <th class="th-simple">From</th>
+                        <th class="th-simple">To</th>
+                        <th class="th-simple">Lifting height (m)</th>
+                        <th class="th-simple">Lifting time (s)</th>
+                    </tr>
+                </thead>
+                <tbody id="liftingTimeTableBody">
+                    <!-- JS动态生成内容 -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 第四个卡片：升降机效率 -->
+        <div class="card">
+            <h1 class="main-title">Lift efficiency</h1>
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr>
+                        <th class="th-simple">No.</th>
+                        <th class="th-simple">Item</th>
+                        <th class="th-simple">Qty.</th>
+                        <th class="th-simple">Unit</th>
+                        <th class="th-simple">Remark</th>
+                    </tr>
+                </thead>
+                <tbody id="efficiencyTableBody">
+                    <tr>
+                        <td class="td-label-centered">1</td>
+                        <td class="td-label">Lifting levels</td>
+                        <td id="liftingLevels" contenteditable="true" class="td-input">9</td>
+                        <td class="td-label">levels</td>
+                        <td class="td-label">take the 2/3 level of the max. level in the calculation</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">2</td>
+                        <td class="td-label">Lifting time</td>
+                        <td id="liftingTimeEff" class="td-label-centered"></td>
+                        <td class="td-label">s</td>
+                        <td class="td-label"></td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">3</td>
+                        <td class="td-label">time of going into the lift</td>
+                        <td id="timeLoadEff" class="td-label-centered"></td>
+                        <td class="td-label">s</td>
+                        <td class="td-label">With Load  / CV type Exluding the lock time</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">4</td>
+                        <td class="td-label">time of going out the lift</td>
+                        <td id="timeNoLoadEff" class="td-label-centered"></td>
+                        <td class="td-label">s</td>
+                        <td class="td-label">Without Load  / CV type Exluding the lock time</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">5</td>
+                        <td class="td-label">pick and drop off time</td>
+                        <td id="pickDropTime" class="td-label-centered">0</td>
+                        <td class="td-label">s</td>
+                        <td class="td-label"></td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">6</td>
+                        <td class="td-label">Decending time</td>
+                        <td id="descendingTime" class="td-label-centered"></td>
+                        <td class="td-label">s</td>
+                        <td class="td-label">Without load</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">7</td>
+                        <td class="td-label">Electrical delay time*3</td>
+                        <td id="elecDelay" class="td-label-centered">3</td>
+                        <td class="td-label">s</td>
+                        <td class="td-label">
+                            In one cycle, there would be three interactions for the electrical control (in,out and return)<br>
+                            Single electrical delay time:1s<br>
+                            Single postion lock time:3s
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">8</td>
+                        <td class="td-label">Position lock*3</td>
+                        <td id="posLock" class="td-label-centered">9</td>
+                        <td class="td-label">s</td>
+                        <td class="td-label"></td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">9</td>
+                        <td class="td-label">Waiting time</td>
+                        <td id="waitingTime" class="td-label-centered">15</td>
+                        <td class="td-label">s</td>
+                        <td class="td-label">Waiting time, experienced data</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">10</td>
+                        <td class="td-label">efficiency</td>
+                        <td id="efficiencyRate" contenteditable="true" class="td-input">85</td>
+                        <td class="td-label">%</td>
+                        <td class="td-label">
+                            1-2 shift :Utilization rate%(稼动率)80-85%<br>
+                            3 shift:70%
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">11</td>
+                        <td class="td-label">cycle time</td>
+                        <td id="cycleTime" class="td-label-centered"></td>
+                        <td class="td-label">s</td>
+                        <td class="td-label"></td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">12</td>
+                        <td class="td-label">Pallet lifting Performance</td>
+                        <td id="palletLiftingPerformance" class="td-display"></td>
+                        <td class="td-label">pph</td>
+                        <td class="td-label"></td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">13</td>
+                        <td class="td-label">throughput requirement</td>
+                        <td id="throughputRequirement" contenteditable="true" class="td-input">413</td>
+                        <td class="td-label">pph</td>
+                        <td class="td-label"></td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">14</td>
+                        <td class="td-label">QTY of lift</td>
+                        <td id="qtyOfLift" class="td-calc"></td>
+                        <td class="td-label"></td>
+                        <td class="td-label"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 第五个卡片：图示与返回链接 -->
+        <div class="flex flex-col items-center justify-center card">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Sample Illustraton</h2>
+            <img src=liftrail.png alt="货架与升降机图示" class="max-w-full h-auto mb-6 rounded-lg">
+            <a href="../homepage.html" class="btn-primary">Return</a>
+        </div>
+    </div>
+    <!-- 请确保您的JS文件路径正确 -->
+    <script src="liftrail_cnscript.js"></script>
+</body>
+</html>

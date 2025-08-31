@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PS Efficiency calculation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* 主卡片容器 */
+        .card {
+            @apply p-6 bg-white rounded-xl shadow-xl w-full;
+        }
+        /* 主按钮 */
+        .btn-primary {
+            @apply bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-xl transition-colors duration-200;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-8">
+    <div class="flex flex-col items-stretch justify-center gap-8 w-full max-w-full lg:max-w-xl">
+        <!-- 主卡片 -->
+        <div class="card flex flex-col items-center gap-6">
+            <h1 class="text-2xl font-bold text-center text-gray-800">Welcome to PS Efficiency calculation</h1>
+	     <h1 id="current-time" class="text-2xl font-bold text-center mb-6 text-gray-800"></h1>
+            <a href="liftcv/liftcv.html" class="btn-primary w-full text-center">Lift CV</a>
+            <a href="liftrail/liftrail.html" class="btn-primary w-full text-center">Lift Rail</a>
+        </div>
+    </div>
+<script src=gettime.js></script>
+</body>
+</html>
