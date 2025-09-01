@@ -108,7 +108,9 @@
     // 页面加载时的主要逻辑
     window.onload = async () => {
         auth0Client = await auth0.createAuth0Client({
+            // 修正后的域名
             domain: "dev-3qtcpqstu44g2ka4.jp.auth0.com",
+            // 客户端 ID
             clientId: "9qwhLc4kmaiNZKTmSBlmiefkgtIjXzlp"
         });
 
