@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PS Efficiency calculation</title>
+    <title>PS Efficiency calculation - Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style type="text/tailwindcss">
         body {
@@ -17,10 +17,6 @@
         .btn-primary {
             @apply bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-xl transition-colors duration-200;
         }
-        /* 新增的辅助类 */
-        .hidden {
-            display: none;
-        }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-8">
@@ -28,109 +24,49 @@
         <!-- 主卡片 -->
         <div class="card flex flex-col items-center gap-6">
             <h1 class="text-2xl font-bold text-center text-gray-800">Welcome to PS Efficiency calculation</h1>
-	        <h1 id="current-time" class="text-2xl font-bold text-center mb-6 text-gray-800"></h1>
-
-            <!-- 未登录用户可见的容器 -->
-            <div id="logged-out-view" class="w-full flex flex-col gap-4">
-                <button id="btn-login" class="btn-primary">登录/注册</button>
-            </div>
-
-            <!-- 已登录用户可见的容器 -->
-            <div id="logged-in-view" class="w-full flex flex-col gap-4 hidden">
-                <a href="liftcv/liftcv.html" class="btn-primary w-full text-center">Lift CV</a>
-                <a href="liftrail/liftrail.html" class="btn-primary w-full text-center">Lift Rail</a>
-                <button id="btn-logout" class="btn-primary">登出</button>
-            </div>
+            <p class="text-gray-600 text-center">请登录或注册以继续。</p>
+            <button id="btn-login" class="btn-primary">登录/注册</button>
         </div>
     </div>
 
 <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
 <script>
     let auth0Client = null;
-
-    // 获取UI元素
-    const loggedOutView = document.getElementById("logged-out-view");
-    const loggedInView = document.getElementById("logged-in-view");
     const loginBtn = document.getElementById("btn-login");
-    const logoutBtn = document.getElementById("btn-logout");
-    const timeElement = document.getElementById('current-time');
 
-    // 更新 UI，根据登录状态显示/隐藏视图
-    const updateUI = async () => {
-        try {
-            const isAuthenticated = await auth0Client.isAuthenticated();
-            if (isAuthenticated) {
-                loggedOutView.classList.add('hidden');
-                loggedInView.classList.remove('hidden');
-                console.log("用户已登录。");
-            } else {
-                loggedOutView.classList.remove('hidden');
-                loggedInView.classList.add('hidden');
-                console.log("用户未登录。");
-            }
-        } catch (e) {
-            console.error("Auth0 isAuthenticated() check failed:", e);
-        }
-    };
-
-    // 用于更新时间显示的函数
-    function updateTime() {
-        const now = new Date();
-
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-        
-        const timezoneOffset = -now.getTimezoneOffset() / 60;
-        const sign = timezoneOffset >= 0 ? '+' : '';
-        const utcOffset = `UTC${sign}${timezoneOffset}`;
-
-        const formattedString = `Now Time：${year}/${month}/${day} ${utcOffset} ${hours}:${minutes}:${seconds}`;
-
-        if (timeElement) {
-            timeElement.textContent = formattedString;
-        }
-    }
-
-    // 页面加载时的主要逻辑
     window.onload = async () => {
         try {
             auth0Client = await auth0.createAuth0Client({
                 domain: "dev-ikrkpim2nd6fq3f0.us.auth0.com",
                 clientId: "2ACFisLmsO61gK8JY5oMQ0J5nHq8L4Ty",
                 authorizationParams: {
-                    redirect_uri: window.location.origin
+                    // 登录成功后重定向到 dashboard.html
+                    redirect_uri: window.location.origin + '/dashboard.html'
                 }
             });
+
+            // 如果用户已在登录状态，直接重定向到 dashboard.html
+            const isAuthenticated = await auth0Client.isAuthenticated();
+            if (isAuthenticated) {
+                window.location.href = window.location.origin + '/dashboard.html';
+                return;
+            }
 
             const query = window.location.search;
             if (query.includes("code=") && query.includes("state=")) {
                 await auth0Client.handleRedirectCallback();
                 window.history.replaceState({}, document.title, window.location.pathname);
+                // 处理回调后，如果成功，重定向到 dashboard.html
+                window.location.href = window.location.origin + '/dashboard.html';
             }
-
-            // 在 Auth0 客户端初始化完成后，再添加事件监听器
+            
+            // 为登录按钮添加事件监听器
             loginBtn.addEventListener('click', () => {
                 auth0Client.loginWithRedirect();
             });
 
-            logoutBtn.addEventListener('click', () => {
-                auth0Client.logout({
-                    logoutParams: {
-                        returnTo: window.location.origin
-                    }
-                });
-            });
-
-            await updateUI();
-            
-            updateTime();
-            setInterval(updateTime, 1000);
         } catch (e) {
-            console.error("初始化Auth0失败:", e);
+            console.error("Auth0初始化失败:", e);
         }
     };
 </script>
