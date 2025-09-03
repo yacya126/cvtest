@@ -57,31 +57,21 @@
 
     // 更新 UI，根据登录状态显示/隐藏视图
     const updateUI = async () => {
-        const isAuthenticated = await auth0Client.isAuthenticated();
-        if (isAuthenticated) {
-            loggedOutView.classList.add('hidden');
-            loggedInView.classList.remove('hidden');
-            console.log("用户已登录。");
-        } else {
-            loggedOutView.classList.remove('hidden');
-            loggedInView.classList.add('hidden');
-            console.log("用户未登录。");
+        try {
+            const isAuthenticated = await auth0Client.isAuthenticated();
+            if (isAuthenticated) {
+                loggedOutView.classList.add('hidden');
+                loggedInView.classList.remove('hidden');
+                console.log("用户已登录。");
+            } else {
+                loggedOutView.classList.remove('hidden');
+                loggedInView.classList.add('hidden');
+                console.log("用户未登录。");
+            }
+        } catch (e) {
+            console.error("Auth0 isAuthenticated() check failed:", e);
         }
     };
-
-    // 处理登录点击事件
-    loginBtn.addEventListener('click', () => {
-        auth0Client.loginWithRedirect();
-    });
-
-    // 处理登出点击事件
-    logoutBtn.addEventListener('click', () => {
-        auth0Client.logout({
-            logoutParams: {
-                returnTo: window.location.origin
-            }
-        });
-    });
 
     // 用于更新时间显示的函数
     function updateTime() {
@@ -107,25 +97,42 @@
 
     // 页面加载时的主要逻辑
     window.onload = async () => {
-        auth0Client = await auth0.createAuth0Client({
-            // 修正后的域名
-            domain: "dev-ikrkpim2nd6fq3f0.us.auth0.com",
-            // 客户端 ID
-            clientId: "2ACFisLmsO61gK8JY5oMQ0J5nHq8L4Ty"
-        });
+        try {
+            auth0Client = await auth0.createAuth0Client({
+                domain: "dev-ikrkpim2nd6fq3f0.us.auth0.com",
+                clientId: "2ACFisLmsO61gK8JY5oMQ0J5nHq8L4Ty",
+                authorizationParams: {
+                    redirect_uri: window.location.origin
+                }
+            });
 
-        const query = window.location.search;
-        if (query.includes("code=") && query.includes("state=")) {
-            await auth0Client.handleRedirectCallback();
-            window.history.replaceState({}, document.title, window.location.pathname);
+            const query = window.location.search;
+            if (query.includes("code=") && query.includes("state=")) {
+                await auth0Client.handleRedirectCallback();
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+
+            // 在 Auth0 客户端初始化完成后，再添加事件监听器
+            loginBtn.addEventListener('click', () => {
+                auth0Client.loginWithRedirect();
+            });
+
+            logoutBtn.addEventListener('click', () => {
+                auth0Client.logout({
+                    logoutParams: {
+                        returnTo: window.location.origin
+                    }
+                });
+            });
+
+            await updateUI();
+            
+            updateTime();
+            setInterval(updateTime, 1000);
+        } catch (e) {
+            console.error("初始化Auth0失败:", e);
         }
-
-        await updateUI();
-        
-        updateTime();
-        setInterval(updateTime, 1000);
     };
 </script>
 </body>
 </html>
-
