@@ -38,7 +38,7 @@
                 <input type="email" id="input-email" class="input-text" placeholder="邮箱">
             </div>
             <div class="w-full">
-                <input type="tel" id="input-phone" class="input-text" placeholder="手机号">
+                <input type="tel" id="input-phone" class="input-text" placeholder="手机号（可选）">
             </div>
             <div class="w-full">
                 <input type="password" id="input-password" class="input-text" placeholder="密码">
@@ -82,28 +82,40 @@
             return;
         }
 
-        statusMessage.textContent = "正在注册...";
+        statusMessage.textContent = "正在验证授权...";
 
-        const user = new AV.User();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPassword(password);
-        if (phone) {
-            user.setMobilePhoneNumber(phone);
-        }
-        
-        user.signUp()
-            .then(function(user) {
-                // 注册成功
-                statusMessage.textContent = "注册成功！正在跳转到仪表盘...";
-                // 注册成功后自动登录并跳转
-                window.location.href = './dashboard.html';
-            })
-            .catch(function(error) {
-                // 注册失败
-                console.error(error);
-                statusMessage.textContent = "注册失败: " + error.code + " - " + error.message;
-            });
+        // 步骤1: 检查邮箱是否在授权白名单中
+        const AuthUser = AV.Object.extend('AuthUsers');
+        const query = new AV.Query(AuthUser);
+        query.equalTo('email', email);
+        query.first().then(function(auth) {
+            if (auth) {
+                // 邮箱在白名单中，执行注册
+                statusMessage.textContent = "正在注册...";
+                const user = new AV.User();
+                user.setUsername(username);
+                user.setEmail(email);
+                user.setPassword(password);
+                if (phone) {
+                    user.setMobilePhoneNumber(phone);
+                }
+                
+                return user.signUp();
+            } else {
+                // 邮箱不在白名单中，拒绝注册
+                throw new Error("该邮箱未获得注册授权。");
+            }
+        })
+        .then(function(user) {
+            // 注册成功
+            statusMessage.textContent = "注册成功！正在跳转到仪表盘...";
+            window.location.href = './dashboard.html';
+        })
+        .catch(function(error) {
+            // 注册或授权失败
+            console.error(error);
+            statusMessage.textContent = "注册失败: " + error.message;
+        });
     });
 </script>
 </body>
