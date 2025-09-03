@@ -44,55 +44,57 @@
 
 <script src="//cdn.jsdelivr.net/npm/leancloud-storage@4.10.0/dist/av-min.js"></script>
 <script>
-    const AV = window.AV;
-    
-    // LeanCloud App ID 和 App Key
-    AV.init({
-        appId: "L5SNq7BVJ9m4jOr50MCp1iAd-gzGzoHsz",
-        appKey: "6CDNvUG0zD9i7EI40nH9zNRv"
-    });
+    window.onload = () => {
+        const AV = window.AV;
+        
+        // LeanCloud App ID 和 App Key
+        AV.init({
+            appId: "L5SNq7BVJ9m4jOr50MCp1iAd-gzGzoHsz",
+            appKey: "6CDNvUG0zD9i7EI40nH9zNRv"
+        });
 
-    const emailInput = document.getElementById("input-email");
-    const passwordInput = document.getElementById("input-password");
-    const loginBtn = document.getElementById("btn-login");
-    const signupBtn = document.getElementById("btn-signup");
-    const statusMessage = document.getElementById("status-message");
+        const emailInput = document.getElementById("input-email");
+        const passwordInput = document.getElementById("input-password");
+        const loginBtn = document.getElementById("btn-login");
+        const signupBtn = document.getElementById("btn-signup");
+        const statusMessage = document.getElementById("status-message");
 
-    // 检查是否已登录
-    const currentUser = AV.User.current();
-    if (currentUser) {
-        window.location.href = '/dashboard.html';
-    }
-
-    // 登录处理函数
-    loginBtn.addEventListener('click', async () => {
-        try {
-            statusMessage.textContent = "正在登录...";
-            const user = await AV.User.logIn(emailInput.value, passwordInput.value);
-            statusMessage.textContent = "登录成功！";
+        // 检查是否已登录
+        const currentUser = AV.User.current();
+        if (currentUser) {
             window.location.href = '/dashboard.html';
-        } catch (error) {
-            console.error("LeanCloud Login Error:", error);
-            statusMessage.textContent = `登录失败: ${error.message}`;
         }
-    });
 
-    // 注册处理函数
-    signupBtn.addEventListener('click', async () => {
-        try {
-            statusMessage.textContent = "正在注册...";
-            const user = new AV.User();
-            user.set('username', emailInput.value);
-            user.set('password', passwordInput.value);
-            user.set('email', emailInput.value);
-            await user.signUp();
-            statusMessage.textContent = "注册成功！正在自动登录...";
-            window.location.href = '/dashboard.html';
-        } catch (error) {
-            console.error("LeanCloud Signup Error:", error);
-            statusMessage.textContent = `注册失败: ${error.message}`;
-        }
-    });
+        // 登录处理函数
+        loginBtn.addEventListener('click', async () => {
+            try {
+                statusMessage.textContent = "正在登录...";
+                const user = await AV.User.logIn(emailInput.value, passwordInput.value);
+                statusMessage.textContent = "登录成功！";
+                window.location.href = '/dashboard.html';
+            } catch (error) {
+                console.error("LeanCloud Login Error:", error);
+                statusMessage.textContent = `登录失败: ${error.message}`;
+            }
+        });
+
+        // 注册处理函数
+        signupBtn.addEventListener('click', async () => {
+            try {
+                statusMessage.textContent = "正在注册...";
+                const user = new AV.User();
+                user.set('username', emailInput.value);
+                user.set('password', passwordInput.value);
+                user.set('email', emailInput.value);
+                await user.signUp();
+                statusMessage.textContent = "注册成功！正在自动登录...";
+                window.location.href = '/dashboard.html';
+            } catch (error) {
+                console.error("LeanCloud Signup Error:", error);
+                statusMessage.textContent = `注册失败: ${error.message}`;
+            }
+        });
+    };
 </script>
 </body>
 </html>
