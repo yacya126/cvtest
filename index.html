@@ -67,18 +67,22 @@
     }
 
     // 登录处理函数
-    loginBtn.addEventListener('click', async () => {
-        try {
-            statusMessage.textContent = "正在登录...";
-            const user = await AV.User.logIn(emailInput.value, passwordInput.value);
-            statusMessage.textContent = "登录成功！";
-            // 登录成功后跳转
-            window.location.href = './dashboard.html';
-        } catch (error) {
-            console.error(error);
-            // 登录失败时显示错误信息
-            statusMessage.textContent = `登录失败: ${error.message}`;
-        }
+    loginBtn.addEventListener('click', function() {
+        // 更新状态信息
+        statusMessage.textContent = "正在登录...";
+
+        // 调用登录 API，并使用 Promise 的 then/catch 方式处理结果
+        AV.User.logIn(emailInput.value, passwordInput.value)
+            .then(function(user) {
+                // 登录成功
+                statusMessage.textContent = "登录成功！";
+                window.location.href = './dashboard.html';
+            })
+            .catch(function(error) {
+                // 登录失败
+                console.error(error);
+                statusMessage.textContent = "登录失败: " + error.code + " - " + error.message;
+            });
     });
 </script>
 </body>
