@@ -72,7 +72,7 @@
             statusMessage.textContent = "登录成功！";
             window.location.href = '/dashboard.html';
         } catch (error) {
-            console.error(error);
+            console.error("LeanCloud Login Error:", error);
             statusMessage.textContent = `登录失败: ${error.message}`;
         }
     });
@@ -89,7 +89,7 @@
             statusMessage.textContent = "注册成功！正在自动登录...";
             window.location.href = '/dashboard.html';
         } catch (error) {
-            console.error(error);
+            console.error("LeanCloud Signup Error:", error);
             statusMessage.textContent = `注册失败: ${error.message}`;
         }
     });
