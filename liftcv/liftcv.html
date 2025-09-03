@@ -308,11 +308,30 @@
         <div class="flex flex-col items-center justify-center card">
             <h2 class="text-xl font-bold text-gray-800 mb-4">Sample Illustraton</h2>
             <img src=liftcv.png alt="货架与升降机图示" class="max-w-full h-auto mb-6 rounded-lg">
-            <a href="../index.html" class="btn-primary">Return</a>
+            <a href="../dashboard.html" class="btn-primary">Return</a>
         </div>
     </div>
     <!-- 请确保您的JS文件路径正确 -->
     <script src="liftcv_cnscript.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@4.10.0/dist/av-min.js"></script>
+    <script>
+        const AV = window.AV;
+        // LeanCloud App ID, App Key 和服务器地址
+        AV.init({
+            appId: "L5SNq7BVJ9m4jOr50MCp1iAd-gzGzoHsz",
+            appKey: "6CDNvUG0zD9i7EI40nH9zNRv",
+            serverURL: "https://l5snq7bv.lc-cn-n1-shared.com"
+        });
+        // 页面加载时检查用户登录状态
+        window.onload = () => {
+            const currentUser = AV.User.current();
+            if (!currentUser) {
+                // 如果未登录，重定向回登录页
+                window.location.href = '../index.html';
+            }
+        };
+    </script>
 </body>
 
 </html>
+
