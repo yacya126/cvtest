@@ -49,10 +49,13 @@
 <script>
     const AV = window.AV;
 
-    // LeanCloud App ID 和 App Key
+    // LeanCloud App ID, App Key, 和服务器地址
+    // Vercel 上的环境变量无法直接在前端 JavaScript 中访问，因此这里需要手动指定 serverURL。
+    // 请替换成你在 LeanCloud 后台绑定的备案域名。
     AV.init({
         appId: "L5SNq7BVJ9m4jOr50MCp1iAd-gzGzoHsz",
-        appKey: "6CDNvUG0zD9i7EI40nH9zNRv"
+        appKey: "6CDNvUG0zD9i7EI40nH9zNRv",
+        serverURL: "https://l5snq7bv.lc-cn-n1-shared.com"
     });
 
     const usernameInput = document.getElementById("input-username");
@@ -77,7 +80,7 @@
         // 调用登录 API，并使用 Promise 的 then/catch 方式处理结果
         AV.User.logIn(username, password)
             .then(function(user) {
-                // 登录成功
+                // 成功登录
                 statusMessage.textContent = "登录成功！";
                 window.location.href = './dashboard.html';
             })
