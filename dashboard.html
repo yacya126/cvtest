@@ -25,15 +25,15 @@
         <div class="card flex flex-col items-center gap-6">
             <h1 class="text-3xl font-bold text-center text-gray-800">功能选择</h1>
             <p id="user-info" class="text-lg text-gray-700 text-center"></p>
-            <p id="current-time" class="text-gray-500 text-center"></p>
             
             <div class="w-full flex flex-col gap-4 mt-4">
-                <a href="/liftcv.html" class="btn-primary w-full text-center">LIFT CV</a>
-                <a href="/liftrail.html" class="btn-primary w-full text-center">LIFT RAIL</a>
-                <!-- 未来扩展的功能 -->
-                <!-- <a href="/new_feature.html" class="btn-primary w-full text-center">新功能</a> -->
+                <!-- LIFT CV 按钮超链接 -->
+                <a href="./liftcv/liftcv.html" class="btn-primary w-full text-center">LIFT CV</a>
+                <!-- LIFT RAIL 按钮超链接 -->
+                <a href="./liftrail/liftrail.html" class="btn-primary w-full text-center">LIFT RAIL</a>
             </div>
             
+            <!-- 登出按钮 -->
             <button id="logout-btn" class="btn-secondary w-full mt-4">登出</button>
         </div>
     </div>
@@ -42,11 +42,12 @@
 <script>
     const AV = window.AV;
 
-    // LeanCloud App ID 和 App Key
-    // 请确保这些凭证与 index.html 中的一致
+    // LeanCloud App ID, App Key 和服务器地址
+    // 确保与 index.html 中的配置一致
     AV.init({
         appId: "L5SNq7BVJ9m4jOr50MCp1iAd-gzGzoHsz",
-        appKey: "6CDNvUG0zD9i7EI40nH9zNRv"
+        appKey: "6CDNvUG0zD9i7EI40nH9zNRv",
+        serverURL: "请在这里填写你的备案域名，例如：https://你的备案域名.com"
     });
 
     const userInfoElement = document.getElementById("user-info");
@@ -58,19 +59,20 @@
         const currentUser = AV.User.current();
         if (!currentUser) {
             // 如果未登录，重定向回登录页
-            window.location.href = '/index.html';
+            window.location.href = './index.html';
         } else {
             // 如果已登录，显示用户信息
-            userInfoElement.textContent = `欢迎回来, ${currentUser.get('email')}！`;
+            // 检查用户名是否存在，如果不存在则显示邮箱
+            const username = currentUser.get('username') || currentUser.get('email');
+            userInfoElement.textContent = `欢迎回来, ${username}！`;
         }
 
         // 登出处理函数
         logoutBtn.addEventListener('click', async () => {
             await AV.User.logOut();
-            window.location.href = '/index.html';
+            window.location.href = './index.html';
         });
     };
 </script>
-<script src="/showtime.js"></script>
 </body>
 </html>
