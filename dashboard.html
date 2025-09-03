@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PS Efficiency calculation - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* 主卡片容器 */
+        .card {
+            @apply p-6 bg-white rounded-xl shadow-xl w-full;
+        }
+        /* 主按钮 */
+        .btn-primary {
+            @apply bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-xl transition-colors duration-200;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-8">
+    <div class="flex flex-col items-stretch justify-center gap-8 w-full max-w-full lg:max-w-xl">
+        <!-- 主卡片 -->
+        <div class="card flex flex-col items-center gap-6 text-center">
+            <h1 class="text-2xl font-bold text-gray-800">功能选择</h1>
+            <p id="current-time" class="text-gray-600 text-sm"></p>
+            <p id="user-info" class="text-lg font-semibold text-gray-700"></p>
+
+            <!-- 功能按钮 -->
+            <div class="w-full flex flex-col gap-4 mt-4">
+                <a href="liftcv.html" class="btn-primary w-full">LIFT CV</a>
+                <a href="liftrail.html" class="btn-primary w-full">LIFT RAIL</a>
+                <!-- 未来扩展的按钮将在这里 -->
+            </div>
+            
+            <!-- 登出按钮 -->
+            <button id="btn-logout" class="btn-primary mt-6">登出</button>
+        </div>
+    </div>
+
+<script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
+<script src="showtime.js"></script>
+<script>
+    let auth0Client = null;
+    const userInfoElement = document.getElementById("user-info");
+    const logoutBtn = document.getElementById("btn-logout");
+
+    window.onload = async () => {
+        try {
+            auth0Client = await auth0.createAuth0Client({
+                domain: "dev-ikrkpim2nd6fq3f0.us.auth0.com",
+                clientId: "2ACFisLmsO61gK8JY5oMQ0J5nHq8L4Ty"
+            });
+
+            // 检查用户是否已登录
+            const isAuthenticated = await auth0Client.isAuthenticated();
+            if (!isAuthenticated) {
+                // 如果未登录，重定向回登录页
+                window.location.href = window.location.origin + '/index.html';
+                return;
+            }
+
+            // 如果已登录，获取用户信息并显示
+            const user = await auth0Client.getUser();
+            userInfoElement.textContent = `欢迎，${user.email}！`;
+
+            // 为登出按钮添加事件监听器
+            logoutBtn.addEventListener('click', () => {
+                auth0Client.logout({
+                    logoutParams: {
+                        returnTo: window.location.origin + '/index.html'
+                    }
+                });
+            });
+
+        } catch (e) {
+            console.error("Auth0初始化失败或认证错误:", e);
+            window.location.href = window.location.origin + '/index.html';
+        }
+    };
+</script>
+</body>
+</html>
