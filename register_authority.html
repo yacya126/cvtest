@@ -6,9 +6,10 @@
     <title>LeanCloud Auth Test</title>
 </head>
 <body>
-   
+    <t1>管理员授权谁注册？</t1>
+    <input id="authorized_email"></input>
     <button id="btn-auth">授权注册</button>
-
+    
     <!-- LeanCloud JavaScript SDK -->
     <script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.10.0/dist/av-min.js"></script>
     <script>
@@ -21,13 +22,15 @@
 
         // 获取 DOM 元素
         const authBtn = document.getElementById("btn-auth");
+        const authorizedEmailInput = document.getElementById("authorized_email");
 
+        // 绑定按钮点击事件
         authBtn.addEventListener('click', function () {
             // 1. 定义数据表名称为 "AuthUsers"
             const AuthUsers = AV.Object.extend("AuthUsers");
             const authUser = new AuthUsers();
-            // 2. 将 "abc@example.com" 写入 "email" 字段
-            authUser.set("email", "abc@example.com");
+            // 2. 将 authorizedEmailInput 写入 "email" 字段
+            authUser.set("email", authorizedEmailInput);
             authUser.save().then(() => {
                 console.log("用户邮箱已保存到 AuthUsers 表。");
             });
