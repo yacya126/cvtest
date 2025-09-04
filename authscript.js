@@ -1,55 +1,4 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LeanCloud Auth Test</title>
-    <style>
-        body { font-family: sans-serif; }
-        t1 { font-size: 1.5rem; margin-bottom: 10px; display: block; }
-        input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-        button { padding: 8px 12px; border: none; border-radius: 4px; background-color: #007bff; color: white; cursor: pointer; }
-        button:hover { background-color: #0056b3; }
-        table, th, td { border: 1px solid #ddd; border-collapse: collapse; text-align: left; padding: 8px; }
-        th { background-color: #f2f2f2; }
-    </style>
-</head>
-<body>
-    <t1>管理员授权谁注册？</t1>
-    <input id="authorized_email"></input>
-    <button id="btn-auth">授权注册</button>
-    <p id="feedback-message" style="margin-top: 10px;"></p>
-    
-    <hr style="margin: 20px 0;"> 
-    
-    <t1>已授权邮箱列表</t1>
-    <button id="btn-query">查看已授权</button>
-    <ul id="email-list"></ul>
-
-    <hr style="margin: 20px 0;">
-    
-    <t1>所有注册用户列表</t1>
-    <button id="btn-query-users">查看注册用户</button>
-    
-    <!-- 用于显示用户列表的表格 -->
-    <table id="user-table" style="width:100%; margin-top: 10px;">
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Mobile Phone</th>
-                <th>Created At</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- 用户数据将在这里动态生成 -->
-        </tbody>
-    </table>
-    
-    <!-- LeanCloud JavaScript SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.10.0/dist/av-min.js"></script>
-    <script>
-        // 初始化 LeanCloud SDK
+// 初始化 LeanCloud SDK
         AV.init({
             appId: "L5SNq7BVJ9m4jOr50MCp1iAd-gzGzoHsz",
             appKey: "6CDNvUG0zD9i7EI40nH9zNRv",
@@ -62,10 +11,13 @@
         const feedbackMessage = document.getElementById("feedback-message");
         const queryBtn = document.getElementById("btn-query");
         const emailList = document.getElementById("email-list");
-        
-        // 新增：获取新添加的 DOM 元素
         const queryUsersBtn = document.getElementById("btn-query-users");
         const userTableBody = document.querySelector("#user-table tbody");
+
+        // 新增的删除用户相关的 DOM 元素
+        const deleteEmailInput = document.getElementById("delete-email-input");
+        const deleteUserBtn = document.getElementById("btn-delete-user");
+        const deleteFeedbackMessage = document.getElementById("delete-feedback-message");
 
         // 绑定授权按钮点击事件
         authBtn.addEventListener('click', function () {
@@ -93,7 +45,7 @@
 
         // 绑定已授权邮箱查询按钮点击事件
         queryBtn.addEventListener('click', function () {
-            emailList.innerHTML = ''; 
+            emailList.innerHTML = '';
             const query = new AV.Query("AuthUsers");
             query.find().then((results) => {
                 if (results.length === 0) {
@@ -117,9 +69,8 @@
             });
         });
 
-        // 新增：绑定用户列表查询按钮点击事件
+        // 绑定用户列表查询按钮点击事件
         queryUsersBtn.addEventListener('click', function () {
-            // 清空表格体内容
             userTableBody.innerHTML = '';
 
             const query = new AV.Query('_User');
@@ -128,7 +79,7 @@
                     const tr = document.createElement('tr');
                     const td = document.createElement('td');
                     td.textContent = "暂无注册用户。";
-                    td.setAttribute('colspan', '4'); // 跨四列
+                    td.setAttribute('colspan', '4');
                     tr.appendChild(td);
                     userTableBody.appendChild(tr);
                 } else {
@@ -140,11 +91,11 @@
                         const createdAt = user.get('createdAt') ? new Date(user.get('createdAt')).toLocaleString() : '';
 
                         tr.innerHTML = `
-                            <td>${username}</td>
-                            <td>${email}</td>
-                            <td>${mobilePhoneNumber}</td>
-                            <td>${createdAt}</td>
-                        `;
+                                    <td>${username}</td>
+                                    <td>${email}</td>
+                                    <td>${mobilePhoneNumber}</td>
+                                    <td>${createdAt}</td>
+                                `;
                         userTableBody.appendChild(tr);
                     });
                 }
@@ -159,6 +110,32 @@
                 console.error("用户列表查询失败:", error);
             });
         });
-    </script>
-</body>
-</html>
+
+        // 新增：绑定删除用户按钮点击事件，现在改为调用云函数
+        deleteUserBtn.addEventListener('click', async function () {
+            deleteFeedbackMessage.textContent = '';
+            const emailToDelete = deleteEmailInput.value.trim();
+
+            if (!emailToDelete) {
+                deleteFeedbackMessage.textContent = "请输入要删除的邮箱地址。";
+                deleteFeedbackMessage.style.color = "red";
+                return;
+            }
+
+            deleteFeedbackMessage.textContent = "正在调用云函数删除用户...";
+            deleteFeedbackMessage.style.color = "gray";
+
+            try {
+                // 调用云函数，并传入要删除的邮箱
+                const result = await AV.Cloud.run('deleteUser', { email: emailToDelete });
+                deleteFeedbackMessage.textContent = `✅ ${result}`;
+                deleteFeedbackMessage.style.color = "green";
+                // 刷新用户列表以显示最新状态
+                queryUsersBtn.click();
+                queryBtn.click();
+            } catch (error) {
+                console.error(error);
+                deleteFeedbackMessage.textContent = `❌ 删除失败: ${error.message}`;
+                deleteFeedbackMessage.style.color = "red";
+            }
+        });

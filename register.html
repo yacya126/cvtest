@@ -29,23 +29,23 @@
     <div class="flex flex-col items-stretch justify-center gap-8 w-full max-w-full lg:max-w-xl">
         <!-- 主卡片 -->
         <div id="register-card" class="card flex flex-col items-center gap-6">
-            <h1 class="text-2xl font-bold text-center text-gray-800">用户注册</h1>
-            <p id="status-message" class="text-gray-600 text-center">请填写以下信息以注册新账户。</p>
+            <h1 class="text-2xl font-bold text-center text-gray-800">New user register</h1>
+            <p id="status-message" class="text-gray-600 text-center">Before registering an account, an email address must obtain authorization from the administrator.</p>
             <div class="w-full">
-                <input type="text" id="input-username" class="input-text" placeholder="用户名">
+                <input type="text" id="input-username" class="input-text" placeholder="Username">
             </div>
             <div class="w-full">
-                <input type="email" id="input-email" class="input-text" placeholder="邮箱">
+                <input type="email" id="input-email" class="input-text" placeholder="E-mail">
             </div>
             <div class="w-full">
-                <input type="tel" id="input-phone" class="input-text" placeholder="手机号（可选）">
+                <input type="tel" id="input-phone" class="input-text" placeholder="Phone Number">
             </div>
             <div class="w-full">
-                <input type="password" id="input-password" class="input-text" placeholder="密码">
+                <input type="password" id="input-password" class="input-text" placeholder="Password(Must remember)">
             </div>
-            <button id="btn-register" class="btn-primary w-full">注册</button>
+            <button id="btn-register" class="btn-primary w-full">Register</button>
             <a href="./index.html" class="w-full">
-                <button class="btn-secondary w-full">返回登录</button>
+                <button class="btn-secondary w-full">Return to login</button>
             </a>
         </div>
     </div>
@@ -69,52 +69,73 @@
     const registerBtn = document.getElementById("btn-register");
     const statusMessage = document.getElementById("status-message");
 
+    // 邮箱格式验证函数
+    function isValidEmail(email) {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    }
+    
     // 注册处理函数
     registerBtn.addEventListener('click', function() {
-        const username = usernameInput.value;
-        const email = emailInput.value;
-        const phone = phoneInput.value;
+        const username = usernameInput.value.trim();
+        const email = emailInput.value.trim();
+        const phone = phoneInput.value.trim();
         const password = passwordInput.value;
         
-        // 简单的前端验证
-        if (!username || !email || !password) {
-            statusMessage.textContent = "用户名、邮箱和密码为必填项！";
+        // 必填字段验证
+        if (!username || !email || !phone || !password) {
+            statusMessage.textContent = "所有字段（用户名、邮箱、手机号和密码）均为必填项！";
+            statusMessage.style.color = "red";
             return;
         }
 
-        statusMessage.textContent = "正在验证授权...";
+        // 邮箱格式验证
+        if (!isValidEmail(email)) {
+            statusMessage.textContent = "请输入有效的邮箱地址！";
+            statusMessage.style.color = "red";
+            return;
+        }
 
-        // 步骤1: 检查邮箱是否在授权白名单中
-        const AuthUser = AV.Object.extend('AuthUsers');
-        const query = new AV.Query(AuthUser);
+        statusMessage.textContent = "正在验证邮箱授权...";
+        statusMessage.style.color = "gray";
+
+        // 查询 AuthUsers 表，检查邮箱是否已授权
+        const query = new AV.Query('AuthUsers');
         query.equalTo('email', email);
-        query.first().then(function(auth) {
-            if (auth) {
-                // 邮箱在白名单中，执行注册
+        query.find().then((results) => {
+            if (results.length > 0) {
+                // 邮箱已获得授权，继续注册
                 statusMessage.textContent = "正在注册...";
+                statusMessage.style.color = "gray";
+
                 const user = new AV.User();
                 user.setUsername(username);
                 user.setEmail(email);
                 user.setPassword(password);
-                if (phone) {
-                    user.setMobilePhoneNumber(phone);
-                }
+                user.setMobilePhoneNumber(phone);
                 
-                return user.signUp();
+                user.signUp()
+                    .then(function(user) {
+                        // 注册成功
+                        statusMessage.textContent = "注册成功！正在跳转到仪表盘...";
+                        statusMessage.style.color = "green";
+                        window.location.href = './dashboard.html';
+                    })
+                    .catch(function(error) {
+                        // 注册失败
+                        console.error(error);
+                        statusMessage.textContent = "注册失败: " + error.code + " - " + error.message;
+                        statusMessage.style.color = "red";
+                    });
             } else {
-                // 邮箱不在白名单中，拒绝注册
-                throw new Error("该邮箱未获得注册授权。");
+                // 邮箱未获得授权
+                statusMessage.textContent = "邮箱未获得授权，请联系管理员。";
+                statusMessage.style.color = "red";
             }
-        })
-        .then(function(user) {
-            // 注册成功
-            statusMessage.textContent = "注册成功！正在跳转到仪表盘...";
-            window.location.href = './dashboard.html';
-        })
-        .catch(function(error) {
-            // 注册或授权失败
+        }).catch((error) => {
             console.error(error);
-            statusMessage.textContent = "注册失败: " + error.message;
+            statusMessage.textContent = "验证授权失败: " + error.message;
+            statusMessage.style.color = "red";
         });
     });
 </script>

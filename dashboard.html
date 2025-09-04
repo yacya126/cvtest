@@ -23,18 +23,14 @@
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-8">
     <div class="flex flex-col items-stretch justify-center gap-8 w-full max-w-full lg:max-w-xl">
         <div class="card flex flex-col items-center gap-6">
-            <h1 class="text-3xl font-bold text-center text-gray-800">功能选择</h1>
+            <h1 class="text-3xl font-bold text-center text-gray-800">Function selection</h1>
             <p id="user-info" class="text-lg text-gray-700 text-center"></p>
-            
+            <p id="current-time" class="text-lg text-gray-700 text-center"></p>
             <div class="w-full flex flex-col gap-4 mt-4">
-                <!-- LIFT CV 按钮超链接 -->
                 <a href="./liftcv/liftcv.html" class="btn-primary w-full text-center">LIFT CV</a>
-                <!-- LIFT RAIL 按钮超链接 -->
                 <a href="./liftrail/liftrail.html" class="btn-primary w-full text-center">LIFT RAIL</a>
             </div>
-            
-            <!-- 登出按钮 -->
-            <button id="logout-btn" class="btn-secondary w-full mt-4">登出</button>
+            <button id="logout-btn" class="btn-secondary w-full mt-4">Logout</button>
         </div>
     </div>
 
@@ -53,6 +49,14 @@
     const userInfoElement = document.getElementById("user-info");
     const logoutBtn = document.getElementById("logout-btn");
 
+    // 为登出按钮添加点击事件监听器
+    logoutBtn.addEventListener('click', () => {
+        AV.User.logOut().then(() => {
+            // 登出成功后，重定向回登录页
+            window.location.href = './index.html';
+        });
+    });
+
     // 页面加载时的主要逻辑
     window.onload = () => {
         // 检查用户登录状态
@@ -64,15 +68,26 @@
             // 如果已登录，显示用户信息
             // 检查用户名是否存在，如果不存在则显示邮箱
             const username = currentUser.get('username') || currentUser.get('email');
-            userInfoElement.textContent = `欢迎回来, ${username}！`;
-        }
+            userInfoElement.textContent = `Welcome Back, ${username}！`;
 
-        // 登出处理函数
-        logoutBtn.addEventListener('click', async () => {
-            await AV.User.logOut();
-            window.location.href = './index.html';
-        });
+            // 如果用户是管理员，添加管理员按钮
+            if (username === 'admin') {
+                const adminBtn = document.createElement('a');
+                adminBtn.href = './auth.html';
+                adminBtn.className = 'btn-secondary w-full text-center';
+                adminBtn.textContent = 'Administrator Auth';
+
+                const divider = document.createElement('hr');
+                divider.className = 'w-full my-4';
+                divider.style.borderColor = '#d1d5db';
+
+                // 使用 insertAdjacentElement 来插入元素，保持正确的顺序
+                logoutBtn.insertAdjacentElement('afterend', divider);
+                divider.insertAdjacentElement('afterend', adminBtn);
+            }
+        }
     };
 </script>
+<script src=showtime.js></script>
 </body>
 </html>

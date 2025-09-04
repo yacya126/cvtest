@@ -29,67 +29,23 @@
     <div class="flex flex-col items-stretch justify-center gap-8 w-full max-w-full lg:max-w-xl">
         <!-- 主卡片 -->
         <div id="login-card" class="card flex flex-col items-center gap-6">
-            <h1 class="text-2xl font-bold text-center text-gray-800">欢迎来到 PS Efficiency calculation</h1>
-            <p id="status-message" class="text-gray-600 text-center">请登录以继续。</p>
+            <h1 class="text-2xl font-bold text-center text-gray-800">Welcome to PS Efficiency calculation</h1>
+            <p id="status-message" class="text-gray-600 text-center">Please login or register and continue.</p>
             <div class="w-full">
-                <input type="text" id="input-username" class="input-text" placeholder="用户名">
+                <input type="text" id="input-username" class="input-text" placeholder="Username">
             </div>
             <div class="w-full">
-                <input type="password" id="input-password" class="input-text" placeholder="密码">
+                <input type="password" id="input-password" class="input-text" placeholder="Password">
             </div>
-            <button id="btn-login" class="btn-primary w-full">登录</button>
+            <button id="btn-login" class="btn-primary w-full">Login</button>
             <!-- 将注册按钮改为超链接 -->
             <a href="./register.html" class="w-full">
-                <button class="btn-secondary w-full">注册</button>
+                <button class="btn-secondary w-full">Register</button>
             </a>
         </div>
     </div>
 
 <script src="//cdn.jsdelivr.net/npm/leancloud-storage@4.10.0/dist/av-min.js"></script>
-<script>
-    const AV = window.AV;
-
-    // LeanCloud App ID, App Key, 和服务器地址
-    // Vercel 上的环境变量无法直接在前端 JavaScript 中访问，因此这里需要手动指定 serverURL。
-    // 请替换成你在 LeanCloud 后台绑定的备案域名。
-    AV.init({
-        appId: "L5SNq7BVJ9m4jOr50MCp1iAd-gzGzoHsz",
-        appKey: "6CDNvUG0zD9i7EI40nH9zNRv",
-        serverURL: "https://l5snq7bv.lc-cn-n1-shared.com"
-    });
-
-    const usernameInput = document.getElementById("input-username");
-    const passwordInput = document.getElementById("input-password");
-    const loginBtn = document.getElementById("btn-login");
-    const statusMessage = document.getElementById("status-message");
-
-    // 检查是否已登录，如果已登录则直接跳转到仪表盘
-    const currentUser = AV.User.current();
-    if (currentUser) {
-        window.location.href = './dashboard.html';
-    }
-
-    // 登录处理函数
-    loginBtn.addEventListener('click', function() {
-        const username = usernameInput.value;
-        const password = passwordInput.value;
-
-        // 更新状态信息
-        statusMessage.textContent = "正在登录...";
-
-        // 调用登录 API，并使用 Promise 的 then/catch 方式处理结果
-        AV.User.logIn(username, password)
-            .then(function(user) {
-                // 成功登录
-                statusMessage.textContent = "登录成功！";
-                window.location.href = './dashboard.html';
-            })
-            .catch(function(error) {
-                // 登录失败
-                console.error(error);
-                statusMessage.textContent = "登录失败: " + error.code + " - " + error.message;
-            });
-    });
-</script>
+<script src="indexscript.js"></script>
 </body>
 </html>

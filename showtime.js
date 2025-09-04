@@ -16,7 +16,7 @@ const utcOffset = `UTC${sign}${timezoneOffset}`;
 
 const formattedString = `${year}/${month}/${day} ${utcOffset} ${hours}:${minutes}:${seconds}`;
 
-timeElement.textContent = `当前时间：${formattedString}`;
+timeElement.textContent = `Current time：${formattedString}`;
 
 }
 

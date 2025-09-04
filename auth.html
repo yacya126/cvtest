@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeanCloud Auth Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* 主卡片容器 */
+        .card {
+            @apply p-6 bg-white rounded-xl shadow-xl w-full;
+        }
+        /* 主按钮 */
+        .btn-primary {
+            @apply bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-xl transition-colors duration-200;
+        }
+        .btn-secondary {
+            @apply bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-xl transition-colors duration-200;
+        }
+        .input-text {
+            @apply w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500;
+        }
+        .section-title {
+            @apply text-xl font-bold text-gray-800 mb-4;
+        }
+        .feedback-message {
+            @apply mt-2 text-gray-600;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- 授权注册部分 -->
+        <div class="card mb-8">
+            <h2 class="section-title">管理员授权谁注册？</h2>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <input id="authorized_email" type="email" placeholder="输入邮箱地址" class="input-text">
+                <button id="btn-auth" class="btn-primary whitespace-nowrap">授权注册</button>
+            </div>
+            <p id="feedback-message" class="feedback-message"></p>
+        </div>
+
+        <!-- 已授权邮箱列表 -->
+        <div class="card mb-8">
+            <h2 class="section-title">已授权邮箱列表</h2>
+            <button id="btn-query" class="btn-secondary mb-4">查看已授权</button>
+            <ul id="email-list" class="pl-5 text-gray-700 space-y-1"></ul>
+        </div>
+
+        <!-- 所有注册用户列表 -->
+        <div class="card mb-8">
+            <h2 class="section-title">所有注册用户列表</h2>
+            <button id="btn-query-users" class="btn-secondary mb-4">查看注册用户</button>
+            
+            <!-- 用于显示用户列表的表格 -->
+            <table id="user-table" class="w-full mt-4 border-collapse">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="px-4 py-2 border text-left text-gray-700">Username</th>
+                        <th class="px-4 py-2 border text-left text-gray-700">Email</th>
+                        <th class="px-4 py-2 border text-left text-gray-700">Mobile Phone</th>
+                        <th class="px-4 py-2 border text-left text-gray-700">Created At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 用户数据将在这里动态生成 -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 删除用户部分 -->
+        <div class="card mb-8">
+            <h2 class="section-title">管理员删除用户邮箱？</h2>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <input id="delete-email-input" type="email" placeholder="输入要删除的邮箱" class="input-text">
+                <button id="btn-delete-user" class="btn-primary whitespace-nowrap">删除用户</button>
+            </div>
+            <p id="delete-feedback-message" class="feedback-message"></p>
+        </div>
+
+        <div class="text-center mt-6">
+            <a href="dashboard.html" class="btn-primary w-full">返回菜单</a>
+        </div>
+    </div>
+
+    <!-- LeanCloud JavaScript SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.10.0/dist/av-min.js"></script>
+    <script src="authscript.js"></script>
+</body>
+</html>
