@@ -4,17 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LeanCloud Auth Test</title>
+    <style>
+        body { font-family: sans-serif; }
+        t1 { font-size: 1.5rem; margin-bottom: 10px; display: block; }
+        input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 8px 12px; border: none; border-radius: 4px; background-color: #007bff; color: white; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        table, th, td { border: 1px solid #ddd; border-collapse: collapse; text-align: left; padding: 8px; }
+        th { background-color: #f2f2f2; }
+    </style>
 </head>
 <body>
     <t1>管理员授权谁注册？</t1>
     <input id="authorized_email"></input>
     <button id="btn-auth">授权注册</button>
     <p id="feedback-message" style="margin-top: 10px;"></p>
-    <hr style="margin: 20px 0;"> <t1>已授权邮箱列表</t1>
+    
+    <hr style="margin: 20px 0;"> 
+    
+    <t1>已授权邮箱列表</t1>
     <button id="btn-query">查看已授权</button>
     <ul id="email-list"></ul>
 
-
+    <hr style="margin: 20px 0;">
+    
+    <t1>所有注册用户列表</t1>
+    <button id="btn-query-users">查看注册用户</button>
+    
+    <!-- 用于显示用户列表的表格 -->
+    <table id="user-table" style="width:100%; margin-top: 10px;">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Mobile Phone</th>
+                <th>Created At</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 用户数据将在这里动态生成 -->
+        </tbody>
+    </table>
+    
     <!-- LeanCloud JavaScript SDK -->
     <script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.10.0/dist/av-min.js"></script>
     <script>
@@ -28,78 +59,104 @@
         // 获取 DOM 元素
         const authBtn = document.getElementById("btn-auth");
         const authorizedEmailInput = document.getElementById("authorized_email");
-        const feedbackMessage = document.getElementById("feedback-message"); // 新增：获取反馈元素
+        const feedbackMessage = document.getElementById("feedback-message");
+        const queryBtn = document.getElementById("btn-query");
+        const emailList = document.getElementById("email-list");
+        
+        // 新增：获取新添加的 DOM 元素
+        const queryUsersBtn = document.getElementById("btn-query-users");
+        const userTableBody = document.querySelector("#user-table tbody");
 
-        // 绑定按钮点击事件
+        // 绑定授权按钮点击事件
         authBtn.addEventListener('click', function () {
-            // 清除之前的消息
             feedbackMessage.textContent = '';
-
             const emailValue = authorizedEmailInput.value;
-
-            // 检查输入是否为空
             if (!emailValue) {
                 feedbackMessage.textContent = "邮箱地址不能为空！";
                 feedbackMessage.style.color = "red";
                 return;
             }
 
-            // 定义数据表名称为 "AuthUsers"
             const AuthUsers = AV.Object.extend("AuthUsers");
             const authUser = new AuthUsers();
-
-            // 将 emailValue 写入 "email" 字段
             authUser.set("email", emailValue);
 
             authUser.save().then(() => {
-                // 操作成功，更新页面上的消息
                 feedbackMessage.textContent = "✅ 用户邮箱已保存到 AuthUsers 表。";
                 feedbackMessage.style.color = "green";
             }).catch((error) => {
-                // 操作失败，更新页面上的消息并显示错误
                 feedbackMessage.textContent = `❌ 保存失败：${error.message}`;
                 feedbackMessage.style.color = "red";
                 console.error("保存失败:", error);
             });
         });
 
-
-        // 新增：获取查询相关的 DOM 元素
-        const queryBtn = document.getElementById("btn-query");
-        const emailList = document.getElementById("email-list");
-        // 新增：绑定查询按钮点击事件
+        // 绑定已授权邮箱查询按钮点击事件
         queryBtn.addEventListener('click', function () {
-            // 清空之前的列表内容
-            emailList.innerHTML = '';
-
-            // 创建针对 "AuthUsers" 表的查询对象
+            emailList.innerHTML = ''; 
             const query = new AV.Query("AuthUsers");
-
-            // 执行查询，获取所有数据
             query.find().then((results) => {
-                // results 是一个数组，包含查询到的所有对象
                 if (results.length === 0) {
                     const li = document.createElement('li');
                     li.textContent = "暂无已授权邮箱。";
                     emailList.appendChild(li);
                 } else {
                     results.forEach((user) => {
-                        // 从每个对象中获取 "email" 字段的值
                         const email = user.get('email');
-
-                        // 创建一个列表项并添加到 ul 中
                         const li = document.createElement('li');
                         li.textContent = email;
                         emailList.appendChild(li);
                     });
                 }
             }).catch((error) => {
-                // 查询失败，在列表中显示错误信息
                 const li = document.createElement('li');
                 li.textContent = `查询失败：${error.message}`;
                 li.style.color = "red";
                 emailList.appendChild(li);
                 console.error("查询失败:", error);
+            });
+        });
+
+        // 新增：绑定用户列表查询按钮点击事件
+        queryUsersBtn.addEventListener('click', function () {
+            // 清空表格体内容
+            userTableBody.innerHTML = '';
+
+            const query = new AV.Query('_User');
+            query.find().then((users) => {
+                if (users.length === 0) {
+                    const tr = document.createElement('tr');
+                    const td = document.createElement('td');
+                    td.textContent = "暂无注册用户。";
+                    td.setAttribute('colspan', '4'); // 跨四列
+                    tr.appendChild(td);
+                    userTableBody.appendChild(tr);
+                } else {
+                    users.forEach((user) => {
+                        const tr = document.createElement('tr');
+                        const username = user.get('username') || '';
+                        const email = user.get('email') || '';
+                        const mobilePhoneNumber = user.get('mobilePhoneNumber') || '';
+                        const createdAt = user.get('createdAt') ? new Date(user.get('createdAt')).toLocaleString() : '';
+
+                        tr.innerHTML = `
+                            <td>${username}</td>
+                            <td>${email}</td>
+                            <td>${mobilePhoneNumber}</td>
+                            <td>${createdAt}</td>
+                        `;
+                        userTableBody.appendChild(tr);
+                    });
+                }
+            }).catch((error) => {
+                const tr = document.createElement('tr');
+                const td = document.createElement('td');
+                td.textContent = `查询失败：${error.message}`;
+                td.setAttribute('colspan', '4');
+                td.style.color = "red";
+                tr.appendChild(td);
+                userTableBody.appendChild(tr);
+                console.error("用户列表查询失败:", error);
             });
         });
     </script>
