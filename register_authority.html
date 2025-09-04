@@ -9,7 +9,7 @@
     <t1>管理员授权谁注册？</t1>
     <input id="authorized_email"></input>
     <button id="btn-auth">授权注册</button>
-    
+    <p id="feedback-message" style="margin-top: 10px;"></p>
     <!-- LeanCloud JavaScript SDK -->
     <script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.10.0/dist/av-min.js"></script>
     <script>
@@ -23,15 +23,38 @@
         // 获取 DOM 元素
         const authBtn = document.getElementById("btn-auth");
         const authorizedEmailInput = document.getElementById("authorized_email");
+        const feedbackMessage = document.getElementById("feedback-message"); // 新增：获取反馈元素
+
         // 绑定按钮点击事件
         authBtn.addEventListener('click', function () {
-            // 1. 定义数据表名称为 "AuthUsers"
+            // 清除之前的消息
+            feedbackMessage.textContent = '';
+
+            const emailValue = authorizedEmailInput.value;
+
+            // 检查输入是否为空
+            if (!emailValue) {
+                feedbackMessage.textContent = "邮箱地址不能为空！";
+                feedbackMessage.style.color = "red";
+                return;
+            }
+
+            // 定义数据表名称为 "AuthUsers"
             const AuthUsers = AV.Object.extend("AuthUsers");
             const authUser = new AuthUsers();
-            // 2. 将 authorizedEmailInput 写入 "email" 字段
-            authUser.set("email", authorizedEmailInput.value);
+
+            // 将 emailValue 写入 "email" 字段
+            authUser.set("email", emailValue);
+
             authUser.save().then(() => {
-                console.log("用户邮箱已保存到 AuthUsers 表。");
+                // 操作成功，更新页面上的消息
+                feedbackMessage.textContent = "✅ 用户邮箱已保存到 AuthUsers 表。";
+                feedbackMessage.style.color = "green";
+            }).catch((error) => {
+                // 操作失败，更新页面上的消息并显示错误
+                feedbackMessage.textContent = `❌ 保存失败：${error.message}`;
+                feedbackMessage.style.color = "red";
+                console.error("保存失败:", error);
             });
         });
     </script>
