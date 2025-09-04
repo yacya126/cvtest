@@ -10,6 +10,11 @@
     <input id="authorized_email"></input>
     <button id="btn-auth">授权注册</button>
     <p id="feedback-message" style="margin-top: 10px;"></p>
+    <hr style="margin: 20px 0;"> <t1>已授权邮箱列表</t1>
+    <button id="btn-query">查看已授权</button>
+    <ul id="email-list"></ul>
+
+
     <!-- LeanCloud JavaScript SDK -->
     <script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.10.0/dist/av-min.js"></script>
     <script>
@@ -55,6 +60,46 @@
                 feedbackMessage.textContent = `❌ 保存失败：${error.message}`;
                 feedbackMessage.style.color = "red";
                 console.error("保存失败:", error);
+            });
+        });
+
+
+        // 新增：获取查询相关的 DOM 元素
+        const queryBtn = document.getElementById("btn-query");
+        const emailList = document.getElementById("email-list");
+        // 新增：绑定查询按钮点击事件
+        queryBtn.addEventListener('click', function () {
+            // 清空之前的列表内容
+            emailList.innerHTML = '';
+
+            // 创建针对 "AuthUsers" 表的查询对象
+            const query = new AV.Query("AuthUsers");
+
+            // 执行查询，获取所有数据
+            query.find().then((results) => {
+                // results 是一个数组，包含查询到的所有对象
+                if (results.length === 0) {
+                    const li = document.createElement('li');
+                    li.textContent = "暂无已授权邮箱。";
+                    emailList.appendChild(li);
+                } else {
+                    results.forEach((user) => {
+                        // 从每个对象中获取 "email" 字段的值
+                        const email = user.get('email');
+
+                        // 创建一个列表项并添加到 ul 中
+                        const li = document.createElement('li');
+                        li.textContent = email;
+                        emailList.appendChild(li);
+                    });
+                }
+            }).catch((error) => {
+                // 查询失败，在列表中显示错误信息
+                const li = document.createElement('li');
+                li.textContent = `查询失败：${error.message}`;
+                li.style.color = "red";
+                emailList.appendChild(li);
+                console.error("查询失败:", error);
             });
         });
     </script>
