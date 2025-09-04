@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeanCloud Auth Test</title>
+</head>
+<body>
+   
+    <button id="btn-auth">授权注册</button>
+
+    <!-- LeanCloud JavaScript SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.10.0/dist/av-min.js"></script>
+    <script>
+        // 初始化 LeanCloud SDK
+        AV.init({
+            appId: "L5SNq7BVJ9m4jOr50MCp1iAd-gzGzoHsz",
+            appKey: "6CDNvUG0zD9i7EI40nH9zNRv",
+            serverURL: "https://l5snq7bv.lc-cn-n1-shared.com"
+        });
+
+        // 获取 DOM 元素
+        const authBtn = document.getElementById("btn-auth");
+
+        // 按钮点击事件处理
+        authBtn.addEventListener('click', function () {
+            const TestObject = AV.Object.extend("TestObject");
+            const testObject = new TestObject();
+            testObject.set("words", "Hello world!");
+            testObject.save().then((testObject) => {
+                console.log("保存成功。");
+            });
+        });
+    </script>
+</body>
+</html>
