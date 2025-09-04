@@ -22,17 +22,6 @@
         // 获取 DOM 元素
         const authBtn = document.getElementById("btn-auth");
 
-        /* 按钮点击事件处理
-        authBtn.addEventListener('click', function () {
-            const TestObject = AV.Object.extend("TestObject");
-            const testObject = new TestObject();
-            testObject.set("words", "Hello world!");
-            testObject.save().then((testObject) => {
-                console.log("保存成功。");
-            });
-        });
-        */
-
         authBtn.addEventListener('click', function () {
             // 1. 定义数据表名称为 "AuthUsers"
             const AuthUsers = AV.Object.extend("AuthUsers");
