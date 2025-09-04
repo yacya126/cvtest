@@ -22,13 +22,25 @@
         // 获取 DOM 元素
         const authBtn = document.getElementById("btn-auth");
 
-        // 按钮点击事件处理
+        /* 按钮点击事件处理
         authBtn.addEventListener('click', function () {
             const TestObject = AV.Object.extend("TestObject");
             const testObject = new TestObject();
             testObject.set("words", "Hello world!");
             testObject.save().then((testObject) => {
                 console.log("保存成功。");
+            });
+        });
+        */
+
+        authBtn.addEventListener('click', function () {
+            // 1. 定义数据表名称为 "AuthUsers"
+            const AuthUsers = AV.Object.extend("AuthUsers");
+            const authUser = new AuthUsers();
+            // 2. 将 "abc@example.com" 写入 "email" 字段
+            authUser.set("email", "abc@example.com");
+            authUser.save().then(() => {
+                console.log("用户邮箱已保存到 AuthUsers 表。");
             });
         });
     </script>
