@@ -271,11 +271,29 @@ function 更新ReshufflingEfficiency参数() {
     const q15value = parseFloat(q15.textContent);
     let q16value = parseFloat(q16.textContent);
 
-    //定义来自liftrail页面的数据变量
+    let liftrail_h6value;
+    let liftrail_h8value;
+
+    //定义来自liftrail页面的数据常量
     const liftrailData = getLiftRailData();
-    //定义liftrail页面的h6单元格的值
-    const liftrail_h6value = parseFloat(liftrailData.h6) || 0;
-    const liftrail_h8value = parseFloat(liftrailData.h8) || 0;
+
+    if (liftrailData?.h6 !== undefined) {
+        // 如果liftrailData不是null，则安全地获取h6和h8的值
+        liftrail_h6value = parseFloat(liftrailData.h6) || 0;
+    } else {
+        // 如果liftrailData是null（没有缓存），可以为变量提供默认值
+        console.warn("无法从 localStorage 中找到 liftrail 数据，使用默认值。");
+        liftrail_h6value = 2400;
+    }
+    if (liftrailData?.h8 !== undefined) {
+        // 如果liftrailData不是null，则安全地获取h6和h8的值
+        liftrail_h8value = parseFloat(liftrailData.h8) || 0;
+    } else {
+        // 如果liftrailData是null（没有缓存），可以为变量提供默认值
+        console.warn("无法从 localStorage 中找到 liftrail 数据，使用默认值。");
+        liftrail_h8value = 2400;
+    }
+
     //计算q11的值
     q11value = (q6value - liftrail_h6value / 1000 * 2 * q8value) / c5value + (q8value * c5value / c6value * 2);
     //计算q12的值
@@ -329,7 +347,13 @@ function 更新PS性能参数() {
     //定义来自liftcv页面的数据变量
     const liftcvData = getLiftCVData();
     //定义liftcv页面的d51单元格的值
-    const liftcv_d51value = parseFloat(liftcvData.cycleTime) || 0;
+    let liftcv_d51value;
+
+    if (liftcvData?.cycleTime !== undefined) {
+        liftcv_d51value = parseFloat(liftcvData.cycleTime) || 0;
+    } else {
+        liftcv_d51value = 134.68;
+    }
     // 这里可以添加对这些值的进一步处理或计算
     j9value = (j4value - c14value / 1000 * 2 * j6value) / c5value + j6value * c5value / c6value * 2;
     j10value = (j5value - c15value / 1000 * 2 * j7value) / c7value + j7value * c7value / c8value * 2;
@@ -386,6 +410,21 @@ c4.addEventListener('change', () => {
     saveDataToLocalStorage();
 });
 
+//针对第一个按钮执行强制事件监听
+document.getElementById('calculatebutton1').addEventListener('click', () => {
+    更新表格数据();
+    saveDataToLocalStorage();
+});
+//针对第二个按钮执行强制事件监听
+document.getElementById('calculatebutton2').addEventListener('click', () => {
+    更新ReshufflingEfficiency参数();
+    saveDataToLocalStorage();
+});
+//针对第三个按钮执行强制事件监听
+document.getElementById('calculatebutton3').addEventListener('click', () => {
+    更新PS性能参数();
+    saveDataToLocalStorage();
+});
 // 页面加载时执行的初始化逻辑
 window.addEventListener('load', () => {
     // 尝试从localStorage加载数据
