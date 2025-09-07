@@ -1,13 +1,21 @@
-        // ============== 主要计算逻辑 ==============
-        
-        // 获取第一个表格的输入和输出单元格
+// 获取所有标记为“data_cell”的单元格
+const dataCells = document.querySelectorAll('.data-cell');
+
+// 定义一个唯一的localStorage键
+const localStorageKey = 'liftcv_data_cells';
+
+// 获取所有可编辑单元格，并为它们添加事件监听器
+const editableCells = document.querySelectorAll('[contenteditable="true"].data-cell');
+
+//获取单元格
+        //获取第一个表格的输入和输出单元格
         const 提升速度单元格1 = document.getElementById('liftingSpeed-1');
         const 提升加速度单元格1 = document.getElementById('liftingAcce-1');
         const 货架层间距单元格1 = document.getElementById('rackingLayerSpacing-1');
         const 升降机速度结果单元格1 = document.getElementById('lifterSpeedResult-1');
         const 升降机功率结果单元格1 = document.getElementById('lifterPowerResult-1');
 
-        // 获取第二个表格及其扩展部分的输入和输出单元格
+        //获取第二个表格及其扩展部分的输入和输出单元格
         const 提升速度单元格2 = document.getElementById('liftingSpeed-2');
         const 提升加速度单元格2 = document.getElementById('liftingAcce-2');
         const 速度结果单元格2 = document.getElementById('speedResult-2');
@@ -20,7 +28,7 @@
         const 带载进出时间单元格 = document.getElementById('timeLoad');
         const 不带载进出时间单元格 = document.getElementById('timeNoLoad');
 
-        // 获取动态表格的表格体
+        // 获取提升时间表格的表格体
         const 提升时间表格体 = document.getElementById('liftingTimeTableBody');
         const 提升时间表格行 = document.getElementsByClassName('lifting-time-row');
 
@@ -40,12 +48,33 @@
         const 吞吐量需求单元格 = document.getElementById('throughputRequirement');
         const 升降机数量单元格 = document.getElementById('qtyOfLift');
 
+// 保存所有数据单元格到localStorage
+function saveDataToLocalStorage() {
+    const dataToSave = {};
+    dataCells.forEach(cell => {
+        if (cell.id) {
+            dataToSave[cell.id] = cell.textContent;
+        }
+    });
+    localStorage.setItem(localStorageKey, JSON.stringify(dataToSave));
+}
 
-        /**
-         * 计算并更新第一组表格的值。
-         * 基于基本的物理公式：v^2 = 2 * a * d，推导出 d = v^2 / (2 * a)。
-         * 这里的速度和加速度都是升降机的提升速度和加速度。
-         */
+// 从localStorage加载数据并填充可编辑单元格
+function loadDataFromLocalStorage() {
+    const savedData = localStorage.getItem(localStorageKey);
+    if (savedData) {
+        const parsedData = JSON.parse(savedData);
+        editableCells.forEach(cell => {
+            if (parsedData[cell.id] !== undefined) {
+                cell.textContent = parsedData[cell.id];
+            }
+        });
+        return true;
+    }
+    return false;
+}
+
+//计算并更新第一组数据。第一组数据的结果会影响附加数据表格和第三组数据，所以在更新完第一组数据后会调用这两个部分的更新函数。
         function 更新计算1() {
             // 从可编辑单元格中获取值，如果不是数字则默认为0
             const 提升速度 = parseFloat(提升速度单元格1.textContent) || 0;
@@ -64,9 +93,7 @@
             更新计算3();
         }
 
-        /**
-         * 计算并更新第二组表格的值。
-         */
+//计算并更新第二组数据。第二组数据的结果会影响第三组数据，所以在更新完第二组数据后会调用第三组数据的更新函数。
         function 更新计算2() {
             // 从可编辑单元格中获取值，如果不是数字则默认为0
             const 带载速度 = parseFloat(提升速度单元格2.textContent) || 0;
@@ -125,10 +152,7 @@
             更新计算3();
         }
 
-        /**
-         * 计算并更新“提升高度和时间”表格。
-         * 这是一个动态生成的表格，根据货架层级数来计算每个层级的高度和提升时间。
-         */
+//计算并更新一组提升时间数据。
         function 更新提升时间表格() {
             // 清除现有的表格内容
             提升时间表格体.innerHTML = '';
@@ -190,9 +214,7 @@
             }
         }
 
-        /**
-         * 计算并更新第三个表格（升降机效率）。
-         */
+//计算并更新第三组数据。
         function 更新计算3() {
             // 获取用户输入的提升层级
             const 提升层级 = parseFloat(提升层级单元格.textContent) || 0;
@@ -244,6 +266,7 @@
             // 计算公式为：所有时间之和除以效率比率
             const 循环时间值 = (提升时间效率值 + 带载时间值 + 不带载时间值 + 0 + 提升时间效率值 + 3 + 9 + 15) / 效率比率 * 100;
             循环时间单元格.textContent = 循环时间值.toFixed(2);
+       
 
             // 12. 托盘提升性能 (pph - pallets per hour)
             // 公式: 3600秒 / 循环时间
@@ -259,20 +282,32 @@
             升降机数量单元格.textContent = 升降机数量值;
         }
 
-        // 为所有可编辑单元格添加事件监听器，当内容改变时触发重新计算
-        提升速度单元格1.addEventListener('input', 更新计算1);
-        提升加速度单元格1.addEventListener('input', 更新计算1);
-        货架层间距单元格1.addEventListener('input', 更新计算1);
-        提升速度单元格2.addEventListener('input', 更新计算2);
-        提升加速度单元格2.addEventListener('input', 更新计算2);
-        平均距离单元格.addEventListener('input', 更新计算2);
-        提升层级单元格.addEventListener('input', 更新计算3);
-        效率比率单元格.addEventListener('input', 更新计算3);
-        吞吐量需求单元格.addEventListener('input', 更新计算3);
-
-        // 页面加载时，自动运行所有计算以显示初始值
-        window.addEventListener('load', () => {
+// 为所有可编辑单元格添加事件监听器
+editableCells.forEach(cell => {
+    cell.addEventListener('input', () => {
+        // 根据id判断调用哪个计算函数
+        if (['liftingSpeed-1', 'liftingAcce-1', 'rackingLayerSpacing-1'].includes(cell.id)) {
             更新计算1();
+        } else if (['liftingSpeed-2', 'liftingAcce-2', 'avgDistance'].includes(cell.id)) {
             更新计算2();
+        } else if (['liftingLevels', 'efficiencyRate', 'throughputRequirement'].includes(cell.id)) {
             更新计算3();
-        });
+        }
+        // 任何可编辑单元格输入变化后，将所有数据单元格保存到localStorage
+        saveDataToLocalStorage();
+    });
+});
+
+// 页面加载时执行的初始化逻辑
+window.addEventListener('load', () => {
+    // 尝试从localStorage加载数据
+    const hasLoaded = loadDataFromLocalStorage();
+
+    // 加载数据后，或者如果localStorage为空，都执行所有计算
+    更新计算1();
+    更新计算2();
+    更新计算3();
+
+    // 页面加载完成后，将当前所有数据单元格保存到localStorage
+    saveDataToLocalStorage();
+});

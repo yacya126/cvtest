@@ -1,32 +1,33 @@
-        // ============== 主要计算逻辑 ==============
-        
-        // 获取第一个表格的输入和输出单元格
-        const 提升速度单元格1 = document.getElementById('liftingSpeed-1');
-        const 提升加速度单元格1 = document.getElementById('liftingAcce-1');
-        const 货架层间距单元格1 = document.getElementById('rackingLayerSpacing-1');
-        const 升降机速度结果单元格1 = document.getElementById('lifterSpeedResult-1');
-        const 升降机功率结果单元格1 = document.getElementById('lifterPowerResult-1');
+// 获取所有标记为“data_cell”的单元格
+const dataCells = document.querySelectorAll('.data-cell');
 
-        // 获取第二个表格及其扩展部分的输入和输出单元格
-        const 提升速度单元格2 = document.getElementById('liftingSpeed-2');
-        const 提升加速度单元格2 = document.getElementById('liftingAcce-2');
-        const 速度结果单元格2 = document.getElementById('speedResult-2');
-        const 加速度结果单元格2 = document.getElementById('acceResult-2');
-        const 带载加速距离单元格 = document.getElementById('distAccelLoad');
-        const 带载停止距离单元格 = document.getElementById('distStopLoad');
-        const 不带载加速距离单元格 = document.getElementById('distAccelNoLoad');
-        const 不带载停止距离单元格 = document.getElementById('distStopNoLoad');
-        const 平均距离单元格 = document.getElementById('avgDistance');
-        const 带载进出时间单元格 = document.getElementById('timeLoad');
-        const 不带载进出时间单元格 = document.getElementById('timeNoLoad');
-        const 轨道式输送机类型选择框 = document.getElementById('ps-selector');
+// 定义一个唯一的localStorage键
+const localStorageKey = 'liftrail_data_cells';
 
+// 获取所有可编辑单元格，并为它们添加事件监听器
+const editableCells = document.querySelectorAll('[contenteditable="true"].data-cell');
 
-        // 获取动态表格的表格体
+//获取单元格
+const d4 = document.getElementById('d4');
+const d6 = document.getElementById('d6');
+const d7 = document.getElementById('d7');
+const d9 = document.getElementById('d9');
+const h2 = document.getElementById('h2');
+const h3 = document.getElementById('h3');
+const l4 = document.getElementById('l4');
+const l6 = document.getElementById('l6');
+const l7 = document.getElementById('l7');
+const l8 = document.getElementById('l8');
+const l9 = document.getElementById('l9');
+const h6 = document.getElementById('h6');
+const h7 = document.getElementById('h7');
+const h8 = document.getElementById('h8');
+const h9 = document.getElementById('h9');
+const 平均距离单元格 = document.getElementById('avgDistance');
+const 带载进出时间单元格 = document.getElementById('timeLoad');
+const 不带载进出时间单元格 = document.getElementById('timeNoLoad');
         const 提升时间表格体 = document.getElementById('liftingTimeTableBody');
         const 提升时间表格行 = document.getElementsByClassName('lifting-time-row');
-
-        // 获取第三个表格（升降机效率）的输入和输出单元格
         const 提升层级单元格 = document.getElementById('liftingLevels');
         const 提升时间效率单元格 = document.getElementById('liftingTimeEff');
         const 带载时间效率单元格 = document.getElementById('timeLoadEff');
@@ -40,26 +41,60 @@
         const 循环时间单元格 = document.getElementById('cycleTime');
         const 托盘提升性能单元格 = document.getElementById('palletLiftingPerformance');
         const 吞吐量需求单元格 = document.getElementById('throughputRequirement');
-        const 升降机数量单元格 = document.getElementById('qtyOfLift');
+const 升降机数量单元格 = document.getElementById('qtyOfLift');
 
+// 保存所有数据单元格到localStorage
+function saveDataToLocalStorage() {
+    const dataToSave = {};
+    // 遍历所有数据单元格，包括可编辑和不可编辑的
+    dataCells.forEach(cell => {
+        if (cell.id) {
+            dataToSave[cell.id] = cell.textContent;
+        }
+    });
 
-        /**
-         * 计算并更新第一组表格的值。
-         * 基于基本的物理公式：v^2 = 2 * a * d，推导出 d = v^2 / (2 * a)。
-         * 这里的速度和加速度都是升降机的提升速度和加速度。
-         */
+    // 专门处理下拉框l4的值
+    if (l4) {
+        dataToSave[l4.id] = l4.value;
+    }
+
+    localStorage.setItem(localStorageKey, JSON.stringify(dataToSave));
+}
+
+// 从localStorage加载数据并填充可编辑单元格
+function loadDataFromLocalStorage() {
+    const savedData = localStorage.getItem(localStorageKey);
+    if (savedData) {
+        const parsedData = JSON.parse(savedData);
+        editableCells.forEach(cell => {
+            if (parsedData[cell.id] !== undefined) {
+                cell.textContent = parsedData[cell.id];
+            }
+        });
+
+        // 专门处理下拉框l4的加载
+        if (l4 && parsedData[l4.id] !== undefined) {
+            l4.value = parsedData[l4.id];
+        }
+
+        return true;
+    }
+    return false;
+}
+
+//计算并更新第一组数据的值。由于提升时间表格、第二组和第三组数据依赖于第一组数据，因此在更新第一组数据后，需要调用更新提升时间表格、第二组和第三组数据的函数。
         function 更新计算1() {
             // 从可编辑单元格中获取值，如果不是数字则默认为0
-            const 提升速度 = parseFloat(提升速度单元格1.textContent) || 0;
-            const 提升加速度 = parseFloat(提升加速度单元格1.textContent) || 0;
+            const 提升速度 = parseFloat(d6.textContent) || 0;
+            const 提升加速度 = parseFloat(d7.textContent) || 0;
 
             // 计算从加速到最大速度的距离（mm）
             const 升降机速度总和 = (提升速度 * 提升速度) / (2 * 提升加速度) * 1000;
-            升降机速度结果单元格1.textContent = 升降机速度总和.toFixed(2);
+            h2.textContent = 升降机速度总和.toFixed(2);
 
             // 计算从最大速度加速到停止的距离（mm），与上面计算相同
             const 升降机功率总和 = (提升速度 * 提升速度) / (2 * 提升加速度) * 1000;
-            升降机功率结果单元格1.textContent = 升降机功率总和.toFixed(2);
+            h3.textContent = 升降机功率总和.toFixed(2);
 
             // 更新完第一个表格后，调用动态表格和第三个表格的更新函数
             更新提升时间表格();
@@ -67,56 +102,33 @@
             更新计算3();
         }
 
-        /**
-         * 计算并更新PS BASE INFORMATION和PS的值。
-         */
+//计算并更新第二组数据的值。由于第三组数据依赖于第二组数据，因此在更新第二组数据后，需要调用更新第三组数据的函数。
         function 更新计算2() {
+            if (l4.value === 'PS1500A' || l4.value === 'PS1500B' || l4.value === 'PS1500C' || l4.value === 'PS1500BD') {
+                l9.textContent = '2';
+            } else {
+                l9.textContent = '1';
+            }
+
             // 从可编辑单元格中获取值，如果不是数字则默认为0
-            const 带载时PS速度 = parseFloat(提升速度单元格2.textContent) || 0;
-            const 带载时PS加速度 = parseFloat(提升加速度单元格2.textContent) || 0;
-            const 不带载时PS速度 = parseFloat(速度结果单元格2.textContent) || 0;
-            const 不带载时PS加速度 = parseFloat(加速度结果单元格2.textContent) || 0;
-
-            //对加速度结果单元格2进行Vlookup处理
-
-            //获取输送机类型表的数据
-            const 输送机类型表 = document.getElementById('PSinformation');
-            //const 输送机类型表主体部分 = dataTable.querySelector('tbody');
-            //加速度结果单元格被清空
-            加速度结果单元格2.textContent = '';
-            // 获取当前选中的值，并移除任何可能存在的空格，以便与数据表中的值匹配
-            const 下拉框选择值 = 轨道式输送机类型选择框.value.replace(/\s/g, '');
-            // 遍历数据表的每一行
-            const rows = 输送机类型表.querySelectorAll('tr');
-            rows.forEach(row => {
-                // 获取当前行的第一个<th>元素，即 Type 列
-                const 第一列Type单元格 = row.querySelector('th:first-child');
-                const 第一列单元格文本 = 第一列Type单元格.textContent.trim().replace(/\s/g, '');
-                if (第一列Type单元格) {
-                    // 检查类型是否匹配
-                    if (第一列单元格文本 === 下拉框选择值) {
-                        // 如果匹配，获取第二列（Qty.）的值
-                        const 第二列QTY单元格 = row.querySelector('th:nth-child(2)');
-                        if (第二列QTY单元格) {
-                            加速度结果单元格2.textContent = 第二列QTY单元格.textContent.trim();
-                        }
-                    }
-                }
-            });
+            const 带载时PS速度 = parseFloat(l6.textContent) || 0;
+            const 带载时PS加速度 = parseFloat(l7.textContent) || 0;
+            const 不带载时PS速度 = parseFloat(l8.textContent) || 0;
+            const 不带载时PS加速度 = parseFloat(l9.textContent) || 0;
 
             // 计算带载情况下的加速距离和停止距离
             const 带载加速距离计算值 = (带载时PS速度 * 带载时PS速度) / (2 * 带载时PS加速度) * 1000;
-            带载加速距离单元格.textContent = 带载加速距离计算值.toFixed(0);
-            带载停止距离单元格.textContent = 带载加速距离计算值.toFixed(0);
+            h6.textContent = 带载加速距离计算值.toFixed(0);
+            h7.textContent = 带载加速距离计算值.toFixed(0);
 
             // 假设不带载时的速度和加速度与带载时相同
             const 不带载加速距离计算值 = (不带载时PS速度 * 不带载时PS速度) / (2 * 不带载时PS加速度) * 1000;
-            不带载加速距离单元格.textContent = 不带载加速距离计算值.toFixed(0);
-            不带载停止距离单元格.textContent = 不带载加速距离计算值.toFixed(0);
+            h8.textContent = 不带载加速距离计算值.toFixed(0);
+            h9.textContent = 不带载加速距离计算值.toFixed(0);
 
             // 获取新的输入值用于时间计算
-            const 带载加速距离 = parseFloat(带载加速距离单元格.textContent) || 0;
-            const 不带载加速距离 = parseFloat(不带载加速距离单元格.textContent) || 0;
+            const 带载加速距离 = parseFloat(h6.textContent) || 0;
+            const 不带载加速距离 = parseFloat(h8.textContent) || 0;
             const 平均距离 = parseFloat(平均距离单元格.textContent) || 0;
 
             // 计算“带载进出升降机的时间”
@@ -150,19 +162,16 @@
             更新计算3();
         }
 
-        /**
-         * 计算并更新“提升高度和时间”表格。
-         * 这是一个动态生成的表格，根据货架层级数来计算每个层级的高度和提升时间。
-         */
+//计算并更新提升时间表格。
         function 更新提升时间表格() {
             // 清除现有的表格内容
             提升时间表格体.innerHTML = '';
 
             // 获取计算所需的参数
-            const 货架层间距 = parseFloat(货架层间距单元格1.textContent) || 0;
-            const 升降机功率结果 = parseFloat(升降机功率结果单元格1.textContent) || 0;
-            const 提升速度 = parseFloat(提升速度单元格1.textContent) || 0;
-            const 提升加速度 = parseFloat(提升加速度单元格1.textContent) || 0;
+            const 货架层间距 = parseFloat(d9.textContent) || 0;
+            const 升降机功率结果 = parseFloat(h3.textContent) || 0;
+            const 提升速度 = parseFloat(d6.textContent) || 0;
+            const 提升加速度 = parseFloat(d7.textContent) || 0;
 
             // 循环生成24行数据，从第2层到第25层
             for (let a = 2; a <= 25; a++) {
@@ -215,9 +224,7 @@
             }
         }
 
-        /**
-         * 计算并更新第三个表格（升降机效率）。
-         */
+//计算并更新第三组数据的值。
         function 更新计算3() {
             // 获取用户输入的提升层级
             const 提升层级 = parseFloat(提升层级单元格.textContent) || 0;
@@ -284,17 +291,17 @@
             升降机数量单元格.textContent = 升降机数量值;
         }
 
-        // 为所有可编辑单元格添加事件监听器，当内容改变时触发重新计算
-        提升速度单元格1.addEventListener('input', 更新计算1);
-        提升加速度单元格1.addEventListener('input', 更新计算1);
-        货架层间距单元格1.addEventListener('input', 更新计算1);
-        提升速度单元格2.addEventListener('input', 更新计算2);
-        提升加速度单元格2.addEventListener('input', 更新计算2);
+        /* 为所有可编辑单元格添加事件监听器，当内容改变时触发重新计算
+        d6.addEventListener('input', 更新计算1);
+        d7.addEventListener('input', 更新计算1);
+        d9.addEventListener('input', 更新计算1);
+        l6.addEventListener('input', 更新计算2);
+        l7.addEventListener('input', 更新计算2);
         平均距离单元格.addEventListener('input', 更新计算2);
         提升层级单元格.addEventListener('input', 更新计算3);
         效率比率单元格.addEventListener('input', 更新计算3);
         吞吐量需求单元格.addEventListener('input', 更新计算3);
-        轨道式输送机类型选择框.addEventListener('change', 更新计算2);
+        l4.addEventListener('change', 更新计算2);
 
         // 页面加载时，自动运行所有计算以显示初始值
         window.addEventListener('load', () => {
@@ -302,3 +309,40 @@
             更新计算2();
             更新计算3();
         });
+        */
+
+// 统一为所有可编辑单元格和下拉框添加事件监听器
+editableCells.forEach(cell => {
+    cell.addEventListener('input', () => {
+        // 根据id判断调用哪个计算函数
+        if (['d6', 'd7', 'd9'].includes(cell.id)) {
+            更新计算1();
+        } else if (['l6', 'l7', 'avgDistance'].includes(cell.id)) {
+            更新计算2();
+        } else if (['liftingLevels', 'efficiencyRate', 'throughputRequirement'].includes(cell.id)) {
+            更新计算3();
+        }
+        // 任何可编辑单元格输入变化后，将所有数据单元格保存到localStorage
+        saveDataToLocalStorage();
+    });
+});
+
+// 为下拉框单元格l4添加事件监听器
+l4.addEventListener('change', () => {
+    更新计算2();
+    saveDataToLocalStorage();
+});
+
+// 页面加载时执行的初始化逻辑
+window.addEventListener('load', () => {
+    // 尝试从localStorage加载数据
+    loadDataFromLocalStorage();
+
+    // 重新计算所有值以确保显示正确
+    更新计算1();
+    更新计算2();
+    更新计算3();
+
+    // 页面加载完成后，将当前所有数据单元格保存到localStorage
+    saveDataToLocalStorage();
+});

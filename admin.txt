@@ -1,0 +1,21 @@
+(function () {
+    const localStorageKey = 'liftcv_data_cells';
+    const originalSetItem = localStorage.setItem;
+
+    localStorage.setItem = function (key, value) {
+        if (key === localStorageKey) {
+            console.log('localStorage被更新了');
+            try {
+                const newData = JSON.parse(value);
+                console.log('更新后的数据单元格信息:');
+                for (const id in newData) {
+                    console.log(`- 单元格ID: ${id}, 新值: ${newData[id]}`);
+                }
+            } catch (e) {
+                console.error('无法解析localStorage中的JSON数据:', e);
+            }
+        }
+        // 调用原始的setItem方法
+        originalSetItem.apply(this, arguments);
+    };
+})();
