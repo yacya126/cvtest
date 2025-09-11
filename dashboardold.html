@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PS Efficiency calculation - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .card {
+            @apply p-6 bg-white rounded-xl shadow-xl w-full;
+        }
+        .btn-primary {
+            @apply bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-xl transition-colors duration-200;
+        }
+        .btn-secondary {
+            @apply bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-xl transition-colors duration-200;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-8">
+    <div class="flex flex-col items-stretch justify-center gap-8 w-full max-w-full lg:max-w-xl">
+        <div class="card flex flex-col items-center gap-6">
+            <h1 class="text-3xl font-bold text-center text-gray-800">Function selection</h1>
+            <p id="user-info" class="text-lg text-gray-700 text-center"></p>
+            <p id="current-time" class="text-lg text-gray-700 text-center"></p>
+            <div class="w-full flex flex-col gap-4 mt-4">
+                <a href="./liftcv/liftcv.html" class="btn-primary w-full text-center">LIFT CV</a>
+                <a href="./liftrail/liftrail.html" class="btn-primary w-full text-center">LIFT RAIL</a>
+                <a href="./psibob/psibob.html" class="btn-primary w-full text-center">PS IB OB</a>
+            </div>
+            <button id="logout-btn" class="btn-secondary w-full mt-4">Logout</button>
+        </div>
+    </div>
+
+<script src="//cdn.jsdelivr.net/npm/leancloud-storage@4.10.0/dist/av-min.js"></script>
+<script>
+    const AV = window.AV;
+
+    // LeanCloud App ID, App Key 和服务器地址
+    // 确保与 index.html 中的配置一致
+    AV.init({
+        appId: "L5SNq7BVJ9m4jOr50MCp1iAd-gzGzoHsz",
+        appKey: "6CDNvUG0zD9i7EI40nH9zNRv",
+        serverURL: "https://l5snq7bv.lc-cn-n1-shared.com"
+    });
+
+    const userInfoElement = document.getElementById("user-info");
+    const logoutBtn = document.getElementById("logout-btn");
+
+    // 为登出按钮添加点击事件监听器
+    logoutBtn.addEventListener('click', () => {
+        AV.User.logOut().then(() => {
+            // 登出成功后，重定向回登录页
+            window.location.href = './index.html';
+        });
+    });
+
+    // 页面加载时的主要逻辑
+    window.onload = () => {
+        // 检查用户登录状态
+        const currentUser = AV.User.current();
+        if (!currentUser) {
+            // 如果未登录，重定向回登录页
+            window.location.href = './index.html';
+        } else {
+            // 如果已登录，显示用户信息
+            // 检查用户名是否存在，如果不存在则显示邮箱
+            const username = currentUser.get('username') || currentUser.get('email');
+            userInfoElement.textContent = `Welcome Back, ${username}！`;
+
+            // 如果用户是管理员，添加管理员按钮
+            if (username === 'admin') {
+                const adminBtn = document.createElement('a');
+                adminBtn.href = './auth.html';
+                adminBtn.className = 'btn-secondary w-full text-center';
+                adminBtn.textContent = 'Administrator Auth';
+
+                const divider = document.createElement('hr');
+                divider.className = 'w-full my-4';
+                divider.style.borderColor = '#d1d5db';
+
+                // 使用 insertAdjacentElement 来插入元素，保持正确的顺序
+                logoutBtn.insertAdjacentElement('afterend', divider);
+                divider.insertAdjacentElement('afterend', adminBtn);
+            }
+        }
+    };
+</script>
+<script src=showtime.js></script>
+</body>
+</html>

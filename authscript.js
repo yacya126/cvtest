@@ -17,7 +17,24 @@
         // 新增的删除用户相关的 DOM 元素
         const deleteEmailInput = document.getElementById("delete-email-input");
         const deleteUserBtn = document.getElementById("btn-delete-user");
-        const deleteFeedbackMessage = document.getElementById("delete-feedback-message");
+const deleteFeedbackMessage = document.getElementById("delete-feedback-message");
+const deleteFeedbackMessage2 = document.getElementById("delete-feedback-message-new");
+const bannedusers = document.getElementById("banned-users");
+
+// 新增用户权限相关的DOM元素
+const queryPermissionsBtn = document.getElementById("btn-query-permissions");
+const permissionsTableBody = document.getElementById("permissions-table-body");
+const userSelect = document.getElementById("user-select");
+const editUserEmail = document.getElementById("edit-user-email");
+
+const banliftcv = document.getElementById("ban-liftcv");
+const banliftrail = document.getElementById("ban-liftrail");
+const banpsibob = document.getElementById("ban-psibob");
+const banallpass = document.getElementById("ban-allpass");
+const openliftcv = document.getElementById("open-liftcv");
+const openliftrail = document.getElementById("open-liftrail");
+const openpsibob = document.getElementById("open-psibob");
+const openallpass = document.getElementById("open-allpass");
 
         // 绑定授权按钮点击事件
         authBtn.addEventListener('click', function () {
@@ -139,3 +156,285 @@
                 deleteFeedbackMessage.style.color = "red";
             }
         });
+
+// 存储所有用户数据，供编辑功能使用
+let allUsers = [];
+
+queryPermissionsBtn.addEventListener('click', function () {
+    permissionsTableBody.innerHTML = '';
+    const query = new AV.Query('_User');
+    query.find().then((users) => {
+        if (users.length === 0) {
+            const tr = document.createElement('tr');
+            const td = document.createElement('td');
+            td.textContent = "暂无注册用户。";
+            td.setAttribute('colspan', '4');
+            tr.appendChild(td);
+            permissionsTableBody.appendChild(tr);
+        } else {
+            users.forEach((user) => {
+                const tr = document.createElement('tr');
+                const username = user.get('username') || '';
+                const email = user.get('email') || '';
+                const LIFTCV = user.get('LIFTCV') || '';
+                const LIFTRAIL = user.get('LIFTRAIL') || '';
+                const PSIBOB = user.get('PSIBOB') || '';
+                const ALLPASS = user.get('ALLPASS') || '';
+
+                tr.innerHTML = `
+                                    <td>${username}</td>
+                                    <td>${email}</td>
+                                    <td>${LIFTCV}</td>
+                                    <td>${LIFTRAIL}</td>
+                                    <td>${PSIBOB}</td>
+                                    <td>${ALLPASS}</td>
+                                `;
+                permissionsTableBody.appendChild(tr);
+            });
+        }
+    }).catch((error) => {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.textContent = `查询失败：${error.message}`;
+        td.setAttribute('colspan', '4');
+        td.style.color = "red";
+        tr.appendChild(td);
+        permissionsTableBody.appendChild(tr);
+        console.error("用户列表查询失败:", error);
+    });
+});
+
+//监听所有的权限处理按钮
+
+banliftcv.addEventListener('click', async function () {
+    console.log("要操作的元素：", deleteFeedbackMessage2); // 看控制台是否输出 null
+    deleteFeedbackMessage2.textContent = '';
+    const targetEmail = bannedusers.value.trim();
+
+    if (!targetEmail) {
+        deleteFeedbackMessage2.textContent = "请输入要调整用户权限的邮箱地址。";
+        deleteFeedbackMessage2.style.color = "red";
+        return;
+    }
+
+    deleteFeedbackMessage2.textContent = "正在调用云函数调整用户权限...";
+    deleteFeedbackMessage2.style.color = "gray";
+
+    try {
+        // 调用云函数，并传入要删除的邮箱
+        const result = await AV.Cloud.run('banUserLiftCV', { email: targetEmail });
+        deleteFeedbackMessage2.textContent = `✅ ${result}`;
+        deleteFeedbackMessage2.style.color = "green";
+        // 刷新用户列表以显示最新状态
+        queryUsersBtn.click();
+        queryBtn.click();
+    } catch (error) {
+        console.error(error);
+        deleteFeedbackMessage2.textContent = `❌ 删除失败: ${error.message}`;
+        deleteFeedbackMessage2.style.color = "red";
+    }
+});
+
+
+banliftrail.addEventListener('click', async function () {
+    console.log("要操作的元素：", deleteFeedbackMessage2); // 看控制台是否输出 null
+    deleteFeedbackMessage2.textContent = '';
+    const targetEmail = bannedusers.value.trim();
+
+    if (!targetEmail) {
+        deleteFeedbackMessage2.textContent = "请输入要调整用户权限的邮箱地址。";
+        deleteFeedbackMessage2.style.color = "red";
+        return;
+    }
+
+    deleteFeedbackMessage2.textContent = "正在调用云函数调整用户权限...";
+    deleteFeedbackMessage2.style.color = "gray";
+
+    try {
+        // 调用云函数，并传入要删除的邮箱
+        const result = await AV.Cloud.run('banUserLiftRAIL', { email: targetEmail });
+        deleteFeedbackMessage2.textContent = `✅ ${result}`;
+        deleteFeedbackMessage2.style.color = "green";
+        // 刷新用户列表以显示最新状态
+        queryUsersBtn.click();
+        queryBtn.click();
+    } catch (error) {
+        console.error(error);
+        deleteFeedbackMessage2.textContent = `❌ 删除失败: ${error.message}`;
+        deleteFeedbackMessage2.style.color = "red";
+    }
+});
+
+banpsibob.addEventListener('click', async function () {
+    console.log("要操作的元素：", deleteFeedbackMessage2); // 看控制台是否输出 null
+    deleteFeedbackMessage2.textContent = '';
+    const targetEmail = bannedusers.value.trim();
+
+    if (!targetEmail) {
+        deleteFeedbackMessage2.textContent = "请输入要调整用户权限的邮箱地址。";
+        deleteFeedbackMessage2.style.color = "red";
+        return;
+    }
+
+    deleteFeedbackMessage2.textContent = "正在调用云函数调整用户权限...";
+    deleteFeedbackMessage2.style.color = "gray";
+
+    try {
+        // 调用云函数，并传入要删除的邮箱
+        const result = await AV.Cloud.run('banUserPSIBOB', { email: targetEmail });
+        deleteFeedbackMessage2.textContent = `✅ ${result}`;
+        deleteFeedbackMessage2.style.color = "green";
+        // 刷新用户列表以显示最新状态
+        queryUsersBtn.click();
+        queryBtn.click();
+    } catch (error) {
+        console.error(error);
+        deleteFeedbackMessage2.textContent = `❌ 删除失败: ${error.message}`;
+        deleteFeedbackMessage2.style.color = "red";
+    }
+});
+
+banallpass.addEventListener('click', async function () {
+    console.log("要操作的元素：", deleteFeedbackMessage2); // 看控制台是否输出 null
+    deleteFeedbackMessage2.textContent = '';
+    const targetEmail = bannedusers.value.trim();
+
+    if (!targetEmail) {
+        deleteFeedbackMessage2.textContent = "请输入要调整用户权限的邮箱地址。";
+        deleteFeedbackMessage2.style.color = "red";
+        return;
+    }
+
+    deleteFeedbackMessage2.textContent = "正在调用云函数调整用户权限...";
+    deleteFeedbackMessage2.style.color = "gray";
+
+    try {
+        // 调用云函数，并传入要删除的邮箱
+        const result = await AV.Cloud.run('banUserALLPASS', { email: targetEmail });
+        deleteFeedbackMessage2.textContent = `✅ ${result}`;
+        deleteFeedbackMessage2.style.color = "green";
+        // 刷新用户列表以显示最新状态
+        queryUsersBtn.click();
+        queryBtn.click();
+    } catch (error) {
+        console.error(error);
+        deleteFeedbackMessage2.textContent = `❌ 删除失败: ${error.message}`;
+        deleteFeedbackMessage2.style.color = "red";
+    }
+});
+
+openallpass.addEventListener('click', async function () {
+    console.log("要操作的元素：", deleteFeedbackMessage2); // 看控制台是否输出 null
+    deleteFeedbackMessage2.textContent = '';
+    const targetEmail = bannedusers.value.trim();
+
+    if (!targetEmail) {
+        deleteFeedbackMessage2.textContent = "请输入要调整用户权限的邮箱地址。";
+        deleteFeedbackMessage2.style.color = "red";
+        return;
+    }
+
+    deleteFeedbackMessage2.textContent = "正在调用云函数调整用户权限...";
+    deleteFeedbackMessage2.style.color = "gray";
+
+    try {
+        // 调用云函数，并传入要删除的邮箱
+        const result = await AV.Cloud.run('openUserALLPASS', { email: targetEmail });
+        deleteFeedbackMessage2.textContent = `✅ ${result}`;
+        deleteFeedbackMessage2.style.color = "green";
+        // 刷新用户列表以显示最新状态
+        queryUsersBtn.click();
+        queryBtn.click();
+    } catch (error) {
+        console.error(error);
+        deleteFeedbackMessage2.textContent = `❌ 删除失败: ${error.message}`;
+        deleteFeedbackMessage2.style.color = "red";
+    }
+});
+
+openpsibob.addEventListener('click', async function () {
+    console.log("要操作的元素：", deleteFeedbackMessage2); // 看控制台是否输出 null
+    deleteFeedbackMessage2.textContent = '';
+    const targetEmail = bannedusers.value.trim();
+
+    if (!targetEmail) {
+        deleteFeedbackMessage2.textContent = "请输入要调整用户权限的邮箱地址。";
+        deleteFeedbackMessage2.style.color = "red";
+        return;
+    }
+
+    deleteFeedbackMessage2.textContent = "正在调用云函数调整用户权限...";
+    deleteFeedbackMessage2.style.color = "gray";
+
+    try {
+        // 调用云函数，并传入要删除的邮箱
+        const result = await AV.Cloud.run('openUserPSIBOB', { email: targetEmail });
+        deleteFeedbackMessage2.textContent = `✅ ${result}`;
+        deleteFeedbackMessage2.style.color = "green";
+        // 刷新用户列表以显示最新状态
+        queryUsersBtn.click();
+        queryBtn.click();
+    } catch (error) {
+        console.error(error);
+        deleteFeedbackMessage2.textContent = `❌ 删除失败: ${error.message}`;
+        deleteFeedbackMessage2.style.color = "red";
+    }
+});
+
+openliftcv.addEventListener('click', async function () {
+    console.log("要操作的元素：", deleteFeedbackMessage2); // 看控制台是否输出 null
+    deleteFeedbackMessage2.textContent = '';
+    const targetEmail = bannedusers.value.trim();
+
+    if (!targetEmail) {
+        deleteFeedbackMessage2.textContent = "请输入要调整用户权限的邮箱地址。";
+        deleteFeedbackMessage2.style.color = "red";
+        return;
+    }
+
+    deleteFeedbackMessage2.textContent = "正在调用云函数调整用户权限...";
+    deleteFeedbackMessage2.style.color = "gray";
+
+    try {
+        // 调用云函数，并传入要删除的邮箱
+        const result = await AV.Cloud.run('openUserLiftCV', { email: targetEmail });
+        deleteFeedbackMessage2.textContent = `✅ ${result}`;
+        deleteFeedbackMessage2.style.color = "green";
+        // 刷新用户列表以显示最新状态
+        queryUsersBtn.click();
+        queryBtn.click();
+    } catch (error) {
+        console.error(error);
+        deleteFeedbackMessage2.textContent = `❌ 删除失败: ${error.message}`;
+        deleteFeedbackMessage2.style.color = "red";
+    }
+});
+
+openliftrail.addEventListener('click', async function () {
+    console.log("要操作的元素：", deleteFeedbackMessage2); // 看控制台是否输出 null
+    deleteFeedbackMessage2.textContent = '';
+    const targetEmail = bannedusers.value.trim();
+
+    if (!targetEmail) {
+        deleteFeedbackMessage2.textContent = "请输入要调整用户权限的邮箱地址。";
+        deleteFeedbackMessage2.style.color = "red";
+        return;
+    }
+
+    deleteFeedbackMessage2.textContent = "正在调用云函数调整用户权限...";
+    deleteFeedbackMessage2.style.color = "gray";
+
+    try {
+        // 调用云函数，并传入要删除的邮箱
+        const result = await AV.Cloud.run('openUserLiftRAIL', { email: targetEmail });
+        deleteFeedbackMessage2.textContent = `✅ ${result}`;
+        deleteFeedbackMessage2.style.color = "green";
+        // 刷新用户列表以显示最新状态
+        queryUsersBtn.click();
+        queryBtn.click();
+    } catch (error) {
+        console.error(error);
+        deleteFeedbackMessage2.textContent = `❌ 删除失败: ${error.message}`;
+        deleteFeedbackMessage2.style.color = "red";
+    }
+});

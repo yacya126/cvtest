@@ -123,6 +123,9 @@ const 参数数据 = {
     const q14 = document.getElementById("q14");
     const q15 = document.getElementById("q15");
     const q16 = document.getElementById("q16");
+    const i16 = document.getElementById("i16");
+    const l19 = document.getElementById("l19");
+    const l24 = document.getElementById("l24");
 }
 
 // 保存所有数据单元格到localStorage
@@ -139,7 +142,9 @@ function saveDataToLocalStorage() {
     if (c4) {
         dataToSave[c4.id] = c4.value;
     }
-
+    if (i16) {
+        dataToSave[i16.id] = i16.value;
+    }
     localStorage.setItem(localStorageKey, JSON.stringify(dataToSave));
 }
 
@@ -158,12 +163,22 @@ function loadDataFromLocalStorage() {
         if (c4 && parsedData[c4.id] !== undefined) {
             c4.value = parsedData[c4.id];
         }
-
-        return true;
+        if (i16 && parsedData[i16.id] !== undefined) {
+            i16.value = parsedData[i16.id];
+        }
+        /*
+        if (i16 && parsedData[i16.id] !== undefined) {
+            // 遍历下拉框的选项，选中value与数据匹配的项
+            for (let option of i16.options) {
+                if (option.value === parsedData[i16.id]) {
+                    option.selected = true;
+                    break;
+                }
+            }
+        }
+        return true;*/
     }
-    return false;
 }
-
 
 // 从localStorage获取LiftRail页面的数据
 function getLiftRailData() {
@@ -193,6 +208,41 @@ function getLiftCVData() {
         }
     }
     return null; // 如果没有数据，返回null
+}
+
+//修改j16单元格状态
+function updateLinkState() {
+    // 1. 定义中英日三语文本映射（与语言标识ch/jp/en对应）
+    const alertTexts = {
+        zh: "点击单元格并在LIFT CV中确认升降机循环时间",
+        en: "Press the cell and confirm Lifter's Cycle time in LIFT CV",
+        ja: "セルをクリックし、LIFT CVでLifter's Cycle timeを確認してください"
+    };
+    const accesspages = {
+        zh: "../liftcv/liftcv_cn.html",
+        en: "../liftcv/liftcv.html",
+        ja: "../liftcv/liftcv_ja.html"
+    };
+    // 2. 获取localStorage中的语言偏好，无配置时默认en
+    const preferredLang = localStorage.getItem('preferredLanguage') || 'en';
+
+    // 3. 匹配对应语言的文本（若语言标识不匹配，仍默认用en）
+    const alertText = alertTexts[preferredLang] || alertTexts.en;
+    const Accesspage = accesspages[preferredLang] || accesspages.en;
+
+    if (i16.selectedIndex === 0) {
+        // 允许跳转状态
+        j16.href = Accesspage;
+        // 执行alert
+        alert(alertText);
+        j16.style.cursor = "pointer"; // 鼠标悬停显示手型，增强交互提示
+    } else {
+        // 禁止跳转状态
+        j16.removeAttribute('href');
+        j16.style.color = "inherit";
+        j16.style.textDecoration = "none";
+        j16.style.cursor = "default"; // 恢复默认鼠标样式
+    }
 }
 
 // 定义更新表格数据的函数（保持不变）
@@ -291,7 +341,7 @@ function 更新ReshufflingEfficiency参数() {
     } else {
         // 如果liftrailData是null（没有缓存），可以为变量提供默认值
         console.warn("无法从 localStorage 中找到 liftrail 数据，使用默认值。");
-        liftrail_h8value = 2400;
+        liftrail_h8value = 1125;
     }
 
     //计算q11的值
@@ -322,6 +372,8 @@ function 更新PS性能参数() {
     const c11value = parseFloat(c11.textContent);
     const c14value = parseFloat(c14.textContent);
     const c15value = parseFloat(c15.textContent);
+    const c21value = parseFloat(c21.textContent);
+    const c22value = parseFloat(c22.textContent);
     const j4value = parseFloat(j4.textContent);
     const j5value = parseFloat(j5.textContent);
     const j6value = parseFloat(j6.textContent);
@@ -335,6 +387,7 @@ function 更新PS性能参数() {
     const j14value = parseFloat(j14.textContent);
     const j15value = parseFloat(j15.textContent);
     let j16value = parseFloat(j16.textContent);
+    console.log("已经执行j16value的获取"+j16value);
     let j17value = parseFloat(j17.textContent);
     let j18value = parseFloat(j18.textContent);
     let j19value = parseFloat(j19.textContent);
@@ -344,41 +397,68 @@ function 更新PS性能参数() {
     let j24value = parseFloat(j24.textContent);
     let j26value = parseFloat(j26.textContent);
     const q16value = parseFloat(q16.textContent);
-    //定义来自liftcv页面的数据变量
+    //定义来自liftcv或者liftrail页面的数据变量
     const liftcvData = getLiftCVData();
+    //用不到liftraildata
+    //const liftrailData = getLiftRailData();
     //定义liftcv页面的d51单元格的值
     let liftcv_d51value;
 
     if (liftcvData?.cycleTime !== undefined) {
         liftcv_d51value = parseFloat(liftcvData.cycleTime) || 0;
     } else {
-        liftcv_d51value = 134.68;
+        //liftcv_d51value = 134.68;
     }
+
     // 这里可以添加对这些值的进一步处理或计算
     j9value = (j4value - c14value / 1000 * 2 * j6value) / c5value + j6value * c5value / c6value * 2;
     j10value = (j5value - c15value / 1000 * 2 * j7value) / c7value + j7value * c7value / c8value * 2;
     j11value = j6value * c9value;
     j12value = j7value * c10value;
     j13value = j8value * c11value;
-    j16value = liftcv_d51value;
+    if (i16.selectedIndex === 0 && (liftcvData?.cycleTime !== undefined)) {
+        j16value = liftcv_d51value;
+    } else if (i16.selectedIndex === 1 && (liftcvData?.cycleTime !== undefined)) {
+        j16value = parseFloat(c21.textContent) + parseFloat(c22.textContent);
+    };
+   //console.log("j16value是"+j16value, typeof j16value);
+    
     j17value = (j9value + j10value + j11value + j12value + j13value) / (j14value/100) / (j15value/100) + j16value;
     j18value = (3600 / j17value).toFixed(1);
-    j19value = (3600 / (j17value + q16value)).toFixed(1);
+
+    if (l19.selectedIndex === 0) {
+        j19value = (3600 / (j17value + q16value)).toFixed(1);
+    } else if (l19.selectedIndex === 1) {
+        j19value = (3600 / (j17value)).toFixed(1);
+    };
+
+    //j19value = (3600 / (j17value + q16value)).toFixed(1);
     j23value = j21value / j18value;
-    j24value = j22value / j19value;
-    j26value = Math.ceil(1.1 * (j23value + j24value));
+    j24value = (j22value / j19value).toFixed(1);
+    let j24valuenumber = parseFloat(j24value);
+    //j24value = j22value / j19value;
+    j26value = Math.ceil(1.1 * (j23value + j24valuenumber));
+    //console.log(j23value, typeof j23value);
+    //console.log(j24valuenumber, typeof j24valuenumber);
+    //console.log(j26value, typeof j26value);
     //呈现
     j9.textContent = j9value.toFixed(0);
     j10.textContent = j10value.toFixed(0);
     j11.textContent = j11value;
     j12.textContent = j12value;
     j13.textContent = j13value;
-    j16.textContent = j16value.toFixed(2);
+    //console.log("j16元素:", j16); // 重点看这里是否为null或undefined
+    //console.log("是否为有效数字:", !isNaN(j16value)); // 若为 false，说明是 NaN
+    //console.log("元素是否在DOM中:", j16.isConnected); // 若为 false，说明已被移除
+    const j16valuetostring = j16value.toFixed(2).toString();
+    //console.log("转换为字符串:", j16valuetostring, typeof j16valuetostring); // 检查转换结果
+    j16.textContent = j16valuetostring;
+    //console.log("赋值后的值:", j16.textContent); // 确认此时是否已正确赋值
     j17.textContent = j17value.toFixed(0);
     j18.textContent = j18value;
     j19.textContent = j19value;
     j23.textContent = j23value.toFixed(1);
-    j24.textContent = j24value.toFixed(1);
+    j24.textContent = j24value;
     j26.textContent = j26value;
 }
 
@@ -403,9 +483,26 @@ editableCells.forEach(cell => {
         saveDataToLocalStorage();
     });
 });
-
 // 针对特殊的下拉框c4，单独添加change事件监听
 c4.addEventListener('change', () => {
+    更新表格数据();
+    saveDataToLocalStorage();
+});
+//针对特殊的下拉框i16，单独添加change事件监听
+i16.addEventListener('change', () => {
+    updateLinkState(); // 根据i16的值更新j16的链接状态
+    更新表格数据();
+    saveDataToLocalStorage();
+});
+//针对特殊的下拉框l19，单独添加change事件监听
+l19.addEventListener('change', () => {
+    l24.selectedIndex = l19.selectedIndex; //联动l24
+    更新表格数据();
+    saveDataToLocalStorage();
+});
+//针对特殊的下拉框l24，单独添加change事件监听
+l24.addEventListener('change', () => {
+    l19.selectedIndex = l24.selectedIndex; //联动l19
     更新表格数据();
     saveDataToLocalStorage();
 });

@@ -298,6 +298,18 @@ editableCells.forEach(cell => {
     });
 });
 
+// 为按钮1添加事件监听器
+document.getElementById('calculatebutton1').addEventListener('click', () => {
+    更新计算1();
+    saveDataToLocalStorage();
+});
+
+//为按钮2添加事件监听器
+document.getElementById('calculatebutton1').addEventListener('click', () => {
+    更新计算3();
+    saveDataToLocalStorage();
+});
+
 // 页面加载时执行的初始化逻辑
 window.addEventListener('load', () => {
     // 尝试从localStorage加载数据

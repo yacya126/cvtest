@@ -18,29 +18,119 @@
         .btn-secondary {
             @apply bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-xl transition-colors duration-200;
         }
+        .language-selector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .select-wrapper {
+            position: relative;
+        }
+        select {
+            @apply bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer;
+        }
+        .select-arrow {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-8">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-8 relative">
+    <!-- 语言选择器 -->
+    <div class="language-selector">
+        <div class="select-wrapper">
+            <select id="language-select">
+                <option value="en">English</option>
+                <option value="zh">中文</option>
+                <option value="ja">日本語</option>
+            </select>
+            <span class="select-arrow">▼</span>
+        </div>
+    </div>
+
     <div class="flex flex-col items-stretch justify-center gap-8 w-full max-w-full lg:max-w-xl">
         <div class="card flex flex-col items-center gap-6">
-            <h1 class="text-3xl font-bold text-center text-gray-800">Function selection</h1>
-            <p id="user-info" class="text-lg text-gray-700 text-center"></p>
+            <h1 class="text-3xl font-bold text-center text-gray-800" data-i18n="function_selection">Function selection</h1>
+            <p id="user-info" class="text-lg text-gray-700 text-center" data-i18n="welcome_back">Welcome Back, {username}！</p>
             <p id="current-time" class="text-lg text-gray-700 text-center"></p>
             <div class="w-full flex flex-col gap-4 mt-4">
-                <a href="./liftcv/liftcv.html" class="btn-primary w-full text-center">LIFT CV</a>
-                <a href="./liftrail/liftrail.html" class="btn-primary w-full text-center">LIFT RAIL</a>
-                <a href="./psibob/psibob.html" class="btn-primary w-full text-center">PS IB OB</a>
+                <a href="#" class="btn-primary w-full text-center" data-i18n="lift_cv" id="liftcvlink">LIFT CV</a>
+                <a href="#" class="btn-primary w-full text-center" data-i18n="lift_rail" id="liftraillink">LIFT RAIL</a>
+                <a href="#" class="btn-primary w-full text-center" data-i18n="ps_ib_ob" id="psiboblink">PS IB OB</a>
             </div>
-            <button id="logout-btn" class="btn-secondary w-full mt-4">Logout</button>
+            <button id="logout-btn" class="btn-secondary w-full mt-4" data-i18n="logout">Logout</button>
         </div>
     </div>
 
 <script src="//cdn.jsdelivr.net/npm/leancloud-storage@4.10.0/dist/av-min.js"></script>
 <script>
+    // 多语言文本数据
+    const translations = {
+        en: {
+            function_selection: "Function selection",
+            welcome_back: "Welcome Back, {username}！",
+            lift_cv: "LIFT CV",
+            lift_rail: "LIFT RAIL",
+            ps_ib_ob: "PS IB OB",
+            logout: "Logout",
+            administrator_auth: "Administrator Auth"
+        },
+        zh: {
+            function_selection: "功能选择",
+            welcome_back: "欢迎回来，{username}！",
+            lift_cv: "升降机(叉车式)",
+            lift_rail: "升降机(轨道式)",
+            ps_ib_ob: "PS IB OB",
+            logout: "退出登录",
+            administrator_auth: "管理员认证"
+        },
+        ja: {
+            function_selection: "機能選択",
+            welcome_back: "おかえりなさい、{username}！",
+            lift_cv: "リフトCV",
+            lift_rail: "リフトレール",
+            ps_ib_ob: "PS IB OB",
+            logout: "ログアウト",
+            administrator_auth: "管理者認証"
+        }
+    };
+
+    // 应用语言
+    function applyLanguage(lang) {
+        // 保存用户选择的语言
+        localStorage.setItem('preferredLanguage', lang);
+
+        // 更新下拉框选中状态
+        document.getElementById('language-select').value = lang;
+
+        // 更新文本内容
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (translations[lang] && translations[lang][key]) {
+                // 处理包含变量的文本（如欢迎消息）
+                let text = translations[lang][key];
+                if (text.includes('{username}') && el.id === 'user-info') {
+                    const currentUser = AV.User.current();
+                    const username = currentUser.get('username') || currentUser.get('email');
+                    text = text.replace('{username}', username);
+                }
+                el.textContent = text;
+            }
+        });
+    }
+
+    // 语言选择事件
+    document.getElementById('language-select').addEventListener('change', (e) => {
+        const selectedLang = e.target.value;
+        applyLanguage(selectedLang);
+    });
+
     const AV = window.AV;
 
-    // LeanCloud App ID, App Key 和服务器地址
-    // 确保与 index.html 中的配置一致
+    // LeanCloud 配置
     AV.init({
         appId: "L5SNq7BVJ9m4jOr50MCp1iAd-gzGzoHsz",
         appKey: "6CDNvUG0zD9i7EI40nH9zNRv",
@@ -49,46 +139,116 @@
 
     const userInfoElement = document.getElementById("user-info");
     const logoutBtn = document.getElementById("logout-btn");
+    const liftcvlink = document.getElementById("liftcvlink");
+    const liftraillink = document.getElementById("liftraillink");
+    const psiboblink = document.getElementById("psiboblink");
 
-    // 为登出按钮添加点击事件监听器
+    // liftcvlink按钮事件
+    liftcvlink.addEventListener('click', (e) => {
+        // 阻止链接的默认行为
+        e.preventDefault();
+        // 根据浏览器缓存获取ccpe的值
+        const preferredLanguage = localStorage.getItem('preferredLanguage') || 'en';
+        console.log("当前存储的语言设置:", preferredLanguage);
+        // 根据ccpe的值决定跳转的URL
+        let targetUrl;
+        if (preferredLanguage === "en") {
+            targetUrl = "./liftcv/liftcv.html";
+        } else if (preferredLanguage === "zh") {
+            targetUrl = "./liftcv/liftcv_cn.html";
+        } else if (preferredLanguage === "ja") {
+            targetUrl = "./liftcv/liftcv_ja.html";
+        }
+        // 如果确定了目标URL，则进行跳转
+        if (targetUrl) {
+            window.location.href = targetUrl;
+        }
+    });
+
+    // liftraillink按钮事件
+    liftraillink.addEventListener('click', (e) => {
+        // 阻止链接的默认行为
+        e.preventDefault();
+        // 根据浏览器缓存获取ccpe的值
+        const preferredLanguage = localStorage.getItem('preferredLanguage') || 'en';
+        console.log("当前存储的语言设置:", preferredLanguage);
+        // 根据ccpe的值决定跳转的URL
+        let targetUrl;
+        if (preferredLanguage === "en") {
+            targetUrl = "./liftrail/liftrail.html";
+        } else if (preferredLanguage === "zh") {
+            targetUrl = "./liftrail/liftrail_cn.html";
+        } else if (preferredLanguage === "ja") {
+            targetUrl = "./liftrail/liftrail_ja.html";
+        }
+        // 如果确定了目标URL，则进行跳转
+        if (targetUrl) {
+            window.location.href = targetUrl;
+        }
+    });
+
+
+    // psibob按钮事件
+    psiboblink.addEventListener('click', (e) => {
+        // 阻止链接的默认行为
+        e.preventDefault();
+        // 根据浏览器缓存获取ccpe的值
+        const preferredLanguage = localStorage.getItem('preferredLanguage') || 'en';
+        console.log("当前存储的语言设置:", preferredLanguage);
+        // 根据ccpe的值决定跳转的URL
+        let targetUrl;
+        if (preferredLanguage === "en") {
+            targetUrl = "./psibob/psibob.html";
+        } else if (preferredLanguage === "zh") {
+            targetUrl = "./psibob/psibob_cn.html";
+        } else if (preferredLanguage === "ja") {
+            targetUrl = "./psibob/psibob_ja.html";
+        }
+        // 如果确定了目标URL，则进行跳转
+        if (targetUrl) {
+            window.location.href = targetUrl;
+        }
+    });
+
+    // 登出按钮事件
     logoutBtn.addEventListener('click', () => {
         AV.User.logOut().then(() => {
-            // 登出成功后，重定向回登录页
             window.location.href = './index.html';
         });
     });
 
-    // 页面加载时的主要逻辑
+    // 页面加载逻辑
     window.onload = () => {
+        // 应用保存的语言或默认英语
+        const savedLang = localStorage.getItem('preferredLanguage') || 'en';
+        applyLanguage(savedLang);
+
         // 检查用户登录状态
         const currentUser = AV.User.current();
         if (!currentUser) {
-            // 如果未登录，重定向回登录页
             window.location.href = './index.html';
         } else {
-            // 如果已登录，显示用户信息
-            // 检查用户名是否存在，如果不存在则显示邮箱
+            // 显示用户信息（多语言处理在applyLanguage中）
             const username = currentUser.get('username') || currentUser.get('email');
-            userInfoElement.textContent = `Welcome Back, ${username}！`;
 
-            // 如果用户是管理员，添加管理员按钮
+            // 管理员按钮
             if (username === 'admin') {
                 const adminBtn = document.createElement('a');
                 adminBtn.href = './auth.html';
                 adminBtn.className = 'btn-secondary w-full text-center';
-                adminBtn.textContent = 'Administrator Auth';
+                adminBtn.setAttribute('data-i18n', 'administrator_auth');
+                adminBtn.textContent = translations[savedLang].administrator_auth || 'Administrator Auth';
 
                 const divider = document.createElement('hr');
                 divider.className = 'w-full my-4';
                 divider.style.borderColor = '#d1d5db';
 
-                // 使用 insertAdjacentElement 来插入元素，保持正确的顺序
                 logoutBtn.insertAdjacentElement('afterend', divider);
                 divider.insertAdjacentElement('afterend', adminBtn);
             }
         }
     };
 </script>
-<script src=showtime.js></script>
+<script src="showtime.js"></script>
 </body>
 </html>

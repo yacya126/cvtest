@@ -32,7 +32,7 @@
     </style>
 </head>
 <body class="bg-gray-100 p-8">
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-4xl mx-auto"></div>
         <!-- 授权注册部分 -->
         <div class="card mb-8">
             <h2 class="section-title">管理员授权谁注册？</h2>
@@ -54,7 +54,7 @@
         <div class="card mb-8">
             <h2 class="section-title">所有注册用户列表</h2>
             <button id="btn-query-users" class="btn-secondary mb-4">查看注册用户</button>
-            
+
             <!-- 用于显示用户列表的表格 -->
             <table id="user-table" class="w-full mt-4 border-collapse">
                 <thead>
@@ -80,12 +80,54 @@
             </div>
             <p id="delete-feedback-message" class="feedback-message"></p>
         </div>
+    <!-- 用户权限列表 -->
+    <div class="card mb-8">
+        <h2 class="section-title">用户权限列表</h2>
+        <button id="btn-query-permissions" class="btn-secondary mb-4">查看用户权限</button>
 
-        <div class="text-center mt-6">
-            <a href="dashboard.html" class="btn-primary w-full">返回菜单</a>
-        </div>
+        <table id="permissions-table" class="w-full mt-4 border-collapse">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="px-4 py-2 border text-left text-gray-700">用户名</th>
+                    <th class="px-4 py-2 border text-left text-gray-700">邮箱</th>
+                    <th class="px-4 py-2 border text-left text-gray-700">LIFTCV</th>
+                    <th class="px-4 py-2 border text-left text-gray-700">LIFTRAIL</th>
+                    <th class="px-4 py-2 border text-left text-gray-700">PSIBOB</th>
+                    <th class="px-4 py-2 border text-left text-gray-700">ALLPASS</th>
+                </tr>
+            </thead>
+            <tbody id="permissions-table-body">
+                <!-- 权限数据将在这里动态生成 -->
+            </tbody>
+        </table>
     </div>
 
+    <!-- 编辑用户权限 -->
+    <div class="card mb-8">
+        <h2 class="text-lg font-semibold text-gray-800 mb-3">管理员禁用用户权限？</h2>
+        <!-- 输入框：小屏全屏，中屏半宽，大屏三分之一宽，增加内边距与圆角 -->
+        <input id="banned-users"
+               type="email"
+               placeholder="输入要控制权限的邮箱"
+               class="input-text mb-4">
+        <!-- 按钮网格：小屏2列，中屏及以上4列，增加按钮内边距与圆角 -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <button id="ban-liftcv" class="btn-primary px-4 py-2 rounded-lg whitespace-nowrap">禁用LIFT CV</button>
+            <button id="ban-liftrail" class="btn-primary px-4 py-2 rounded-lg whitespace-nowrap">禁用LIFT RAIL</button>
+            <button id="ban-psibob" class="btn-primary px-4 py-2 rounded-lg whitespace-nowrap">禁用PS IB OB</button>
+            <button id="ban-allpass" class="btn-primary px-4 py-2 rounded-lg whitespace-nowrap">全部禁用</button>
+            <button id="open-liftcv" class="btn-primary px-4 py-2 rounded-lg whitespace-nowrap">启用LIFT CV</button>
+            <button id="open-liftrail" class="btn-primary px-4 py-2 rounded-lg whitespace-nowrap">启用LIFT RAIL</button>
+            <button id="open-psibob" class="btn-primary px-4 py-2 rounded-lg whitespace-nowrap">启用PS IB OB</button>
+            <button id="open-allpass" class="btn-primary px-4 py-2 rounded-lg whitespace-nowrap">全部启用</button>
+        </div>
+        <p id="delete-feedback-message-new" class="feedback-message"></p>
+    </div>
+        
+
+    <div class="text-center mt-6">
+        <a href="dashboard.html" class="btn-primary w-full">返回菜单</a>
+    </div>
     <!-- LeanCloud JavaScript SDK -->
     <script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.10.0/dist/av-min.js"></script>
     <script src="authscript.js"></script>
