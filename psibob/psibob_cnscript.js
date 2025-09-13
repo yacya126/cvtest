@@ -223,20 +223,38 @@ function updateLinkState() {
         en: "../liftcv/liftcv.html",
         ja: "../liftcv/liftcv_ja.html"
     };
+    const alertTexts2 = {
+        zh: "点击单元格并在LIFT RAIL中确认升降机循环时间",
+        en: "Press the cell and confirm Lifter's Cycle time in LIFT RAIL",
+        ja: "セルをクリックし、LIFT RAILでLifter's Cycle timeを確認してください"
+    }
+    const accesspages2 = {
+        zh: "../liftrail/liftrail_cn.html",
+        en: "../liftrail/liftrail.html",
+        ja: "../liftrail/liftrail_ja.html"
+    }
+
     // 2. 获取localStorage中的语言偏好，无配置时默认en
     const preferredLang = localStorage.getItem('preferredLanguage') || 'en';
 
     // 3. 匹配对应语言的文本（若语言标识不匹配，仍默认用en）
     const alertText = alertTexts[preferredLang] || alertTexts.en;
     const Accesspage = accesspages[preferredLang] || accesspages.en;
-
+    const alertText2 = alertTexts2[preferredLang] || alertTexts2.en;
+    const Accesspages2 = accesspages2[preferredLang] || accesspages2.en;
     if (i16.selectedIndex === 0) {
         // 允许跳转状态
         j16.href = Accesspage;
         // 执行alert
         alert(alertText);
         j16.style.cursor = "pointer"; // 鼠标悬停显示手型，增强交互提示
-    } else {
+    } else if (i16.selectedIndex === 2) {
+        // 允许跳转状态
+        j16.href = Accesspages2;
+        // 执行alert
+        alert(alertText2);
+        j16.style.cursor = "pointer"; // 鼠标悬停显示手型，增强交互提示
+    } else { 
         // 禁止跳转状态
         j16.removeAttribute('href');
         j16.style.color = "inherit";
@@ -387,7 +405,7 @@ function 更新PS性能参数() {
     const j14value = parseFloat(j14.textContent);
     const j15value = parseFloat(j15.textContent);
     let j16value = parseFloat(j16.textContent);
-    console.log("已经执行j16value的获取"+j16value);
+    //console.log("已经执行j16value的获取"+j16value);
     let j17value = parseFloat(j17.textContent);
     let j18value = parseFloat(j18.textContent);
     let j19value = parseFloat(j19.textContent);
@@ -399,13 +417,21 @@ function 更新PS性能参数() {
     const q16value = parseFloat(q16.textContent);
     //定义来自liftcv或者liftrail页面的数据变量
     const liftcvData = getLiftCVData();
-    //用不到liftraildata
-    //const liftrailData = getLiftRailData();
+    const liftrailData = getLiftRailData();
     //定义liftcv页面的d51单元格的值
     let liftcv_d51value;
+    let liftrail_cycleTimevalue;
 
     if (liftcvData?.cycleTime !== undefined) {
         liftcv_d51value = parseFloat(liftcvData.cycleTime) || 0;
+    } else {
+        //liftcv_d51value = 134.68;
+    }
+    console.log(liftcvData);
+    console.log((liftcvData?.cycleTime == undefined));
+    console.log(liftcvData == null);
+    if (liftrailData?.cycleTime !== undefined) {
+        liftrail_d51value = parseFloat(liftrailData.cycleTime) || 0;
     } else {
         //liftcv_d51value = 134.68;
     }
@@ -416,12 +442,32 @@ function 更新PS性能参数() {
     j11value = j6value * c9value;
     j12value = j7value * c10value;
     j13value = j8value * c11value;
-    if (i16.selectedIndex === 0 && (liftcvData?.cycleTime !== undefined)) {
-        j16value = liftcv_d51value;
-    } else if (i16.selectedIndex === 1 && (liftcvData?.cycleTime !== undefined)) {
+    if (i16.selectedIndex === 0) {
+        console.log("单元格选择第1个选项");
+        if (liftcvData === null) {
+            console.log("liftcvData不能找到数据，默认122.13");
+            //给定默认值
+            j16value = 122.13;
+        } else {
+            console.log("liftcvData能找到数据，使用数据" + liftcv_d51value);
+            j16value = liftcv_d51value;
+        };
+    } else if (i16.selectedIndex === 1) {
+        console.log("单元格选择第2个选项");
         j16value = parseFloat(c21.textContent) + parseFloat(c22.textContent);
+    } else if (i16.selectedIndex === 2) {
+        console.log("单元格选择第3个选项");
+        if (liftrailData === null) {
+            console.log("liftrailData不能找到数据，默认85.40");
+            //给定默认值
+            j16value = 85.40;
+        } else {
+            console.log("liftrailData能找到数据，使用数据" + liftrail_d51value);
+            j16value = liftrail_d51value;
+        };     
+    } else {
+        console.log("单元格选择出现异常");
     };
-   //console.log("j16value是"+j16value, typeof j16value);
     
     j17value = (j9value + j10value + j11value + j12value + j13value) / (j14value/100) / (j15value/100) + j16value;
     j18value = (3600 / j17value).toFixed(1);
@@ -431,29 +477,18 @@ function 更新PS性能参数() {
     } else if (l19.selectedIndex === 1) {
         j19value = (3600 / (j17value)).toFixed(1);
     };
-
-    //j19value = (3600 / (j17value + q16value)).toFixed(1);
     j23value = j21value / j18value;
     j24value = (j22value / j19value).toFixed(1);
     let j24valuenumber = parseFloat(j24value);
-    //j24value = j22value / j19value;
     j26value = Math.ceil(1.1 * (j23value + j24valuenumber));
-    //console.log(j23value, typeof j23value);
-    //console.log(j24valuenumber, typeof j24valuenumber);
-    //console.log(j26value, typeof j26value);
     //呈现
     j9.textContent = j9value.toFixed(0);
     j10.textContent = j10value.toFixed(0);
     j11.textContent = j11value;
     j12.textContent = j12value;
     j13.textContent = j13value;
-    //console.log("j16元素:", j16); // 重点看这里是否为null或undefined
-    //console.log("是否为有效数字:", !isNaN(j16value)); // 若为 false，说明是 NaN
-    //console.log("元素是否在DOM中:", j16.isConnected); // 若为 false，说明已被移除
     const j16valuetostring = j16value.toFixed(2).toString();
-    //console.log("转换为字符串:", j16valuetostring, typeof j16valuetostring); // 检查转换结果
     j16.textContent = j16valuetostring;
-    //console.log("赋值后的值:", j16.textContent); // 确认此时是否已正确赋值
     j17.textContent = j17value.toFixed(0);
     j18.textContent = j18value;
     j19.textContent = j19value;
