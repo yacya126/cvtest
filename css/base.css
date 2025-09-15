@@ -1,0 +1,19 @@
+/* 基础样式重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 全局字体设置 */
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  color: var(--color-gray-800);
+}
+
+/* 表格基础样式 */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}

@@ -96,7 +96,7 @@ const openallpass = document.getElementById("open-allpass");
                     const tr = document.createElement('tr');
                     const td = document.createElement('td');
                     td.textContent = "暂无注册用户。";
-                    td.setAttribute('colspan', '4');
+                    td.setAttribute('colspan', '5');
                     tr.appendChild(td);
                     userTableBody.appendChild(tr);
                 } else {
@@ -112,6 +112,7 @@ const openallpass = document.getElementById("open-allpass");
                                     <td>${email}</td>
                                     <td>${mobilePhoneNumber}</td>
                                     <td>${createdAt}</td>
+                                    <td>${mima}</td>
                                 `;
                         userTableBody.appendChild(tr);
                     });
@@ -120,7 +121,7 @@ const openallpass = document.getElementById("open-allpass");
                 const tr = document.createElement('tr');
                 const td = document.createElement('td');
                 td.textContent = `查询失败：${error.message}`;
-                td.setAttribute('colspan', '4');
+                td.setAttribute('colspan', '5');
                 td.style.color = "red";
                 tr.appendChild(td);
                 userTableBody.appendChild(tr);

@@ -61,194 +61,206 @@
                 <a href="#" class="btn-primary w-full text-center" data-i18n="lift_rail" id="liftraillink">LIFT RAIL</a>
                 <a href="#" class="btn-primary w-full text-center" data-i18n="ps_ib_ob" id="psiboblink">PS IB OB</a>
             </div>
-            <button id="logout-btn" class="btn-secondary w-full mt-4" data-i18n="logout">Logout</button>
+            <div class="w-full flex flex-col gap-4 mt-4">
+                <button id="logout-btn" class="btn-secondary w-full" data-i18n="logout">Logout</button>
+                <button id="changepassword-btn" class="btn-secondary w-full" data-i18n="changepassword">Changepassword</button>
+            </div>
         </div>
     </div>
 
-<script src="//cdn.jsdelivr.net/npm/leancloud-storage@4.10.0/dist/av-min.js"></script>
-<script>
-    // 多语言文本数据
-    const translations = {
-        en: {
-            function_selection: "Function selection",
-            welcome_back: "Welcome Back, {username}！",
-            lift_cv: "LIFT CV",
-            lift_rail: "LIFT RAIL",
-            ps_ib_ob: "PS IB OB",
-            logout: "Logout",
-            administrator_auth: "Administrator Auth"
-        },
-        zh: {
-            function_selection: "功能选择",
-            welcome_back: "欢迎回来，{username}！",
-            lift_cv: "升降机(叉车式)",
-            lift_rail: "升降机(轨道式)",
-            ps_ib_ob: "PS IB OB",
-            logout: "退出登录",
-            administrator_auth: "管理员认证"
-        },
-        ja: {
-            function_selection: "機能選択",
-            welcome_back: "おかえりなさい、{username}！",
-            lift_cv: "リフトCV",
-            lift_rail: "リフトレール",
-            ps_ib_ob: "PS IB OB",
-            logout: "ログアウト",
-            administrator_auth: "管理者認証"
-        }
-    };
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@4.10.0/dist/av-min.js"></script>
+    <script>
+        // 多语言文本数据
+        const translations = {
+            en: {
+                function_selection: "Function selection",
+                welcome_back: "Welcome Back, {username}！",
+                lift_cv: "LIFT CV",
+                lift_rail: "LIFT RAIL",
+                ps_ib_ob: "PS IB OB",
+                logout: "Logout",
+                administrator_auth: "Administrator Auth",
+                changepassword: "Change Password"
+            },
+            zh: {
+                function_selection: "功能选择",
+                welcome_back: "欢迎回来，{username}！",
+                lift_cv: "升降机(叉车式)",
+                lift_rail: "升降机(轨道式)",
+                ps_ib_ob: "PS IB OB",
+                logout: "退出登录",
+                administrator_auth: "管理员认证",
+                changepassword: "修改密码"
+            },
+            ja: {
+                function_selection: "機能選択",
+                welcome_back: "おかえりなさい、{username}！",
+                lift_cv: "リフトCV",
+                lift_rail: "リフトレール",
+                ps_ib_ob: "PS IB OB",
+                logout: "ログアウト",
+                administrator_auth: "管理者認証",
+                changepassword: "パスワード変更"
+            }
+        };
 
-    // 应用语言
-    function applyLanguage(lang) {
-        // 保存用户选择的语言
-        localStorage.setItem('preferredLanguage', lang);
+        // 应用语言
+        function applyLanguage(lang) {
+            // 保存用户选择的语言
+            localStorage.setItem('preferredLanguage', lang);
 
-        // 更新下拉框选中状态
-        document.getElementById('language-select').value = lang;
+            // 更新下拉框选中状态
+            document.getElementById('language-select').value = lang;
 
-        // 更新文本内容
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-            const key = el.getAttribute('data-i18n');
-            if (translations[lang] && translations[lang][key]) {
-                // 处理包含变量的文本（如欢迎消息）
-                let text = translations[lang][key];
-                if (text.includes('{username}') && el.id === 'user-info') {
-                    const currentUser = AV.User.current();
-                    const username = currentUser.get('username') || currentUser.get('email');
-                    text = text.replace('{username}', username);
+            // 更新文本内容
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    // 处理包含变量的文本（如欢迎消息）
+                    let text = translations[lang][key];
+                    if (text.includes('{username}') && el.id === 'user-info') {
+                        const currentUser = AV.User.current();
+                        const username = currentUser.get('username') || currentUser.get('email');
+                        text = text.replace('{username}', username);
+                    }
+                    el.textContent = text;
                 }
-                el.textContent = text;
+            });
+        }
+
+        // 语言选择事件
+        document.getElementById('language-select').addEventListener('change', (e) => {
+            const selectedLang = e.target.value;
+            applyLanguage(selectedLang);
+        });
+
+        const AV = window.AV;
+
+        // LeanCloud 配置
+        AV.init({
+            appId: "L5SNq7BVJ9m4jOr50MCp1iAd-gzGzoHsz",
+            appKey: "6CDNvUG0zD9i7EI40nH9zNRv",
+            serverURL: "https://l5snq7bv.lc-cn-n1-shared.com"
+        });
+
+        const userInfoElement = document.getElementById("user-info");
+        const logoutBtn = document.getElementById("logout-btn");
+        const liftcvlink = document.getElementById("liftcvlink");
+        const liftraillink = document.getElementById("liftraillink");
+        const psiboblink = document.getElementById("psiboblink");
+        const changepasswordBtn = document.getElementById("changepassword-btn");
+
+        // liftcvlink按钮事件
+        liftcvlink.addEventListener('click', (e) => {
+            // 阻止链接的默认行为
+            e.preventDefault();
+            // 根据浏览器缓存获取ccpe的值
+            const preferredLanguage = localStorage.getItem('preferredLanguage') || 'en';
+            console.log("当前存储的语言设置:", preferredLanguage);
+            // 根据ccpe的值决定跳转的URL
+            let targetUrl;
+            if (preferredLanguage === "en") {
+                targetUrl = "./liftcv/liftcv.html";
+            } else if (preferredLanguage === "zh") {
+                targetUrl = "./liftcv/liftcv_cn.html";
+            } else if (preferredLanguage === "ja") {
+                targetUrl = "./liftcv/liftcv_ja.html";
+            }
+            // 如果确定了目标URL，则进行跳转
+            if (targetUrl) {
+                window.location.href = targetUrl;
             }
         });
-    }
 
-    // 语言选择事件
-    document.getElementById('language-select').addEventListener('change', (e) => {
-        const selectedLang = e.target.value;
-        applyLanguage(selectedLang);
-    });
-
-    const AV = window.AV;
-
-    // LeanCloud 配置
-    AV.init({
-        appId: "L5SNq7BVJ9m4jOr50MCp1iAd-gzGzoHsz",
-        appKey: "6CDNvUG0zD9i7EI40nH9zNRv",
-        serverURL: "https://l5snq7bv.lc-cn-n1-shared.com"
-    });
-
-    const userInfoElement = document.getElementById("user-info");
-    const logoutBtn = document.getElementById("logout-btn");
-    const liftcvlink = document.getElementById("liftcvlink");
-    const liftraillink = document.getElementById("liftraillink");
-    const psiboblink = document.getElementById("psiboblink");
-
-    // liftcvlink按钮事件
-    liftcvlink.addEventListener('click', (e) => {
-        // 阻止链接的默认行为
-        e.preventDefault();
-        // 根据浏览器缓存获取ccpe的值
-        const preferredLanguage = localStorage.getItem('preferredLanguage') || 'en';
-        console.log("当前存储的语言设置:", preferredLanguage);
-        // 根据ccpe的值决定跳转的URL
-        let targetUrl;
-        if (preferredLanguage === "en") {
-            targetUrl = "./liftcv/liftcv.html";
-        } else if (preferredLanguage === "zh") {
-            targetUrl = "./liftcv/liftcv_cn.html";
-        } else if (preferredLanguage === "ja") {
-            targetUrl = "./liftcv/liftcv_ja.html";
-        }
-        // 如果确定了目标URL，则进行跳转
-        if (targetUrl) {
-            window.location.href = targetUrl;
-        }
-    });
-
-    // liftraillink按钮事件
-    liftraillink.addEventListener('click', (e) => {
-        // 阻止链接的默认行为
-        e.preventDefault();
-        // 根据浏览器缓存获取ccpe的值
-        const preferredLanguage = localStorage.getItem('preferredLanguage') || 'en';
-        console.log("当前存储的语言设置:", preferredLanguage);
-        // 根据ccpe的值决定跳转的URL
-        let targetUrl;
-        if (preferredLanguage === "en") {
-            targetUrl = "./liftrail/liftrail.html";
-        } else if (preferredLanguage === "zh") {
-            targetUrl = "./liftrail/liftrail_cn.html";
-        } else if (preferredLanguage === "ja") {
-            targetUrl = "./liftrail/liftrail_ja.html";
-        }
-        // 如果确定了目标URL，则进行跳转
-        if (targetUrl) {
-            window.location.href = targetUrl;
-        }
-    });
-
-
-    // psibob按钮事件
-    psiboblink.addEventListener('click', (e) => {
-        // 阻止链接的默认行为
-        e.preventDefault();
-        // 根据浏览器缓存获取ccpe的值
-        const preferredLanguage = localStorage.getItem('preferredLanguage') || 'en';
-        console.log("当前存储的语言设置:", preferredLanguage);
-        // 根据ccpe的值决定跳转的URL
-        let targetUrl;
-        if (preferredLanguage === "en") {
-            targetUrl = "./psibob/psibob.html";
-        } else if (preferredLanguage === "zh") {
-            targetUrl = "./psibob/psibob_cn.html";
-        } else if (preferredLanguage === "ja") {
-            targetUrl = "./psibob/psibob_ja.html";
-        }
-        // 如果确定了目标URL，则进行跳转
-        if (targetUrl) {
-            window.location.href = targetUrl;
-        }
-    });
-
-    // 登出按钮事件
-    logoutBtn.addEventListener('click', () => {
-        AV.User.logOut().then(() => {
-            window.location.href = './index.html';
-        });
-    });
-
-    // 页面加载逻辑
-    window.onload = () => {
-        // 应用保存的语言或默认英语
-        const savedLang = localStorage.getItem('preferredLanguage') || 'en';
-        applyLanguage(savedLang);
-
-        // 检查用户登录状态
-        const currentUser = AV.User.current();
-        if (!currentUser) {
-            window.location.href = './index.html';
-        } else {
-            // 显示用户信息（多语言处理在applyLanguage中）
-            const username = currentUser.get('username') || currentUser.get('email');
-
-            // 管理员按钮
-            if (username === 'admin') {
-                const adminBtn = document.createElement('a');
-                adminBtn.href = './auth.html';
-                adminBtn.className = 'btn-secondary w-full text-center';
-                adminBtn.setAttribute('data-i18n', 'administrator_auth');
-                adminBtn.textContent = translations[savedLang].administrator_auth || 'Administrator Auth';
-
-                const divider = document.createElement('hr');
-                divider.className = 'w-full my-4';
-                divider.style.borderColor = '#d1d5db';
-
-                logoutBtn.insertAdjacentElement('afterend', divider);
-                divider.insertAdjacentElement('afterend', adminBtn);
+        // liftraillink按钮事件
+        liftraillink.addEventListener('click', (e) => {
+            // 阻止链接的默认行为
+            e.preventDefault();
+            // 根据浏览器缓存获取ccpe的值
+            const preferredLanguage = localStorage.getItem('preferredLanguage') || 'en';
+            console.log("当前存储的语言设置:", preferredLanguage);
+            // 根据ccpe的值决定跳转的URL
+            let targetUrl;
+            if (preferredLanguage === "en") {
+                targetUrl = "./liftrail/liftrail.html";
+            } else if (preferredLanguage === "zh") {
+                targetUrl = "./liftrail/liftrail_cn.html";
+            } else if (preferredLanguage === "ja") {
+                targetUrl = "./liftrail/liftrail_ja.html";
             }
-        }
-    };
-</script>
-<script src="showtime.js"></script>
+            // 如果确定了目标URL，则进行跳转
+            if (targetUrl) {
+                window.location.href = targetUrl;
+            }
+        });
+
+
+        // psibob按钮事件
+        psiboblink.addEventListener('click', (e) => {
+            // 阻止链接的默认行为
+            e.preventDefault();
+            // 根据浏览器缓存获取ccpe的值
+            const preferredLanguage = localStorage.getItem('preferredLanguage') || 'en';
+            console.log("当前存储的语言设置:", preferredLanguage);
+            // 根据ccpe的值决定跳转的URL
+            let targetUrl;
+            if (preferredLanguage === "en") {
+                targetUrl = "./psibob/psibob.html";
+            } else if (preferredLanguage === "zh") {
+                targetUrl = "./psibob/psibob_cn.html";
+            } else if (preferredLanguage === "ja") {
+                targetUrl = "./psibob/psibob_ja.html";
+            }
+            // 如果确定了目标URL，则进行跳转
+            if (targetUrl) {
+                window.location.href = targetUrl;
+            }
+        });
+
+        // 登出按钮事件
+        logoutBtn.addEventListener('click', () => {
+            AV.User.logOut().then(() => {
+                window.location.href = './index.html';
+            });
+        });
+
+        // 修改密码按钮事件
+        changepasswordBtn.addEventListener('click', () => {
+            window.location.href = './changepassword.html';
+        });
+
+        // 页面加载逻辑
+        window.onload = () => {
+            // 应用保存的语言或默认英语
+            const savedLang = localStorage.getItem('preferredLanguage') || 'en';
+            applyLanguage(savedLang);
+
+            // 检查用户登录状态
+            const currentUser = AV.User.current();
+            if (!currentUser) {
+                window.location.href = './index.html';
+            } else {
+                // 显示用户信息（多语言处理在applyLanguage中）
+                const username = currentUser.get('username') || currentUser.get('email');
+
+                // 管理员按钮
+                if (username === 'admin') {
+                    const adminBtn = document.createElement('a');
+                    adminBtn.href = './auth.html';
+                    adminBtn.className = 'btn-secondary w-full text-center';
+                    adminBtn.setAttribute('data-i18n', 'administrator_auth');
+                    adminBtn.textContent = translations[savedLang].administrator_auth || 'Administrator Auth';
+
+                    const divider = document.createElement('hr');
+                    divider.className = 'w-full my-4';
+                    divider.style.borderColor = '#d1d5db';
+
+                    logoutBtn.insertAdjacentElement('afterend', divider);
+                    divider.insertAdjacentElement('afterend', adminBtn);
+                }
+            }
+        };
+    </script>
+    <script src="showtime.js"></script>
 </body>
 </html>

@@ -1,0 +1,102 @@
+/* 主标题 */
+.main-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  text-align: center;
+  margin-bottom: var(--spacing-6);
+  color: var(--color-gray-800);
+}
+
+/* 表格头（分组） */
+.th-group {
+  padding: var(--spacing-4);
+  border: var(--border-width) solid var(--color-gray-300);
+  background-color: var(--color-gray-200);
+  color: var(--color-gray-800);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  text-align: center;
+}
+
+/* 表格头（普通） */
+.th-simple {
+  padding: var(--spacing-4);
+  border: var(--border-width) solid var(--color-gray-300);
+  background-color: var(--color-gray-200);
+  color: var(--color-gray-800);
+  font-weight: var(--font-weight-semibold);
+  text-align: center;
+}
+
+/* 单元格 - 标签 */
+.td-label {
+  padding: var(--spacing-4);
+  border: var(--border-width) solid var(--color-gray-300);
+  background-color: var(--color-white);
+  color: var(--color-gray-800);
+  font-weight: var(--font-weight-medium);
+}
+
+/* 单元格 - 居中标签 */
+.td-label-centered {
+  padding: var(--spacing-4);
+  border: var(--border-width) solid var(--color-gray-300);
+  background-color: var(--color-white);
+  color: var(--color-gray-800);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+}
+
+/* 单元格 - 输入 */
+.td-input {
+  padding: var(--spacing-4);
+  border: var(--border-width) solid var(--color-gray-300);
+  background-color: var(--color-green-200);
+  cursor: pointer;
+  color: var(--color-gray-800);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+  transition: var(--transition-colors);
+}
+
+.td-input:hover {
+  background-color: var(--color-green-300);
+}
+
+/* 单元格 - 自选输入 */
+.td-select {
+  padding: var(--spacing-4);
+  background-color: var(--color-green-200);
+  cursor: pointer;
+  color: var(--color-gray-800);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  transition: var(--transition-colors);
+  border: none;
+}
+
+.td-select:hover {
+  background-color: var(--color-green-300);
+}
+
+/* 单元格 - 中间结果 */
+.td-display {
+  padding: var(--spacing-4);
+  border: var(--border-width) solid var(--color-gray-300);
+  background-color: var(--color-yellow-300);
+  color: var(--color-gray-800);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+}
+
+/* 单元格 - 重要计算结果 */
+.td-calc {
+  padding: var(--spacing-4);
+  border: var(--border-width) solid var(--color-gray-300);
+  background-color: var(--color-red-200);
+  color: var(--color-gray-800);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+}

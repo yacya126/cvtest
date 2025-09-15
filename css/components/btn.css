@@ -1,0 +1,14 @@
+.btn-primary {
+  background-color: var(--color-blue-500);
+  color: var(--color-white);
+  font-weight: var(--font-weight-bold);
+  padding: 0.5rem 1rem; /* py-2 px-4 转换 */
+  border-radius: var(--border-radius);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-colors);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-blue-600);
+}

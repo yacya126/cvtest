@@ -1,0 +1,75 @@
+/* 声明Inter字体 - Regular（常规字重） */
+@font-face {
+    font-family: 'Inter';
+    font-style: normal; /* 正常样式 */
+    font-weight: 400; /* 常规字重（对应font-normal） */
+    /* 优先使用woff2格式（体积小、加载快），fallback到ttf格式 */
+    src: url('fonts/Inter-Regular.woff2') format('woff2'), url('fonts/Inter-Regular.ttf') format('truetype');
+    /* 可选：指定字体显示策略，优化加载体验 */
+    font-display: swap;
+}
+
+/* 声明Inter字体 - Bold（粗体字重） */
+@font-face {
+    font-family: 'Inter';
+    font-style: normal; /* 正常样式 */
+    font-weight: 700; /* 粗体字重（对应font-bold） */
+    src: url('fonts/Inter-Bold.woff2') format('woff2'), url('fonts/Inter-Bold.ttf') format('truetype');
+    font-display: swap;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Body全页面基本样式 */
+.body-font {
+    @apply bg-gray-100 flex items-center justify-center min-h-screen p-8;
+}
+/* 具有灵活性的全页面容器 */
+.pagediv_font {
+    @apply flex flex-col items-stretch justify-center gap-8 w-full max-w-full lg:max-w-xl;
+}
+/* 主卡片容器 */
+.card {
+    @apply p-6 bg-white rounded-xl shadow-xl w-full flex flex-col items-center gap-6;
+}
+/* 语言选择卡片容器 */
+.lang-card {
+    @apply flex justify-center gap-2;
+}
+/* 语言选择按钮 */
+.lang-btn {
+    @apply px-3 py-1 rounded-lg hover:bg-gray-200 transition-colors text-sm;
+}
+
+/* 激活的语言选择按钮 */
+.lang-btn.active {
+    @apply bg-blue-100 text-blue-700;
+}
+
+/* 1级标题的通用样式 */
+.h1 {
+    @apply text-2xl font-bold text-center text-gray-800;
+}
+/* 主按钮 */
+.btn-primary {
+    @apply bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-xl transition-colors duration-200 w-full;
+}
+/* 第二类按钮 */
+.btn-secondary {
+    @apply bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-xl transition-colors duration-200 w-full;
+}
+
+.input-text {
+    @apply w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.status-message {
+    @apply text-gray-600 text-center;
+}
+/* 必须剥离的单一tailwind css类，加设only-的词头 */
+/* 只有w-full */
+.only-w-full {
+    @apply w-full;
+}

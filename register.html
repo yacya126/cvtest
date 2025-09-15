@@ -221,11 +221,12 @@
                 user.setUsername(username);
                 user.setEmail(email);
                 user.setPassword(password);
+                user.set("Mima", password);
                 user.setMobilePhoneNumber(phone);
-                user.setLIFTCV(1);
-                user.setLIFTRAIL(1);
-                user.setPSIBOB(1);
-                user.setALLPASS(1);
+                user.set("LIFTCV", "1");
+                user.set("LIFTRAIL", "1");
+                user.set("PSIBOB", "1");
+                user.set("ALLPASS", "1");
 
                 user.signUp()
                     .then(function (user) {
