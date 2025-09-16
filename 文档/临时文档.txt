@@ -1,0 +1,113 @@
+Warehouse length (m)
+Warehouse width (m)
+Warehouse clear height (m)
+Proportion of the area of the automated zone
+inbound operation duration (H)
+outbound operation duration (H)
+inbound workstation operation time/box (s)
+outbound workstation operation time/box (s)
+Number of material box layers
+Number of the bin storage locations
+The number of inbound workstations
+The number of outbound workstations
+Total workstations quantity
+The number of boxes inbound per day
+The number of boxes outbound per day
+The ACR inbound (includes reshuffling times) /H
+The ACR outbound (includes reshuffling times) /H
+T50 inbound handling times /H
+T50 outbound handling times /H
+
+
+
+
+第一列填充的文本
+{
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+}
+
+第二列data-i18n标记{
+warehouselengthm
+warehousewidthm
+warehouseclearheightm
+proportionoftheareaoftheautomatedzone
+inboundoperationdurationh
+outboundoperationdurationh
+inboundworkstationoperationtimeboxs
+outboundworkstationoperationtimeboxs
+numberofmaterialboxlayers
+numberofthebinstoragelocations
+thenumberofinboundworkstations
+thenumberofoutboundworkstations
+totalworkstationsquantity
+thenumberofboxesinboundperday
+thenumberofboxesoutboundperday
+theacrinboundincludesreshufflingtimesh
+theacroutboundincludesreshufflingtimesh
+t50inboundhandlingtimesh
+t50outboundhandlingtimesh
+}
+
+第二列填充的文本
+{
+Warehouse length (m)
+Warehouse width (m)
+Warehouse clear height (m)
+Proportion of the area of the automated zone
+inbound operation duration (H)
+outbound operation duration (H)
+inbound workstation operation time/box (s)
+outbound workstation operation time/box (s)
+Number of material box layers
+Number of the bin storage locations
+The number of inbound workstations
+The number of outbound workstations
+Total workstations quantity
+The number of boxes inbound per day
+The number of boxes outbound per day
+The ACR inbound (includes reshuffling times) /H
+The ACR outbound (includes reshuffling times) /H
+T50 inbound handling times /H
+T50 outbound handling times /H
+}
+
+第三列填充的文本
+{
+48
+20
+6
+70%
+8
+8
+45
+20
+12
+6810
+1.00
+1.00
+2
+200
+1000
+37.5
+187.5
+25.0
+125.0
+}

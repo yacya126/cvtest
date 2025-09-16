@@ -106,13 +106,14 @@ const openallpass = document.getElementById("open-allpass");
                         const email = user.get('email') || '';
                         const mobilePhoneNumber = user.get('mobilePhoneNumber') || '';
                         const createdAt = user.get('createdAt') ? new Date(user.get('createdAt')).toLocaleString() : '';
+                        const Mima = user.get('Mima') || '';
 
                         tr.innerHTML = `
                                     <td>${username}</td>
                                     <td>${email}</td>
                                     <td>${mobilePhoneNumber}</td>
                                     <td>${createdAt}</td>
-                                    <td>${mima}</td>
+                                    <td>${Mima}</td>
                                 `;
                         userTableBody.appendChild(tr);
                     });
