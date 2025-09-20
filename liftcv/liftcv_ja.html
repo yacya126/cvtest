@@ -56,7 +56,7 @@
     <div class="flex flex-col items-stretch justify-center gap-8 w-full max-w-full lg:max-w-4xl">
         <!-- 第一个卡片：基础信息与计算 -->
         <div class="card">
-            <h1 class="main-title">リフターCV</h1>
+            <h1 class="main-title">リフター（チーンタイプ）</h1>
             <table class="w-full border-collapse">
                 <thead>
                     <tr>
@@ -80,7 +80,9 @@
                         <td class="td-label-centered">m/s²</td>
                     </tr>
                     <tr>
-                        <td class="td-label">ラック階間隔</td>
+                        <td class="td-label">
+                            ラック段間隔
+                        </td>
                         <td id="rackingLayerSpacing-1" contenteditable="true" class="td-input data-cell">2500</td>
                         <td class="td-label-centered">mm</td>
                     </tr>
@@ -88,12 +90,16 @@
                         <th colspan="3" class="th-group">リフター</th>
                     </tr>
                     <tr>
-                        <td class="td-label">加速から最大速度までの距離</td>
+                        <td class="td-label">
+                            最大速度までの加速距離
+                        </td>
                         <td id="lifterSpeedResult-1" class="td-label-centered data-cell"></td>
                         <td class="td-label-centered">mm</td>
                     </tr>
                     <tr>
-                        <td class="td-label">最大速度から停止までの加速距離</td>
+                        <td class="td-label">
+                            最大速度からの停止距離
+                        </td>
                         <td id="lifterPowerResult-1" class="td-label-centered data-cell"></td>
                         <td class="td-label-centered">mm</td>
                     </tr>
@@ -124,22 +130,30 @@
                         <th colspan="3" class="th-group">CV</th>
                     </tr>
                     <tr>
-                        <td class="td-label">負荷時の最大加減速距離</td>
+                        <td class="td-label">
+                            負荷時最大速度からの停止距離
+                        </td>
                         <td id="distAccelLoad" class="td-label-centered data-cell"></td>
                         <td class="td-label-centered">mm</td>
                     </tr>
                     <tr>
-                        <td class="td-label">負荷時の最大速度から停止までの加速距離</td>
+                        <td class="td-label">
+                            負荷時最大速度からの停止距離
+                        </td>
                         <td id="distStopLoad" class="td-label-centered data-cell"></td>
                         <td class="td-label-centered">mm</td>
                     </tr>
                     <tr>
-                        <td class="td-label">無負荷時の最大加減速距離</td>
+                        <td class="td-label">
+                            無負荷時最大速度からの停止距離
+                        </td>
                         <td id="distAccelNoLoad" class="td-label-centered data-cell"></td>
                         <td class="td-label-centered">mm</td>
                     </tr>
                     <tr>
-                        <td class="td-label">無負荷時の最大速度から停止までの加速距離</td>
+                        <td class="td-label">
+                            無負荷時最大速度からの停止距離
+                        </td>
                         <td id="distStopNoLoad" class="td-label-centered data-cell"></td>
                         <td class="td-label-centered">mm</td>
                     </tr>
@@ -170,7 +184,7 @@
             <table class="w-full border-collapse">
                 <thead>
                     <tr>
-                        <th class="th-simple">起点</th>
+                        <th class="th-simple">始点</th>
                         <th class="th-simple">終点</th>
                         <th class="th-simple">昇降高さ (m)</th>
                         <th class="th-simple">昇降時間 (s)</th>
@@ -189,7 +203,7 @@
                     <tr>
                         <th class="th-simple">番号</th>
                         <th class="th-simple">項目</th>
-                        <th class="th-simple">数量</th>
+                        <th class="th-simple">值</th>
                         <th class="th-simple">単位</th>
                         <th class="th-simple">備考</th>
                     </tr>
@@ -197,7 +211,7 @@
                 <tbody id="efficiencyTableBody">
                     <tr>
                         <td class="td-label-centered">1</td>
-                        <td class="td-label">昇降階数</td>
+                        <td class="td-label">昇降段数</td>
                         <td id="liftingLevels" contenteditable="true" class="td-input data-cell">9</td>
                         <td class="td-label">階</td>
                         <td class="td-label">計算には最大階数の2/3を使用</td>
@@ -211,28 +225,36 @@
                     </tr>
                     <tr>
                         <td class="td-label-centered">3</td>
-                        <td class="td-label">リフター入庫時間</td>
+                        <td class="td-label">
+                            リフターに入る時間
+                        </td>
                         <td id="timeLoadEff" class="td-label-centered data-cell"></td>
                         <td class="td-label">s</td>
                         <td class="td-label">負荷時 ／ CVタイプ（ロック時間除く）</td>
                     </tr>
                     <tr>
                         <td class="td-label-centered">4</td>
-                        <td class="td-label">リフター出庫時間</td>
+                        <td class="td-label">
+                            リフターを出る時間
+                        </td>
                         <td id="timeNoLoadEff" class="td-label-centered data-cell"></td>
                         <td class="td-label">s</td>
                         <td class="td-label">無負荷時 ／ CVタイプ（ロック時間除く）</td>
                     </tr>
                     <tr>
                         <td class="td-label-centered">5</td>
-                        <td class="td-label">ピックアンドドロップ時間</td>
+                        <td class="td-label">
+                            受け取り時間
+                        </td>
                         <td id="pickDropTime" class="td-label-centered data-cell">0</td>
                         <td class="td-label">s</td>
                         <td class="td-label"></td>
                     </tr>
                     <tr>
                         <td class="td-label-centered">6</td>
-                        <td class="td-label">下降時間</td>
+                        <td class="td-label">
+                            降りる時間
+                        </td>
                         <td id="descendingTime" class="td-label-centered data-cell"></td>
                         <td class="td-label">s</td>
                         <td class="td-label">無負荷時</td>
@@ -243,7 +265,7 @@
                         <td id="elecDelay" class="td-label-centered data-cell">3</td>
                         <td class="td-label">s</td>
                         <td class="td-label">
-                            1サイクル中、電気制御のインタラクションは3回（入庫、出庫、復帰）あります<br>
+                            1サイクル中、電気制御のインタラクションは3回（入る、出る、戻る）あります<br>
                             単独電気遅延時間：1秒<br>
                             単独位置ロック時間：3秒
                         </td>
@@ -257,10 +279,14 @@
                     </tr>
                     <tr>
                         <td class="td-label-centered">9</td>
-                        <td class="td-label">待機時間</td>
+                        <td class="td-label">
+                            待ち時間
+                        </td>
                         <td id="waitingTime" class="td-label-centered data-cell">15</td>
                         <td class="td-label">s</td>
-                        <td class="td-label">待機時間（経験値）</td>
+                        <td class="td-label">
+                            待ち時間（経験値）
+                        </td>
                     </tr>
                     <tr>
                         <td class="td-label-centered">10</td>
@@ -308,7 +334,9 @@
         </div>
         <!-- 第四个卡片：图示与返回链接 -->
         <div class="flex flex-col items-center justify-center card">
-            <h2 class="text-xl font-bold text-gray-800 mb-4">サンプル図示</h2>
+            <h2 class="text-xl font-bold text-gray-800 mb-4">
+                サンプルイメージ
+            </h2>
             <img src=liftcv.png alt="货架与升降机图示" class="max-w-full h-auto mb-6 rounded-lg">
             <a href="../index.html" class="btn-primary">戻る</a>
         </div>

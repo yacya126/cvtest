@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>升降机与CV信息计算（已优化）</title>
+    <title>提升机与CV信息计算（已优化）</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style type="text/tailwindcss">
         body {
@@ -56,16 +56,16 @@
     <div class="flex flex-col items-stretch justify-center gap-8 w-full max-w-full lg:max-w-4xl">
         <!-- 第一个卡片：基础信息与计算 -->
         <div class="card">
-            <h1 class="main-title">升降机(叉车式)</h1>
+            <h1 class="main-title">提升机(链条式)</h1>
             <table class="w-full border-collapse">
                 <thead>
                     <tr>
-                        <th colspan="3" class="th-group">升降机基本信息</th>
+                        <th colspan="3" class="th-group">提升机基本信息</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="td-label">升降机类型</td>
+                        <td class="td-label">提升机类型</td>
                         <td class="td-label-centered">CV</td>
                         <td class="td-label-centered"></td>
                     </tr>
@@ -85,7 +85,7 @@
                         <td class="td-label-centered">毫米</td>
                     </tr>
                     <tr>
-                        <th colspan="3" class="th-group">升降机</th>
+                        <th colspan="3" class="th-group">提升机</th>
                     </tr>
                     <tr>
                         <td class="td-label">从加速到最大速度的距离</td>
@@ -144,17 +144,17 @@
                         <td class="td-label-centered">毫米</td>
                     </tr>
                     <tr>
-                        <td class="td-label">进出升降机的平均距离</td>
+                        <td class="td-label">进出提升机的平均距离</td>
                         <td id="avgDistance" contenteditable="true" class="td-input data-cell">2</td>
                         <td class="td-label-centered">米</td>
                     </tr>
                     <tr>
-                        <td class="td-label">带载进出升降机的时间</td>
+                        <td class="td-label">带载进出提升机的时间</td>
                         <td id="timeLoad" class="td-display data-cell"></td>
                         <td class="td-label-centered">秒</td>
                     </tr>
                     <tr>
-                        <td class="td-label">空载进出升降机的时间</td>
+                        <td class="td-label">空载进出提升机的时间</td>
                         <td id="timeNoLoad" class="td-display data-cell"></td>
                         <td class="td-label-centered">秒</td>
                     </tr>
@@ -167,7 +167,7 @@
 
         <!-- 第二个卡片：提升高度与时间 -->
         <div class="card">
-            <h1 class="main-title">提升高度与时间</h1>
+            <h1 class="main-title">提升层高与时间</h1>
 
             <table class="w-full border-collapse">
                 <thead>
@@ -184,9 +184,9 @@
             </table>
         </div>
 
-        <!-- 第三个卡片：升降机效率 -->
+        <!-- 第三个卡片：提升机效率 -->
         <div class="card">
-            <h1 class="main-title">升降机效率</h1>
+            <h1 class="main-title">提升机效率</h1>
             <table class="w-full border-collapse">
                 <thead>
                     <tr>
@@ -214,14 +214,14 @@
                     </tr>
                     <tr>
                         <td class="td-label-centered">3</td>
-                        <td class="td-label">进入升降机的时间</td>
+                        <td class="td-label">进入提升机的时间</td>
                         <td id="timeLoadEff" class="td-label-centered data-cell"></td>
                         <td class="td-label">秒</td>
                         <td class="td-label">带载 / CV类型（不含锁定时间）</td>
                     </tr>
                     <tr>
                         <td class="td-label-centered">4</td>
-                        <td class="td-label">离开升降机的时间</td>
+                        <td class="td-label">离开提升机的时间</td>
                         <td id="timeNoLoadEff" class="td-label-centered data-cell"></td>
                         <td class="td-label">秒</td>
                         <td class="td-label">空载 / CV类型（不含锁定时间）</td>
@@ -271,7 +271,7 @@
                         <td id="efficiencyRate" contenteditable="true" class="td-input data-cell">85</td>
                         <td class="td-label">%</td>
                         <td class="td-label">
-                            1-2班制：利用率%（稼动率）80-85%<br>
+                            1-2班制：利用率%（稼动率）75-85%<br>
                             3班制：70%
                         </td>
                     </tr>
@@ -284,21 +284,21 @@
                     </tr>
                     <tr>
                         <td class="td-label-centered">12</td>
-                        <td class="td-label">托盘提升性能</td>
+                        <td class="td-label">提升机效率</td>
                         <td id="palletLiftingPerformance" class="td-display data-cell"></td>
-                        <td class="td-label">个/小时</td>
+                        <td class="td-label">托盘/小时</td>
                         <td class="td-label"></td>
                     </tr>
                     <tr>
                         <td class="td-label-centered">13</td>
                         <td class="td-label">吞吐量要求</td>
                         <td id="throughputRequirement" contenteditable="true" class="td-input data-cell">413</td>
-                        <td class="td-label">个/小时</td>
+                        <td class="td-label">托盘/小时</td>
                         <td class="td-label"></td>
                     </tr>
                     <tr>
                         <td class="td-label-centered">14</td>
-                        <td class="td-label">升降机数量</td>
+                        <td class="td-label">提升机数量</td>
                         <td id="qtyOfLift" class="td-calc data-cell"></td>
                         <td class="td-label"></td>
                         <td class="td-label"></td>
@@ -313,7 +313,7 @@
         <!-- 第四个卡片：图示与返回链接 -->
         <div class="flex flex-col items-center justify-center card">
             <h2 class="text-xl font-bold text-gray-800 mb-4">示例图示</h2>
-            <img src=liftcv.png alt="货架与升降机图示" class="max-w-full h-auto mb-6 rounded-lg">
+            <img src=liftcv.png alt="货架与提升机图示" class="max-w-full h-auto mb-6 rounded-lg">
             <a href="../index.html" class="btn-primary">返回</a>
         </div>
     </div>
