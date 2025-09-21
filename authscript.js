@@ -5,6 +5,8 @@
             serverURL: "https://l5snq7bv.lc-cn-n1-shared.com"
         });
 
+//#region 获取所有元素
+
         // 获取 DOM 元素
         const authBtn = document.getElementById("btn-auth");
         const authorizedEmailInput = document.getElementById("authorized_email");
@@ -36,8 +38,10 @@ const openliftrail = document.getElementById("open-liftrail");
 const openpsibob = document.getElementById("open-psibob");
 const openallpass = document.getElementById("open-allpass");
 
-        // 绑定授权按钮点击事件
-        authBtn.addEventListener('click', function () {
+//#endregion
+
+// 绑定授权按钮点击事件
+authBtn.addEventListener('click', function () {
             feedbackMessage.textContent = '';
             const emailValue = authorizedEmailInput.value;
             if (!emailValue) {
@@ -60,8 +64,10 @@ const openallpass = document.getElementById("open-allpass");
             });
         });
 
-        // 绑定已授权邮箱查询按钮点击事件
-        queryBtn.addEventListener('click', function () {
+// 绑定授权按钮点击事件
+
+// 绑定已授权邮箱查询按钮点击事件
+queryBtn.addEventListener('click', function () {
             emailList.innerHTML = '';
             const query = new AV.Query("AuthUsers");
             query.find().then((results) => {
@@ -86,8 +92,8 @@ const openallpass = document.getElementById("open-allpass");
             });
         });
 
-        // 绑定用户列表查询按钮点击事件
-        queryUsersBtn.addEventListener('click', function () {
+// 绑定用户列表查询按钮点击事件
+queryUsersBtn.addEventListener('click', function () {
             userTableBody.innerHTML = '';
 
             const query = new AV.Query('_User');
@@ -130,8 +136,8 @@ const openallpass = document.getElementById("open-allpass");
             });
         });
 
-        // 新增：绑定删除用户按钮点击事件，现在改为调用云函数
-        deleteUserBtn.addEventListener('click', async function () {
+// 新增：绑定删除用户按钮点击事件，现在改为调用云函数
+deleteUserBtn.addEventListener('click', async function () {
             deleteFeedbackMessage.textContent = '';
             const emailToDelete = deleteEmailInput.value.trim();
 
@@ -161,7 +167,6 @@ const openallpass = document.getElementById("open-allpass");
 
 // 存储所有用户数据，供编辑功能使用
 let allUsers = [];
-
 queryPermissionsBtn.addEventListener('click', function () {
     permissionsTableBody.innerHTML = '';
     const query = new AV.Query('_User');
@@ -206,7 +211,7 @@ queryPermissionsBtn.addEventListener('click', function () {
     });
 });
 
-//监听所有的权限处理按钮
+//#region 监听所有的权限处理按钮
 
 banliftcv.addEventListener('click', async function () {
     console.log("要操作的元素：", deleteFeedbackMessage2); // 看控制台是否输出 null
@@ -236,7 +241,6 @@ banliftcv.addEventListener('click', async function () {
         deleteFeedbackMessage2.style.color = "red";
     }
 });
-
 
 banliftrail.addEventListener('click', async function () {
     console.log("要操作的元素：", deleteFeedbackMessage2); // 看控制台是否输出 null
@@ -440,3 +444,4 @@ openliftrail.addEventListener('click', async function () {
         deleteFeedbackMessage2.style.color = "red";
     }
 });
+//#endregion
