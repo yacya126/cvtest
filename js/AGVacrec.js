@@ -187,54 +187,54 @@ function calculateRowSubtotal(row) {
 	//console.log(D.textContent);
 	//计算G列
 	if (models === "A42") {
-		Gvalue = ((5 / 7) * parseFloat(F.textContent) + 7 / 3);
+		let Gvalue = ((5 / 7) * parseFloat(F.textContent) + 7 / 3);
 		G.textContent = Gvalue.toFixed(3);
 	} else if (models === "A42T") {
-		Gvalue = ((5 / 7) * parseFloat(F.textContent) + 2.8);
+		let Gvalue = ((5 / 7) * parseFloat(F.textContent) + 2.8);
 		G.textContent = Gvalue.toFixed(3);
 	} else {
 		console.error("no models");
 	}
 	//计算I列
 	if (models === "A42") {
-		Ivalue = (8.67 * parseFloat(H.textContent));
+		let Ivalue = (8.67 * parseFloat(H.textContent));
 		I.textContent = Ivalue.toFixed(3);
 	} else if (models === "A42T") {
-		Ivalue = (10 * parseFloat(H.textContent));
+		let Ivalue = (10 * parseFloat(H.textContent));
 		I.textContent = Ivalue.toFixed(3);
 	} else {
 		console.error("no models");
 	}
 	//计算J列
-	Jvalue = Gvalue + Ivalue;
+	let Jvalue = Gvalue + Ivalue;
 	J.textContent = Jvalue.toFixed(3);
 	//计算L列
 	if (models === "A42") {
-		Lvalue = (18.67 * parseFloat(K.textContent));
+		let Lvalue = (18.67 * parseFloat(K.textContent));
 		L.textContent = Lvalue.toFixed(3);
 	} else if (models === "A42T") {
-		Lvalue = (27.0 * parseFloat(K.textContent));
+		let Lvalue = (27.0 * parseFloat(K.textContent));
 		L.textContent = Lvalue.toFixed(3);
 	} else {
 		console.error("no models");
 	}
 	//计算N列
-	Nvalue = Jvalue + Lvalue + parseFloat(M.textContent);
+	let Nvalue = Jvalue + Lvalue + parseFloat(M.textContent);
 	N.textContent = Nvalue.toFixed(3);
 	//计算O列
-	Ovalue = ((3600 / Nvalue) * parseFloat(E.textContent) * 0.8);
+	let Ovalue = ((3600 / Nvalue) * parseFloat(E.textContent) * 0.8);
 	O.textContent = Ovalue.toFixed(3);
 	//计算P列
-	Pvalue = Ovalue * 0.85;
+	let Pvalue = Ovalue * 0.85;
 	P.textContent = Pvalue.toFixed(3);
 	//计算Q列
-	Qvalue = (parseFloat(D.textContent) / Pvalue);
+	let Qvalue = (parseFloat(D.textContent) / Pvalue);
 	Q.textContent = Qvalue.toFixed(1);
 	//计算R列
-	Rvalue = Qvalue *0.17;
+	let Rvalue = Qvalue *0.17;
 	R.textContent = Rvalue.toFixed(1);
 	//计算S列
-	Svalue = 3600 / Ovalue;
+	let Svalue = 3600 / Ovalue;
 	S.textContent = Svalue.toFixed(5);
 }
 
