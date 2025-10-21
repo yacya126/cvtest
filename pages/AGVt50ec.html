@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>AGV Calculation - T50</title>
+		<link rel="stylesheet" href="../css/output.css" />
+		<script src="https://cdn.jsdelivr.net/npm/handsontable@13.1/dist/handsontable.full.min.js"></script>
+		<link
+			href="https://cdn.jsdelivr.net/npm/handsontable@13.1/dist/handsontable.full.min.css"
+			rel="stylesheet"
+		/>
+		<script src="../js/i18n.js" defer></script>
+		<script src="../js/load-language-selector.js" defer></script>
+	</head>
+	<body class="body-font">
+		<div class="pagediv-font">
+			<div class="card mt-10">
+				<h1 class="h1" data-i18n="Matrix8calculator3">
+					Matrix8 Calculator - T50
+				</h1>
+				<button
+					class="btn-primary"
+					id="hiddenshowbutton"
+					data-i18n="hiddenorshow"
+				>
+					Hidden / Show The details data
+				</button>
+				<table class="table-basic hidden" id="basicinformationtable">
+					<thead>
+						<tr>
+							<th colspan="2" class="th-group" data-i18n="acrec_group_title">
+								AGV Basic Information
+							</th>
+						</tr>
+						<tr>
+							<th class="th-group" data-i18n="acrec_no"></th>
+							<th class="th-group">1</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_model"></td>
+							<td class="td-label-centered data-col-1" id="C4">T50</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_linear_speed">
+								直线速度
+							</td>
+							<td class="td-label-centered data-col-1" id="D4">3.00</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_acceleration">
+								加速度
+							</td>
+							<td class="td-label-centered data-col-1" id="E4">1.50</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_deceleration">
+								减速度
+							</td>
+							<td class="td-label-centered data-col-1" id="F4">1.50</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_accel_time">
+								加速时间/次
+							</td>
+							<td class="td-label-centered data-col-1" id="G4">2.00</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_decel_time">
+								减速时间/次
+							</td>
+							<td class="td-label-centered data-col-1" id="H4">2.00</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_accel_dist">
+								加速距离/m
+							</td>
+							<td class="td-label-centered data-col-1" id="I4">3.00</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_decel_dist">
+								减速距离/m
+							</td>
+							<td class="td-label-centered data-col-1" id="J4">3.00</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_turn90_time">
+								转90度时间/s
+							</td>
+							<td class="td-label-centered data-col-1" id="K4">1.50</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_turn180_time">
+								转180度时间/s
+							</td>
+							<td class="td-label-centered data-col-1" id="L4">1.50</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_stop_time_t50ec">
+								交界时间/s
+							</td>
+							<td class="td-label-centered data-col-1" id="M4">2.00</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_extra_lift_time_t50ec">
+								顶升/放下时间/s
+							</td>
+							<td class="td-label-centered data-col-1" id="N4">2.00</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_charge_eff">
+								充电效率%
+							</td>
+							<td class="td-label-centered data-col-1" id="P4">85</td>
+						</tr>
+						<tr>
+							<td
+								class="td-label-centered"
+								data-i18n="acrec_charger_utilization"
+							>
+								充电桩利用率%
+							</td>
+							<td class="td-label-centered data-col-1" id="Q4">17</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_availability">
+								稼动率
+							</td>
+							<td class="td-label-centered data-col-1" id="R4">80</td>
+						</tr>
+					</tbody>
+				</table>
+				<hr class="divider" />
+
+				<div class="flex space-x-4 mb-4">
+					<h1 class="h1" data-i18n="t50ec_calculate"></h1>
+				</div>
+
+				<div class="content_frame w-full overflow-x-auto h-full max-h-full" id="data-table">
+					<table class="table_basic w-full border-collapse table-auto">
+						<thead>
+							<tr>
+								<th class="th-group" data-i18n="t50ec_tablehead_1"></th>
+								<th class="th-group" data-i18n="t50ec_tablehead_2"></th>
+								<th class="th-group" data-i18n="t50ec_tablehead_3"></th>
+								<th class="th-group" data-i18n="t50ec_tablehead_4"></th>
+								<th class="th-group" data-i18n="t50ec_tablehead_5"></th>
+								<th class="th-group" data-i18n="t50ec_tablehead_6"></th>
+								<th class="th-group" data-i18n="t50ec_tablehead_7"></th>
+								<th class="th-group" data-i18n="t50ec_tablehead_8"></th>
+								<th class="th-group" data-i18n="t50ec_tablehead_9"></th>
+								<th class="th-group" data-i18n="t50ec_tablehead_10"></th>
+								<th class="th-group" data-i18n="t50ec_tablehead_11"></th>
+								<th class="th-group" data-i18n="t50ec_tablehead_12"></th>
+								<th class="th-group" data-i18n="t50ec_tablehead_13"></th>
+								<th class="th-group" data-i18n="t50ec_tablehead_14"></th>
+								<th class="th-group" data-i18n="t50ec_tablehead_15"></th>
+								<th class="th-group" data-i18n="t50ec_tablehead_16"></th>
+								<th class="th-group" data-i18n="t50ec_tablehead_17"></th>
+							</tr>
+						</thead>
+						<tbody id="calculateTableBody">
+							<tr>
+								<td class="data-cell td-label-centered td-row-number">1</td>
+								<td class="data-cell td-input" contenteditable="true">Inbound</td>
+								<td class="data-cell td-input" contenteditable="true">25.0</td>
+								<td class="data-cell td-input" contenteditable="true">75</td>
+								<td class="data-cell td-label-centered">27.0</td>
+								<td class="data-cell td-input" contenteditable="true">6</td>
+								<td class="data-cell td-label-centered">36.0</td>
+								<td class="data-cell td-label-centered">63.0</td>
+								<td class="data-cell td-input" contenteditable="true">2</td>
+								<td class="data-cell td-label-centered">16.0</td>
+								<td class="data-cell td-input" contenteditable="true">60.0</td>
+                                <td class="data-cell td-input" contenteditable="true">10.0</td>
+								<td class="data-cell td-label-centered">149.0</td>
+								<td class="data-cell td-label-centered">19.3</td>
+								<td class="data-cell td-label-centered">16.4</td>
+								<td class="data-cell td-label-centered">1.5</td>
+								<td class="data-cell td-label-centered">0.3</td>
+							</tr>
+							<tr>
+								<td class="data-cell td-label-centered td-row-number">2</td>
+								<td class="data-cell td-input" contenteditable="true">Outbound</td>
+								<td class="data-cell td-input" contenteditable="true">1.0</td>
+								<td class="data-cell td-input" contenteditable="true">75</td>
+								<td class="data-cell td-label-centered">27.0</td>
+								<td class="data-cell td-input" contenteditable="true">6</td>
+								<td class="data-cell td-label-centered">36.0</td>
+								<td class="data-cell td-label-centered">63.0</td>
+								<td class="data-cell td-input" contenteditable="true">2</td>
+								<td class="data-cell td-label-centered">16.0</td>
+								<td class="data-cell td-input" contenteditable="true">20.0</td>
+                                <td class="data-cell td-input" contenteditable="true">10.0</td>
+								<td class="data-cell td-label-centered">109.0</td>
+								<td class="data-cell td-label-centered">26.4</td>
+								<td class="data-cell td-label-centered">22.5</td>
+								<td class="data-cell td-label-centered">0.0</td>
+								<td class="data-cell td-label-centered">0.0</td>
+							</tr>
+							<tr>
+								<td class="data-cell td-label-centered td-row-number">3</td>
+								<td class="data-cell td-input" contenteditable="true">Others</td>
+								<td class="data-cell td-input" contenteditable="true">0.0</td>
+								<td class="data-cell td-input" contenteditable="true">75</td>
+								<td class="data-cell td-label-centered">27.0</td>
+								<td class="data-cell td-input" contenteditable="true">8</td>
+								<td class="data-cell td-label-centered">48.0</td>
+								<td class="data-cell td-label-centered">75.0</td>
+								<td class="data-cell td-input" contenteditable="true">2</td>
+								<td class="data-cell td-label-centered">16.0</td>
+								<td class="data-cell td-input" contenteditable="true">20.0</td>
+                                <td class="data-cell td-input" contenteditable="true">20.0</td>
+								<td class="data-cell td-label-centered">131.0</td>
+								<td class="data-cell td-label-centered">22.0</td>
+								<td class="data-cell td-label-centered">18.7</td>
+								<td class="data-cell td-label-centered">0.0</td>
+								<td class="data-cell td-label-centered">0.0</td>
+							</tr>
+							<tr>
+								<td class="data-cell td-label-centered td-row-number">4</td>
+								<td class="data-cell td-input" contenteditable="true">Others</td>
+								<td class="data-cell td-input" contenteditable="true">0.0</td>
+								<td class="data-cell td-input" contenteditable="true">75</td>
+								<td class="data-cell td-label-centered">27.0</td>
+								<td class="data-cell td-input" contenteditable="true">8</td>
+								<td class="data-cell td-label-centered">48.0</td>
+								<td class="data-cell td-label-centered">75.0</td>
+								<td class="data-cell td-input" contenteditable="true">2</td>
+								<td class="data-cell td-label-centered">16.0</td>
+								<td class="data-cell td-input" contenteditable="true">19.0</td>
+                                <td class="data-cell td-input" contenteditable="true">19.0</td>
+								<td class="data-cell td-label-centered">129.0</td>
+								<td class="data-cell td-label-centered">22.3</td>
+								<td class="data-cell td-label-centered">19.0</td>
+								<td class="data-cell td-label-centered">0.0</td>
+								<td class="data-cell td-label-centered">0.0</td>
+							</tr>
+						</tbody>
+						<tfoot id="calculateTableFoot">
+							<tr>
+								<td class="data-cell td-label-centered">SUM</td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-display font-bold text-red-600"></td>
+								<td class="data-cell td-display font-bold text-red-600"></td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+				<button
+					class="btn-primary"
+					id="button-addline"
+					data-i18n="button-addline"
+				>
+					addline
+				</button>
+				<button
+					class="btn-primary"
+					id="button-deleteline"
+					data-i18n="button-deleteline"
+				>
+					deleteline
+				</button>
+
+				<button class="btn-primary" id="button-test" data-i18n="liftcv-calculatebutton">计算</button>
+				<a
+					href="../pages/AGVconclusion.html"
+					class="btn-secondary"
+					data-i18n="AGV-returnOVERVIEW"
+				>
+					Return
+				</a>
+				<a
+					href="../pages/dashboard.html"
+					class="btn-secondary"
+					data-i18n="AGV-returnOVERVIEW2"
+				>
+					Return
+				</a>
+			</div>
+		</div>
+		<div id="hot-container"></div>
+		<!-- 业务逻辑js，请确保您的JS文件路径正确 -->
+		<script src="../js/table_persistence.js"></script>
+		<script src="../js/AGVt50ec.js"></script>
+	</body>
+</html>

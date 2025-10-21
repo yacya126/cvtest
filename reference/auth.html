@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeanCloud Auth Test</title>
+    <script src="Tailwind-OFFICIAL.js"></script>
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* 主卡片容器 */
+        .card {
+            @apply p-6 bg-white rounded-xl shadow-xl w-full;
+        }
+        /* 主按钮 */
+        .btn-primary {
+            @apply bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-xl transition-colors duration-200;
+        }
+        .btn-secondary {
+            @apply bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-xl transition-colors duration-200;
+        }
+        .input-text {
+            @apply w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500;
+        }
+        .section-title {
+            @apply text-xl font-bold text-gray-800 mb-4;
+        }
+        .feedback-message {
+            @apply mt-2 text-gray-600;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto"></div>
+        <!-- 授权注册部分 -->
+        <div class="card mb-8">
+            <h2 class="section-title">管理员授权谁注册？</h2>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <input id="authorized_email" type="email" placeholder="输入邮箱地址" class="input-text">
+                <button id="btn-auth" class="btn-primary whitespace-nowrap">授权注册</button>
+                <button id="btn-quickauth" class="btn-primary whitespace-nowrap">一键注册</button>
+            </div>
+            <h2 class="section-title">备注：点击“授权注册”按钮则授权对应邮箱注册，由用户自行注册。点击“一键注册”按钮则同时授权并完成注册，用户直接登录。默认用户名为用户邮箱“@”以前的部分，默认密码为123456。</h2>
+            <p id="feedback-message" class="feedback-message"></p>
+        </div>
+
+        <!-- 已授权邮箱列表 -->
+        <div class="card mb-8">
+            <h2 class="section-title">已授权邮箱列表</h2>
+            <button id="btn-query" class="btn-secondary mb-4">查看已授权</button>
+            <ul id="email-list" class="pl-5 text-gray-700 space-y-1"></ul>
+        </div>
+
+        <!-- 所有注册用户列表 -->
+        <div class="card mb-8">
+            <h2 class="section-title">所有注册用户列表</h2>
+            <button id="btn-query-users" class="btn-secondary mb-4">查看注册用户</button>
+
+            <!-- 用于显示用户列表的表格 -->
+            <table id="user-table" class="w-full mt-4 border-collapse">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="px-4 py-2 border text-left text-gray-700">Username</th>
+                        <th class="px-4 py-2 border text-left text-gray-700">Email</th>
+                        <th class="px-4 py-2 border text-left text-gray-700">Mobile Phone</th>
+                        <th class="px-4 py-2 border text-left text-gray-700">Created At</th>
+                        <th class="px-4 py-2 border text-left text-gray-700">Password</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 用户数据将在这里动态生成 -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 删除用户部分 -->
+        <div class="card mb-8">
+            <h2 class="section-title">管理员删除用户邮箱？</h2>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <input id="delete-email-input" type="email" placeholder="输入要删除的邮箱" class="input-text">
+                <button id="btn-delete-user" class="btn-primary whitespace-nowrap">删除用户</button>
+            </div>
+            <p id="delete-feedback-message" class="feedback-message"></p>
+        </div>
+    <!-- 用户权限列表 -->
+    <div class="card mb-8">
+        <h2 class="section-title">用户权限列表</h2>
+        <button id="btn-query-permissions" class="btn-secondary mb-4">查看用户权限</button>
+
+        <table id="permissions-table" class="w-full mt-4 border-collapse">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="px-4 py-2 border text-left text-gray-700">用户名</th>
+                    <th class="px-4 py-2 border text-left text-gray-700">邮箱</th>
+                    <th class="px-4 py-2 border text-left text-gray-700">LIFTCV</th>
+                    <th class="px-4 py-2 border text-left text-gray-700">LIFTRAIL</th>
+                    <th class="px-4 py-2 border text-left text-gray-700">PSIBOB</th>
+                    <th class="px-4 py-2 border text-left text-gray-700">ALLPASS</th>
+                </tr>
+            </thead>
+            <tbody id="permissions-table-body">
+                <!-- 权限数据将在这里动态生成 -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 编辑用户权限 -->
+    <div class="card mb-8">
+        <h2 class="text-lg font-semibold text-gray-800 mb-3">管理员禁用用户权限？</h2>
+        <!-- 输入框：小屏全屏，中屏半宽，大屏三分之一宽，增加内边距与圆角 -->
+        <input id="banned-users"
+               type="email"
+               placeholder="输入要控制权限的邮箱"
+               class="input-text mb-4">
+        <!-- 按钮网格：小屏2列，中屏及以上4列，增加按钮内边距与圆角 -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <button id="ban-liftcv" class="btn-primary px-4 py-2 rounded-lg whitespace-nowrap">禁用LIFT CV</button>
+            <button id="ban-liftrail" class="btn-primary px-4 py-2 rounded-lg whitespace-nowrap">禁用LIFT RAIL</button>
+            <button id="ban-psibob" class="btn-primary px-4 py-2 rounded-lg whitespace-nowrap">禁用PS IB OB</button>
+            <button id="ban-allpass" class="btn-primary px-4 py-2 rounded-lg whitespace-nowrap">全部禁用</button>
+            <button id="open-liftcv" class="btn-primary px-4 py-2 rounded-lg whitespace-nowrap">启用LIFT CV</button>
+            <button id="open-liftrail" class="btn-primary px-4 py-2 rounded-lg whitespace-nowrap">启用LIFT RAIL</button>
+            <button id="open-psibob" class="btn-primary px-4 py-2 rounded-lg whitespace-nowrap">启用PS IB OB</button>
+            <button id="open-allpass" class="btn-primary px-4 py-2 rounded-lg whitespace-nowrap">全部启用</button>
+        </div>
+        <p id="delete-feedback-message-new" class="feedback-message"></p>
+    </div>
+        
+
+    <div class="text-center mt-6">
+        <a href="dashboard.html" class="btn-primary w-full">返回菜单</a>
+    </div>
+    <!-- LeanCloud JavaScript SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.10.0/dist/av-min.js"></script>
+    <script src="authscript.js"></script>
+</body>
+</html>

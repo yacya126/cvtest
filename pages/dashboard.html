@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PS Efficiency calculation - Dashboard</title>
+    <link rel="stylesheet" href="../css/output.css" />
+    <!-- 引入加载工具 -->
+    <script src="../js/i18n.js" defer></script>
+    <script src="../js/load-language-selector.js" defer></script>
+  </head>
+  <body class="body-font">
+    <div class="pagediv-font">
+      <div class="card mt-10">
+        <h1 class="h1" data-i18n="function_selection">Function selection</h1>
+        <div class="header-group">
+          <h1 id="user-info" data-i18n="welcome_back" class="inline-heading">
+            Welcome Back！
+          </h1>
+          <h1 id="current-username" class="inline-heading"></h1>
+        </div>
+        <div class="header-group">
+          <h1
+            id="current-timeshow"
+            data-i18n="current-timeshow"
+            class="inline-heading"
+          >
+            Current time:
+          </h1>
+          <h1 id="current-time" class="inline-heading"></h1>
+        </div>
+
+        <div class="content-frame">
+          <h1 data-i18n="dashboard-lifters" class="h1">Lifters</h1>
+          <a
+            href="liftcv.html"
+            class="btn-primary"
+            data-i18n="lift_cv"
+            id="liftcvlink"
+            >LIFT CV</a
+          >
+          <a
+            href="liftrail.html"
+            class="btn-primary"
+            data-i18n="lift_rail"
+            id="liftraillink"
+            >LIFT RAIL</a
+          >
+          <a
+            href="psibob.html"
+            class="btn-primary"
+            data-i18n="ps_ib_ob"
+            id="psiboblink"
+            >PS IB OB</a
+          >
+        </div>
+        <div class="content-frame">
+          <h1 data-i18n="dashboard-agv" class="h1">AGV</h1>
+          <a
+            href="../pages/AGVconclusion.html"
+            class="btn-primary"
+            data-i18n="card0_overview"
+            id="overview"
+            >Overview</a
+          >
+          <a href="AGVacrec.html" class="btn-primary" data-i18n="card0_acr_ec" id="acr_ec"
+            >ACR</a
+          >
+          <a href="AGVt50ec.html" class="btn-primary" data-i18n="card0_t50_ec" id="t50_ec"
+            >T50</a
+          >
+          <a href="AGVkivaec.html" class="btn-primary" data-i18n="card0_kiva_ec" id="kiva_ec"
+            >KIVA</a
+          >
+        </div>
+        <div class="content-frame">
+          <button id="logout-btn" class="btn-secondary" data-i18n="logout">
+            Logout
+          </button>
+          <button
+            id="changepassword-btn"
+            class="btn-secondary"
+            data-i18n="changepassword"
+          >
+            Changepassword
+          </button>
+        </div>
+        <div class="content-frame" id="auth">
+          <hr class="divider" />
+          <button id="admin-auth" class="btn-secondary" data-i18n="admin-auth">
+            Administrator Auth
+          </button>
+        </div>
+      </div>
+    </div>
+    <script src="../js/av-min.js"></script>
+    <script src="../js/showtime.js"></script>
+    <script src="../js/dashboard.js"></script>
+  </body>
+</html>

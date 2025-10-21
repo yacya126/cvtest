@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>原生 HTML 动态表格 - 包含合计行</title>
+	</head>
+	<body>
+		<h2>AGV 动态数据表</h2>
+		<table id="data-table">
+			<thead>
+				<tr>
+					<th>列 1 (求和)</th>
+					<th>列 2 (求和)</th>
+					<th>列 3 (求和)</th>
+					<th>列 4 (求和)</th>
+					<th>列 5 (求和)</th>
+					<th>列 6 (求和)</th>
+					<th>列 7 (求和)</th>
+					<th>列 8 (求和)</th>
+				</tr>
+			</thead>
+
+			<tbody id="data-table-body">
+				<tr>
+					<td>42</td>
+					<td>
+						<input type="text" value="初始文本" oninput="updateTotals()" />
+					</td>
+					<td>15</td>
+					<td></td>
+					<td>45</td>
+					<td>55</td>
+					<td>65</td>
+					<td>75</td>
+				</tr>
+			</tbody>
+
+			<tfoot>
+				<tr id="total-row">
+					<td id="total-col-0">0</td>
+					<td id="total-col-1">0</td>
+					<td id="total-col-2">0</td>
+					<td id="total-col-3">0</td>
+					<td id="total-col-4">0</td>
+					<td id="total-col-5">0</td>
+					<td id="total-col-6">0</td>
+					<td id="total-col-7">0</td>
+				</tr>
+			</tfoot>
+		</table>
+		<button onclick="addRow()">添加新的表格行</button>
+		<button onclick="deleteRow()">删除最后一行数据</button>
+		<button onclick="calculateColumnFour()">计算 (更新第四列)</button>
+		<script>
+			const NUM_COLUMNS = 8;
+			function getRandomFloat(min, max, decimals = 2) {
+				const str = (Math.random() * (max - min) + min).toFixed(decimals);
+				return parseFloat(str);
+			}
+			function addRow() {
+				const tableBody = document.getElementById("data-table-body");
+				const newRow = document.createElement("tr");
+
+				for (let i = 0; i < NUM_COLUMNS; i++) {
+					if (i === 1) {
+						const inputCell = document.createElement("input");
+						inputCell.type = "text";
+						inputCell.placeholder = "输入文本";
+						newRow.appendChild(inputCell);
+					} 
+                    /*
+                    else if (i === 3) {
+						const nodataCell = document.createElement("td");
+						nodataCell.textContent = "";
+						newRow.appendChild(nodataCell);
+					}
+                    */
+                    else {
+						const randomNumber = getRandomFloat(10, 100, 2);
+						const newCell = document.createElement("td");
+						newCell.textContent = randomNumber;
+					}
+				}
+				tableBody.appendChild(newRow);
+
+				// ** 关键步骤：添加新行后，立即更新合计行 **
+				updateTotals();
+			}
+			function deleteRow() {
+				const tableBody = document.getElementById("data-table-body");
+				const dataRows = tableBody.getElementsByTagName("tr");
+
+				// 检查是否有数据行可以删除 (确保至少保留一行)
+				if (dataRows.length > 1) {
+					// 获取 tbody 中的最后一行
+					const lastRow = dataRows[dataRows.length - 1];
+
+					// 从 tbody 中移除这一行
+					tableBody.removeChild(lastRow);
+
+					// 删除行后，更新合计行
+					updateTotals();
+				} else if (dataRows.length === 1) {
+					// 仅剩一行时，给出提示或执行清空操作
+					alert("已是最后一行数据，不能再删除。");
+				} else {
+					// 表格已空
+					alert("表格主体已无数据行可删除。");
+				}
+			}
+			function updateTotals() {
+				const tableBody = document.getElementById("data-table-body");
+				// 初始化一个数组来存储每列的总和
+				const sums = new Array(NUM_COLUMNS).fill(0);
+
+				// 遍历 tbody 中的所有行
+				const dataRows = tableBody.getElementsByTagName("tr");
+
+				for (let i = 0; i < dataRows.length; i++) {
+					const cells = dataRows[i].getElementsByTagName("td");
+
+					for (let j = 0; j < cells.length && j < NUM_COLUMNS; j++) {
+						// **【核心逻辑】跳过第 2 列 (j=1) 的求和**
+						if (j === 1 || j === 3) {
+							continue; // 跳过当前列，继续下一列
+						}
+
+						let value;
+						const cellContent = cells[j].textContent.trim();
+
+						// 💡 处理输入框的值：如果单元格内有 input，提取 input 的值
+						const inputElement = cells[j].querySelector("input");
+
+						if (inputElement) {
+							// 如果是输入框列（虽然我们上面跳过了，但以防万一），或者其他数字列未来也用输入框
+							value = parseFloat(inputElement.value.trim());
+						} else {
+							// 如果是标准 <td> 单元格，提取其文本内容
+							value = parseFloat(cellContent);
+						}
+
+						if (!isNaN(value)) {
+							// 使用 Math.round() 避免中间计算的精度误差
+							const factor = 10000; // 提高精度到万分之一
+							sums[j] = Math.round((sums[j] + value) * factor) / factor;
+						}
+					}
+				}
+
+				/* 将计算出的总和更新到页脚 (tfoot)
+				for (let k = 0; k < NUM_COLUMNS; k++) {
+					const totalCell = document.getElementById(`total-col-${k}`);
+					const finalSum = sums[k].toFixed(2);
+					if (totalCell) {
+						totalCell.textContent = finalSum;
+					}
+				}
+                */
+			}
+			function calculateColumnFour() {
+				const tableBody = document.getElementById("data-table-body");
+				const dataRows = tableBody.getElementsByTagName("tr");
+
+				// 精度因子，用于避免浮点数误差（例如保留两位小数，就使用 100）
+				const factor = 100;
+
+				for (let i = 0; i < dataRows.length; i++) {
+					const cells = dataRows[i].getElementsByTagName("td");
+
+					// 1. 提取第一列 (索引 0) 的值
+					// 使用 || 0 确保如果内容为空，则解析为 0
+					const val1 = parseFloat(cells[0].textContent.trim() || 0);
+
+					// 2. 提取第三列 (索引 2) 的值
+					const val3 = parseFloat(cells[2].textContent.trim() || 0);
+
+					// 3. 计算总和并处理精度误差 (乘 100 四舍五入，再除 100)
+					const rawSum = val1 + val3;
+					const result = Math.round(rawSum * factor) / factor;
+
+					// 4. 更新第四列 (索引 3) 的内容
+					if (cells.length > 3) {
+						// 使用 toFixed(2) 格式化结果，确保显示两位小数
+						cells[3].textContent = result.toFixed(2);
+					}
+				}
+
+				// 💡 提示：由于第四列内容发生了变化，应该重新计算表格底部的合计行
+				updateTotals();
+			}
+			window.onload = updateTotals;
+		</script>
+	</body>
+</html>

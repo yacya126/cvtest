@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGV Calculation Overview</title>
+    <link rel="stylesheet" href="../css/output.css">
+    <!-- 引入加载工具 -->
+    <script src="../js/i18n.js" defer></script>
+    <script src="../js/load-language-selector.js" defer></script>
+</head>
+
+<body class="body-font">
+    <div class="pagediv-font">
+        <!-- 第一个卡片：基础信息与计算 -->
+        <div class="card mt-10">
+            <h1 class="h1" data-i18n="Matrix8calculator">Matrix8 Calculator - Overview</h1>
+            <table class="table-basic">
+                <thead>
+                    <tr>
+                        <th class="th-simple">Sr.</th>
+                        <th class="th-simple">Items</th>
+                        <th class="th-simple">Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="td-label">1</td>
+                        <td class="td-label" data-i18n="warehouselengthm">Warehouse length (m)</td>
+                        <td class="td-input data-cell" contenteditable="true" id="g4">48</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">2</td>
+                        <td class="td-label" data-i18n="warehousewidthm">Warehouse width (m)</td>
+                        <td class="td-input data-cell" contenteditable="true" id="g5">20</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">3</td>
+                        <td class="td-label" data-i18n="warehouseclearheightm">Warehouse clear height (m)</td>
+                        <td class="td-input data-cell" contenteditable="true" id="g6">6</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">4</td>
+                        <td class="td-label" data-i18n="proportionoftheareaoftheautomatedzone">Proportion of the area of the automated zone (%)</td>
+                        <td class="td-input data-cell" contenteditable="true" id="g7">70</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">5</td>
+                        <td class="td-label" data-i18n="inboundoperationdurationh">inbound operation duration (H)</td>
+                        <td class="td-input data-cell" contenteditable="true" id="g8">8</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">6</td>
+                        <td class="td-label" data-i18n="outboundoperationdurationh">outbound operation duration (H)</td>
+                        <td class="td-input data-cell" contenteditable="true" id="g9">8</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">7</td>
+                        <td class="td-label" data-i18n="inboundworkstationoperationtimeboxs">inbound workstation operation time/box (s)</td>
+                        <td class="td-input data-cell" contenteditable="true" id="g10">45</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">8</td>
+                        <td class="td-label" data-i18n="outboundworkstationoperationtimeboxs">outbound workstation operation time/box (s)</td>
+                        <td class="td-input data-cell" contenteditable="true" id="g11">20</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">9</td>
+                        <td class="td-label" data-i18n="numberofmaterialboxlayers">Number of material box layers</td>
+                        <td class="td-input data-cell" contenteditable="true" id="g12">12</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">10</td>
+                        <td class="td-label" data-i18n="numberofthebinstoragelocations">Number of the bin storage locations</td>
+                        <td class="td-input data-cell" contenteditable="true" id="g13">6810</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">11</td>
+                        <td class="td-label" data-i18n="thenumberofinboundworkstations">The number of inbound workstations</td>
+                        <td class="td-inputcalc data-cell" contenteditable="true" id="g14">1.00</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">12</td>
+                        <td class="td-label" data-i18n="thenumberofoutboundworkstations">The number of outbound workstations</td>
+                        <td class="td-inputcalc data-cell" contenteditable="true" id="g15">1.00</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">13</td>
+                        <td class="td-label" data-i18n="totalworkstationsquantity">Total workstations quantity</td>
+                        <td class="td-inputcalc data-cell" contenteditable="true" id="g16">2</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">14</td>
+                        <td class="td-label" data-i18n="thenumberofboxesinboundperday">The number of boxes inbound per day</td>
+                        <td class="td-input data-cell" contenteditable="true" id="g17">200</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">15</td>
+                        <td class="td-label" data-i18n="thenumberofboxesoutboundperday">The number of boxes outbound per day</td>
+                        <td class="td-input data-cell" contenteditable="true" id="g18">1000</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">16</td>
+                        <td class="td-label" data-i18n="theacrinboundincludesreshufflingtimesh">The ACR inbound (includes reshuffling times) /H</td>
+                        <td class="td-inputcalc data-cell" contenteditable="true" id="g19">37.5</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">17</td>
+                        <td class="td-label" data-i18n="theacroutboundincludesreshufflingtimesh">The ACR outbound (includes reshuffling times) /H</td>
+                        <td class="td-inputcalc data-cell" contenteditable="true" id="g20">187.5</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">18</td>
+                        <td class="td-label" data-i18n="t50inboundhandlingtimesh">T50 inbound handling times /H</td>
+                        <td class="td-inputcalc data-cell" contenteditable="true" id="g21">25.0</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">19</td>
+                        <td class="td-label" data-i18n="t50outboundhandlingtimesh">T50 outbound handling times /H</td>
+                        <td class="td-inputcalc data-cell" contenteditable="true" id="g22">125.0</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h4 data-i18n="overviewnote">
+                Note: Move one box per order line; Each container is transferred between high and first handover layers.
+            </h4>
+            <button class="btn-primary" id="calculatebutton1" data-i18n="liftcv-calculatebutton">
+                CALCULATION
+            </button>
+        </div>
+        <div class="card">
+            <h1 class="h1" data-i18n="conclusion2">Conclusion</h1>
+            <table class="table-basic">
+                <tbody id="conclusionTable">
+                    <tr>
+                        <td class="td-label-centered">1</td>
+                        <td class="td-label" data-i18n="totalacrquantity">Total ACR quantity</td>
+                        <td class="td-calca" id="g26" data-url="AGVacrec.html">Press to calc</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">2</td>
+                        <td class="td-label" data-i18n="t50quantity">T50 quantity</td>
+                        <td class="td-calca" id="g27" data-url="AGVt50ec.html">Press to calc</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">3</td>
+                        <td class="td-label" data-i18n="kivaagvquantity">KIVA AGV quantitys</td>
+                        <td class="td-calca" id="g28" data-url="AGVkivaec.html">Press to calc</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h4 data-i18n="conclusionnote">
+                Note: The above data automatically displays the calculation results of the three pages (ACR EC, T50 EC, and KIVA EC).
+                If you have any questions, please click the cell to navigate to the corresponding page for calculation.
+            </h4>
+            <button class="btn-primary" id="calculatebutton2" data-i18n="liftcv-calculatebutton">
+                CALCULATION
+            </button>
+            <a href="../index.html" class="btn-primary" data-i18n="liftcv-return">Return</a>
+            <a href="AGVacrec.html" class="btn-secondary" data-i18n="card0_acr_ec" id="acr_ec" hidden>ACR</a>
+            <a href="AGVt50ec.html" class="btn-secondary" data-i18n="card0_t50_ec" id="t50_ec" hidden>T50</a>
+            <a href="AGVkivaec.html" class="btn-secondary" data-i18n="card0_kiva_ec" id="kiva_ec" hidden>KIVA</a>
+        </div>
+    <!-- 业务逻辑js，请确保您的JS文件路径正确 -->
+    <script src="../js/AGVconclusion.js"></script>
+</body>
+</html>

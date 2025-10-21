@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIFT CV Calculation page</title>
+    <link rel="stylesheet" href="../css/output.css">
+    <!-- 引入加载工具 -->
+    <script src="../js/i18n.js" defer></script>
+    <script src="../js/load-language-selector.js" defer></script>
+</head>
+
+<body class="body-font">
+    <div class="pagediv-font">
+        <!-- 第一个卡片：基础信息与计算 -->
+        <div class="card mt-10">
+            <h1 class="h1" data-i18n="liftcv-title">Lift CV</h1>
+            <table class="table-basic">
+                <thead>
+                    <tr>
+                        <th colspan="3" class="th-group" data-i18n="liftcv-liftbasicinformation">Lift basic Information</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="td-label" data-i18n="liftcv-lifttype">Lift type</td>
+                        <td class="td-label-centered">CV</td>
+                        <td class="td-label-centered"></td>
+                    </tr>
+                    <tr>
+                        <td class="td-label" data-i18n="liftcv-liftingspeed">Lifting speed</td>
+                        <td id="liftingSpeed-1" contenteditable="true" class="td-input data-cell">0.6</td>
+                        <td class="td-label-centered">m/s</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label" data-i18n="liftcv-liftingacce">Lifting acce.</td>
+                        <td id="liftingAcce-1" contenteditable="true" class="td-input data-cell">0.3</td>
+                        <td class="td-label-centered">m/s²</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label" data-i18n="liftcv-rackinglayerspacing">Racking layer spacing</td>
+                        <td id="rackingLayerSpacing-1" contenteditable="true" class="td-input data-cell">2100</td>
+                        <td class="td-label-centered">mm</td>
+                    </tr>
+                    <tr>
+                        <th colspan="3" class="th-group" data-i18n="liftcv-lifter">Lifter</th>
+                    </tr>
+                    <tr>
+                        <td class="td-label" data-i18n="liftcv-accedistance">The distance from acceletation to max. speed</td>
+                        <td id="lifterSpeedResult-1" class="td-label-centered data-cell"></td>
+                        <td class="td-label-centered">mm</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label" data-i18n="liftcv-stopdistance">The distance from max.speed acceletation to stop</td>
+                        <td id="lifterPowerResult-1" class="td-label-centered data-cell"></td>
+                        <td class="td-label-centered">mm</td>
+                    </tr>
+                    <tr>
+                        <th colspan="3" class="th-group" data-i18n="liftcv-cvbaseinformation">CV Base Information</th>
+                    </tr>
+                    <tr>
+                        <td class="td-label" data-i18n="liftcv-cvspeedwithloading">CV speed with loading</td>
+                        <td id="liftingSpeed-2" contenteditable="true" class="td-input data-cell">0.266</td>
+                        <td class="td-label-centered">m/s</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label" data-i18n="liftcv-cvaccewithloading">CV acce. with loading</td>
+                        <td id="liftingAcce-2" contenteditable="true" class="td-input data-cell">0.300</td>
+                        <td class="td-label-centered">m/s²</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label" data-i18n="liftcv-cvspeedwithoutloading">CV speed without loading</td>
+                        <td id="speedResult-2" class="td-label-centered data-cell"></td>
+                        <td class="td-label-centered">mm</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label" data-i18n="liftcv-cvaccewithoutloading">CV acce. without loading</td>
+                        <td id="acceResult-2" class="td-label-centered data-cell"></td>
+                        <td class="td-label-centered">mm</td>
+                    </tr>
+                    <tr>
+                        <th colspan="3" class="th-group" data-i18n="liftcv-cv2">CV</th>
+                    </tr>
+                    <tr>
+                        <td class="td-label" data-i18n="liftcv-accedistance2">The distance from acceletation to max. speed within loading</td>
+                        <td id="distAccelLoad" class="td-label-centered data-cell"></td>
+                        <td class="td-label-centered">mm</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label" data-i18n="liftcv-stopdistance2">The distance from max.speed acceletation to stop within loading</td>
+                        <td id="distStopLoad" class="td-label-centered data-cell"></td>
+                        <td class="td-label-centered">mm</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label" data-i18n="liftcv-accedistance3">The distance from acceletation to max. speed without loading</td>
+                        <td id="distAccelNoLoad" class="td-label-centered data-cell"></td>
+                        <td class="td-label-centered">mm</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label" data-i18n="liftcv-stopdistance3">The distance from max.speed acceletation to stop within loading</td>
+                        <td id="distStopNoLoad" class="td-label-centered data-cell"></td>
+                        <td class="td-label-centered">mm</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label" data-i18n="liftcv-avgdistance">the avg. distance of in or out lift</td>
+                        <td id="avgDistance" contenteditable="true" class="td-input data-cell">2</td>
+                        <td class="td-label-centered">m</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label" data-i18n="liftcv-inouttimewithload">the time of in or out lift with load</td>
+                        <td id="timeLoad" class="td-display data-cell"></td>
+                        <td class="td-label-centered">s</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label" data-i18n="liftcv-inouttimewithoutload">the time of in or out lift without loading</td>
+                        <td id="timeNoLoad" class="td-display data-cell"></td>
+                        <td class="td-label-centered">s</td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="btn-primary" id="calculatebutton1" data-i18n="liftcv-calculatebutton">
+                CALCULATION
+            </button>
+        </div>
+
+        <!-- 第二个卡片：提升高度与时间 -->
+        <div class="card">
+            <h1 class="h1" data-i18n="liftcv-liftingheightandtime">Lifting Height and time</h1>
+            <table class="table-basic">
+                <thead>
+                    <tr>
+                        <th class="th-simple" data-i18n="liftcv-from">From</th>
+                        <th class="th-simple" data-i18n="liftcv-to">To</th>
+                        <th class="th-simple" data-i18n="liftcv-liftingheight">Lifting height (m)</th>
+                        <th class="th-simple" data-i18n="liftcv-liftingtime">Lifting time (s)</th>
+                    </tr>
+                </thead>
+                <tbody id="liftingTimeTableBody">
+                    <!-- JS动态生成内容 -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 第三个卡片：升降机效率 -->
+        <div class="card">
+            <h1 class="h1" data-i18n="liftcv-liftefficiency">Lift efficiency</h1>
+            <table class="table-basic">
+                <thead>
+                    <tr>
+                        <th class="th-simple" data-i18n="liftcv-no">No.</th>
+                        <th class="th-simple" data-i18n="liftcv-item">Item</th>
+                        <th class="th-simple" data-i18n="liftcv-qty">Qty.</th>
+                        <th class="th-simple" data-i18n="liftcv-unit">Unit</th>
+                        <th class="th-simple" data-i18n="liftcv-remark">Remark</th>
+                    </tr>
+                </thead>
+                <tbody id="efficiencyTableBody">
+                    <tr>
+                        <td class="td-label-centered">1</td>
+                        <td class="td-label" data-i18n="liftcv-liftinglevels">Lifting levels</td>
+                        <td id="liftingLevels" contenteditable="true" class="td-input data-cell">9</td>
+                        <td class="td-label" data-i18n="liftcv-levels">levels</td>
+                        <td class="td-label" data-i18n="liftcv-levelsremark">take the 2/3 level of the max. level in the calculation</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">2</td>
+                        <td class="td-label" data-i18n="liftcv-liftingtime2">Lifting time</td>
+                        <td id="liftingTimeEff" class="td-label-centered data-cell"></td>
+                        <td class="td-label">s</td>
+                        <td class="td-label"></td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">3</td>
+                        <td class="td-label" data-i18n="liftcv-timeofgoing">time of going into the lift</td>
+                        <td id="timeLoadEff" class="td-label-centered data-cell"></td>
+                        <td class="td-label">s</td>
+                        <td class="td-label" data-i18n="liftcv-timeofgoingremark">With Load  / CV type Exluding the lock time</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">4</td>
+                        <td class="td-label" data-i18n="liftcv-timeofgoing2">time of going out the lift</td>
+                        <td id="timeNoLoadEff" class="td-label-centered data-cell"></td>
+                        <td class="td-label">s</td>
+                        <td class="td-label" data-i18n="liftcv-timeofgoing2remark">Without Load  / CV type Exluding the lock time</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">5</td>
+                        <td class="td-label" data-i18n="liftcv-pickanddrop">pick and drop off time</td>
+                        <td id="pickDropTime" class="td-label-centered data-cell">0</td>
+                        <td class="td-label">s</td>
+                        <td class="td-label"></td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">6</td>
+                        <td class="td-label" data-i18n="liftcv-decendingtime">Decending time</td>
+                        <td id="descendingTime" class="td-label-centered data-cell"></td>
+                        <td class="td-label">s</td>
+                        <td class="td-label" data-i18n="liftcv-decendingtimeremark">Without load</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">7</td>
+                        <td class="td-label" data-i18n="liftcv-electrical">Electrical delay time*3</td>
+                        <td id="elecDelay" class="td-label-centered data-cell">3</td>
+                        <td class="td-label">s</td>
+                        <td class="td-label" data-i18n="liftcv-electricalremark" data-i18n-html>
+                            In one cycle, there would be three interactions for<br>
+                            the electrical control (in,out and return)<br>
+                            Single electrical delay time:1s<br>
+                            Single postion lock time:3s
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">8</td>
+                        <td class="td-label" data-i18n="liftcv-positionlock">Position lock*3</td>
+                        <td id="posLock" class="td-label-centered data-cell">9</td>
+                        <td class="td-label">s</td>
+                        <td class="td-label"></td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">9</td>
+                        <td class="td-label" data-i18n="liftcv-waitingtime">Waiting time</td>
+                        <td id="waitingTime" class="td-label-centered data-cell">15</td>
+                        <td class="td-label">s</td>
+                        <td class="td-label" data-i18n="liftcv-waitingtimeremark">Waiting time, experienced data</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">10</td>
+                        <td class="td-label" data-i18n="liftcv-efficiency">efficiency</td>
+                        <td id="efficiencyRate" contenteditable="true" class="td-input data-cell">85</td>
+                        <td class="td-label">%</td>
+                        <td class="td-label" data-i18n="liftcv-efficiencyremark">
+                            1-2 shift :Utilization rate%(稼动率)80-85%<br>
+                            3 shift:70%
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">11</td>
+                        <td class="td-label" data-i18n="liftcv-cycletime">cycle time</td>
+                        <td id="cycleTime" class="td-label-centered data-cell"></td>
+                        <td class="td-label">s</td>
+                        <td class="td-label"></td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">12</td>
+                        <td class="td-label" data-i18n="liftcv-pallet">Pallet lifting Performance</td>
+                        <td id="palletLiftingPerformance" class="td-display data-cell"></td>
+                        <td class="td-label">pph</td>
+                        <td class="td-label"></td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">13</td>
+                        <td class="td-label" data-i18n="liftcv-throughput">throughput requirement</td>
+                        <td id="throughputRequirement" contenteditable="true" class="td-input data-cell">413</td>
+                        <td class="td-label">pph</td>
+                        <td class="td-label"></td>
+                    </tr>
+                    <tr>
+                        <td class="td-label-centered">14</td>
+                        <td class="td-label" data-i18n="liftcv-qty2">QTY of lift</td>
+                        <td id="qtyOfLift" class="td-calc data-cell"></td>
+                        <td class="td-label"></td>
+                        <td class="td-label"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="btn-primary" id="calculatebutton1" data-i18n="liftcv-calculatebutton">
+                CALCULATION
+            </button>
+        </div>
+
+        <!-- 第四个卡片：图示与返回链接 -->
+        <div class="card">
+            <h2 class="h1" data-i18n="liftcv-illustration">Sample Illustraton</h2>
+            <img src=../pictures/liftcv.png alt="货架与升降机图示" class="max-w-full h-auto mb-6 rounded-lg">
+            <a href="../index.html" class="btn-primary" data-i18n="liftcv-return">Return</a>
+        </div>
+    </div>
+    <!-- 业务逻辑js，请确保您的JS文件路径正确 -->
+    <script src="../js/data_storage.js" id="data_localstorageScript" data-key="liftcvData"></script>
+    <script src="../js/liftcv.js"></script>
+</body>
+</html>

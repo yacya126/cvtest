@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>滚动时语言选择框渐隐效果</title>
+    <link rel="stylesheet" href="../css/language-selector-output.css">
+</head>
+<body>
+    <!-- 语言选择框 -->
+    <div class="lang-card" id="langSelector">
+        <button class="lang-btn" data-lang="zh">中文</button>
+        <button class="lang-btn" data-lang="en">English</button>
+        <button class="lang-btn" data-lang="ja">日本語</button>
+    </div>
+    <script>
+        // 获取语言选择框元素
+        const langSelector = document.getElementById('langSelector');
+        
+        // 配置参数（可根据需求调整）
+        const config = {
+            startFadeDistance: 50,   // 开始渐变的滚动距离（px）
+            completeFadeDistance: 200 // 完全消失的滚动距离（px）
+        };
+
+        // 处理滚动事件
+        function handleScroll() {
+            const scrollY = window.scrollY; // 当前滚动距离
+            
+            if (scrollY < config.startFadeDistance) {
+                // 未达到渐变阈值：完全显示
+                langSelector.style.opacity = '1';
+                langSelector.style.filter = 'blur(0px)';
+                langSelector.style.visibility = 'visible';
+            } 
+            else if (scrollY < config.completeFadeDistance) {
+                // 处于渐变区间：计算透明度和模糊度
+                const progress = (scrollY - config.startFadeDistance) / 
+                                (config.completeFadeDistance - config.startFadeDistance);
+                langSelector.style.opacity = (1 - progress).toString();
+                langSelector.style.filter = `blur(${progress * 5}px)`; // 最大模糊5px
+                langSelector.style.visibility = 'visible';
+            } 
+            else {
+                // 超过完全消失阈值：隐藏
+                langSelector.style.opacity = '0';
+                langSelector.style.filter = 'blur(5px)';
+                langSelector.style.visibility = 'hidden'; // 完全隐藏（不占交互空间）
+            }
+        }
+
+        // 初始化时执行一次（处理页面刷新时的滚动状态）
+        handleScroll();
+
+        // 监听滚动事件（使用passive优化滚动性能）
+        window.addEventListener('scroll', handleScroll, { passive: true });
+    </script>
+</body>
+</html>

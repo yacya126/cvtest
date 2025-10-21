@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Handsontable 自动求和示例</title>
+    <script src="https://cdn.jsdelivr.net/npm/handsontable@13.1/dist/handsontable.full.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/handsontable@13.1/dist/handsontable.full.min.css" rel="stylesheet"/>
+    <style>
+      /* 针对所有表格数据单元格（td）和表头单元格（th） */
+      /* 覆盖 Handsontable 默认的对齐方式 */
+      .handsontable .htCore td,
+      .handsontable .htCore th {
+        /* 文本水平居中 */
+        text-align: center !important;
+      }
+      /* 确保数字格式化后的内容也居中 */
+      .handsontable td.htNumeric {
+        text-align: center !important;
+      }
+      /* 可选：如果你希望行头（最左边行号）的数字也居中 */
+      .handsontable .htRowHeaders .current {
+        text-align: center !important;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>自动求和表格</h1>
+    <div id="hot-container"></div>
+
+    <script>
+      let GlobalCalculationType = "A42"; 
+      // 初始数据：包含 6 列
+      // 0, 1 列是汉字；2, 3, 4 列是待求和的数字；第 5 列是初始求和值 (可以为空)
+      const initialData = [
+        ["一", 4, 5, 12, NaN, 4],
+        ["四", 4, 5, 12, NaN, 4],
+        ["七", 4, 5, 12, NaN, 4],
+      ];
+
+      // -----------------------------------------------------------
+      // 自定义渲染器函数：用于计算求和 (第 5 列)
+      // -----------------------------------------------------------
+      
+      function sumRenderer(
+        instance,
+        td,
+        row,
+        col,
+        prop,
+        value,
+        cellProperties
+      ) {
+        console.log("sumrenderer ok");
+        // 获取待求和的列 (第 1 2 3 列 从0开始) 的值
+        const valC = instance.getDataAtCell(row, 1);
+        const valD = instance.getDataAtCell(row, 2);
+        const valE = instance.getDataAtCell(row, 3);
+
+        // 转换为数字，如果不是有效数字则视为 0
+        const numC = parseFloat(valC) || 0;
+        const numD = parseFloat(valD) || 0;
+        const numE = parseFloat(valE) || 0;
+
+        const TraveltimeSingletask =
+          1.4 / 0.6 +
+          1.4 / 0.6 +
+          (numE - ((1.4 / 0.6 + 1.4 / 0.6) * 1.4) / 2) / 1.4;
+        //1.40/0.60+1.40/0.60+(numE-(1.40/0.60+1.40/0.60)*1.40/2)/1.40
+        // 调用默认的 TextRenderer 来渲染单元格
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        // 显示计算结果
+        td.innerHTML = TraveltimeSingletask.toFixed(1);
+      }
+      function globalVarRenderer(
+        instance,
+        td,
+        row,
+        col,
+        prop,
+        value,
+        cellProperties
+      ) {
+        let outputValue;
+
+        // 根据全局变量的值来确定输出值
+        if (GlobalCalculationType === "A42") {
+          // 要求保留两位小数的数字
+          outputValue = 34.67;
+        } else if (GlobalCalculationType === "A42T") {
+          outputValue = 40.0;
+        } else {
+          // 默认情况或未匹配时显示空
+          outputValue = "";
+        }
+
+        // 确保值被格式化为字符串，方便渲染
+        const formattedOutput =
+          outputValue !== "" ? outputValue.toFixed(2) : "";
+
+        // 调用默认的 TextRenderer 来继承基本样式
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+
+        // 覆盖 td 的内容以显示计算/确定的值
+        td.innerHTML = formattedOutput;
+      }
+      
+      // Handsontable 配置对象
+      const hotSettings = {
+        data: initialData,
+        colHeaders: [
+          "环节",
+          "AGV要求搬运箱数/箱/h",
+          "使用背篓层数",
+          "单任务直线路程/m",
+          "单任务直线路程时间/s",
+          "路程转弯数/个",
+          "路程转弯时间/s",
+          "路程时间/s",
+          "装+卸次数/次",
+          "取放箱时间/s",
+          "排队时间/s",
+          "一次任务时间/s",
+          "单AGV搬运效率/箱/h",
+          "含充电AGV效率/箱/h",
+          "理论AGV数/台",
+          "充电桩数/台",
+        ],
+        rowHeaders: true,
+        width: "auto",
+        height: "auto",
+        licenseKey: "non-commercial-and-evaluation",
+
+        // -----------------------------------------------------------
+        // 列配置
+        // -----------------------------------------------------------
+        columns: [
+          { type: "text" }, // 0: A - 文本 (汉字)
+          { type: "numeric", format: "0" }, // 1: B - 数字（整数）
+          { type: "numeric", format: "0" }, // 2: C - 待求和的数字 (整数)
+          { type: "numeric", format: "0" }, // 3: D - 待求和的数字 (整数)
+          {
+            type: "numeric",
+            readOnly: true, // 5: 求和列 - 只读
+            renderer: sumRenderer, // 使用自定义渲染器进行求和计算
+            afterChange: function (changes, source) {
+              // 如果是内部操作或没有变化，则退出
+              if (source === "loadData" || source === "render" || !changes) {
+                return;
+              }
+              let needsRedraw = false;
+              changes.forEach(([row, prop, oldValue, newValue]) => {
+                // prop 是列的索引。我们只关心 C(2), D(3), E(4) 列的变化
+                // 注意：Handsontable 的 prop 在这里是列的索引
+                if (prop === 1 || prop === 2 || prop === 3) {
+                  needsRedraw = true;
+                }
+              });
+
+              // 如果 C, D, 或 E 列有变化，则强制重绘
+              if (needsRedraw) {
+                this.render(); // 触发重绘，从而运行 sumRenderer 重新计算求和列
+              }
+            }, // 4： 中间结果数字
+          },
+          { type: "numeric", format: "0" }, // 5: F - 待求和的数字 (整数)
+          {
+            type: "numeric",
+            readOnly: true, // 6: 求和列 - 只读
+            renderer: globalVarRenderer, // 使用自定义渲染器进行计算
+          },
+        ],
+      };
+
+      // 实例化 Handsontable
+      const container = document.getElementById('hot-container');
+      const hot = new Handsontable(container, hotSettings);
+    </script>
+  </body>
+</html>

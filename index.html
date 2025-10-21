@@ -3,111 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PS Efficiency calculation - Login</title>
-    <script src="Tailwind-OFFICIAL.js"></script>
-    <link rel="stylesheet" href="tailwind-init-styles.css" type="text/css">
+    <title>My homepage</title>
+    <link rel="stylesheet" href="css/output.css">
+    <!-- 引入加载工具 -->
+    <script src="js/i18n.js" defer></script>
+    <script src="js/load-language-selector.js" defer></script>
 </head>
 <body class="body-font">
-    <div class="pagediv_font">
-        <!-- 语言选择区 -->
-        <div class="lang-card">
-            <button class="lang-btn" data-lang="zh">中文</button>
-            <button class="lang-btn" data-lang="en">English</button>
-            <button class="lang-btn" data-lang="ja">日本語</button>
-        </div>
-        <!-- 主卡片 -->
-        <div id="login-card" class="card">
-            <h1 class="h1" data-i18n="welcome">Welcome to PS Efficiency calculation</h1>
-            <p id="status-message" class="status-message" data-i18n="login_prompt">Please login or register and continue.</p>
-            <div class="only-w-full">
-                <input type="text" id="input-username" class="input-text" data-i18n-placeholder="username" placeholder="Username">
+    <div class="pagediv-font">
+        <div id="login-card" class="card mt-10">
+            <h1 class="h1" data-i18n="index-welcome">Welcome to PS Efficiency calculation</h1>
+            <p id="status-message" class="status-message" data-i18n="index-status-message">Please login or register and continue.</p>
+            <div class="w-full">
+                <input type="text" id="input-username" class="input-text" placeholder="Username" data-i18n="index-username-placeholder">
             </div>
-            <div class="only-w-full">
-                <input type="password" id="input-password" class="input-text" data-i18n-placeholder="password" placeholder="Password">
+            <div class="w-full">
+                <input type="password" id="input-password" class="input-text" placeholder="Password" data-i18n="index-password-placeholder">
             </div>
-            <button id="btn-login" class="btn-primary" data-i18n="login">Login</button>
+            <button id="btn-login" class="btn-primary" data-i18n="index-login-btn">Login</button>
             <!-- 注册按钮 -->
-            <a href="./register.html" class="only-w-full">
-                <button class="btn-secondary" data-i18n="register">Register</button>
+            <a href="pages/register.html" class="w-full">
+                <button class="btn-secondary" data-i18n="index-register-btn">Register</button>
             </a>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.10.0/dist/av-min.js"></script>
-    <script>
-        // 多语言文本数据
-        const translations = {
-            zh: {
-                welcome: "欢迎使用PS效率计算工具",
-                login_prompt: "请登录或注册以继续",
-                username: "用户名",
-                password: "密码",
-                login: "登录",
-                register: "注册"
-            },
-            en: {
-                welcome: "Welcome to PS Efficiency calculation",
-                login_prompt: "Please login or register and continue.",
-                username: "Username",
-                password: "Password",
-                login: "Login",
-                register: "Register"
-            },
-            ja: {
-                welcome: "PS効率計算ツールへようこそ",
-                login_prompt: "ログインまたは登録して続行してください",
-                username: "ユーザー名",
-                password: "パスワード",
-                login: "ログイン",
-                register: "登録"
-            }
-        };
-
-        // 应用语言
-        function applyLanguage(lang) {
-            // 保存用户选择的语言
-            localStorage.setItem('preferredLanguage', lang);
-
-            // 更新文本内容
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang] && translations[lang][key]) {
-                    el.textContent = translations[lang][key];
-                }
-            });
-
-            // 更新占位符
-            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-                const key = el.getAttribute('data-i18n-placeholder');
-                if (translations[lang] && translations[lang][key]) {
-                    el.placeholder = translations[lang][key];
-                }
-            });
-
-            // 更新语言按钮状态
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                if (btn.getAttribute('data-lang') === lang) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-        }
-
-        // 语言选择按钮事件
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const lang = btn.getAttribute('data-lang');
-                applyLanguage(lang);
-            });
-        });
-
-        // 页面加载时应用保存的语言或默认语言
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedLang = localStorage.getItem('preferredLanguage') || 'zh';
-            applyLanguage(savedLang);
-        });
-    </script>
-    <script src="indexscript.js"></script>
+    <script src="js/av-min.js" defer></script>
+    <script src="js/index.js" defer></Script>
 </body>
 </html>

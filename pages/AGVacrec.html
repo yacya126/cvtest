@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>AGV Calculation - ACR</title>
+		<link rel="stylesheet" href="../css/output.css" />
+		<script src="https://cdn.jsdelivr.net/npm/handsontable@13.1/dist/handsontable.full.min.js"></script>
+		<link
+			href="https://cdn.jsdelivr.net/npm/handsontable@13.1/dist/handsontable.full.min.css"
+			rel="stylesheet"
+		/>
+		<script src="../js/i18n.js" defer></script>
+		<script src="../js/load-language-selector.js" defer></script>
+	</head>
+	<body class="body-font">
+		<div class="pagediv-font">
+			<div class="card mt-10">
+				<h1 class="h1" data-i18n="Matrix8calculator2">
+					Matrix8 Calculator - ACR
+				</h1>
+				<button
+					class="btn-primary"
+					id="hiddenshowbutton"
+					data-i18n="hiddenorshow"
+				>
+					Hidden / Show The details data
+				</button>
+				<table class="table-basic hidden" id="basicinformationtable">
+					<thead>
+						<tr>
+							<th colspan="3" class="th-group" data-i18n="acrec_group_title">
+								AGV Basic Information
+							</th>
+						</tr>
+						<tr>
+							<th class="th-group" data-i18n="acrec_no">No.</th>
+							<th class="th-group">1</th>
+							<th class="th-group">2</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_model">型号</td>
+							<td class="td-label-centered data-col-1" id="C4">A42</td>
+							<td class="td-label-centered data-col-2" id="C5">A42T</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_linear_speed">
+								直线速度
+							</td>
+							<td class="td-label-centered data-col-1" id="D4">1.40</td>
+							<td class="td-label-centered data-col-2" id="D5">1.50</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_acceleration">
+								加速度
+							</td>
+							<td class="td-label-centered data-col-1" id="E4">0.60</td>
+							<td class="td-label-centered data-col-2" id="E5">0.50</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_deceleration">
+								减速度
+							</td>
+							<td class="td-label-centered data-col-1" id="F4">0.60</td>
+							<td class="td-label-centered data-col-2" id="F5">0.50</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_accel_time">
+								加速时间/次
+							</td>
+							<td class="td-label-centered data-col-1" id="G4">2.33</td>
+							<td class="td-label-centered data-col-2" id="G5">3.00</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_decel_time">
+								减速时间/次
+							</td>
+							<td class="td-label-centered data-col-1" id="H4">2.33</td>
+							<td class="td-label-centered data-col-2" id="H5">3.00</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_accel_dist">
+								加速距离/m
+							</td>
+							<td class="td-label-centered data-col-1" id="I4">1.63</td>
+							<td class="td-label-centered data-col-2" id="I5">2.25</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_decel_dist">
+								减速距离/m
+							</td>
+							<td class="td-label-centered data-col-1" id="J4">1.63</td>
+							<td class="td-label-centered data-col-2" id="J5">2.25</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_turn90_time">
+								转90度时间/s
+							</td>
+							<td class="td-label-centered data-col-1" id="K4">4.00</td>
+							<td class="td-label-centered data-col-2" id="K5">4.00</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_turn180_time">
+								转180度时间/s
+							</td>
+							<td class="td-label-centered data-col-1" id="L4">8.00</td>
+							<td class="td-label-centered data-col-2" id="L5">8.00</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_stop_time">
+								交界点启停时间/s
+							</td>
+							<td class="td-label-centered data-col-1" id="M4">4.67</td>
+							<td class="td-label-centered data-col-2" id="M5">6.00</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_extra_lift_time">
+								额外顶升时间/s
+							</td>
+							<td class="td-label-centered data-col-1" id="N4">7.00</td>
+							<td class="td-label-centered data-col-2" id="N5">10.50</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_lift_time">
+								顶升时间/s
+							</td>
+							<td class="td-label-centered data-col-1" id="O4">7.00</td>
+							<td class="td-label-centered data-col-2" id="O5">10.50</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_charge_eff">
+								充电效率%
+							</td>
+							<td class="td-label-centered data-col-1" id="P4">85</td>
+							<td class="td-label-centered data-col-2" id="P5">85</td>
+						</tr>
+						<tr>
+							<td
+								class="td-label-centered"
+								data-i18n="acrec_charger_utilization"
+							>
+								充电桩利用率%
+							</td>
+							<td class="td-label-centered data-col-1" id="Q4">17</td>
+							<td class="td-label-centered data-col-2" id="Q5">17</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_availability">
+								稼动率
+							</td>
+							<td class="td-label-centered data-col-1" id="R4">80</td>
+							<td class="td-label-centered data-col-2" id="R5">80</td>
+						</tr>
+					</tbody>
+				</table>
+				<hr class="divider" />
+				<h1 class="h1" data-i18n="acrec_step1">Step 1</h1>
+				<div class="flex space-x-4 mb-4">
+					<button class="btn-primary" id="button-A42">A42</button>
+					<button class="btn-primary" id="button-A42T">A42T</button>
+				</div>
+				<table class="table-basic hidden" id="basicinformationtable_show">
+					<thead>
+						<tr>
+							<th colspan="3" class="th-group" data-i18n="acrec_group_title">
+								AGV Basic Information
+							</th>
+						</tr>
+						<tr>
+							<th class="th-group" data-i18n="acrec_no">No.</th>
+							<th class="th-group">1</th>
+							<th class="th-group">2</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_model">型号</td>
+							<td class="td-label-centered data-col-1" id="C4">A42</td>
+							<td class="td-label-centered data-col-2" id="C5">A42T</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_linear_speed">
+								直线速度
+							</td>
+							<td class="td-label-centered data-col-1" id="D4">1.40</td>
+							<td class="td-label-centered data-col-2" id="D5">1.50</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_acceleration">
+								加速度
+							</td>
+							<td class="td-label-centered data-col-1" id="E4">0.60</td>
+							<td class="td-label-centered data-col-2" id="E5">0.50</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_deceleration">
+								减速度
+							</td>
+							<td class="td-label-centered data-col-1" id="F4">0.60</td>
+							<td class="td-label-centered data-col-2" id="F5">0.50</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_accel_time">
+								加速时间/次
+							</td>
+							<td class="td-label-centered data-col-1" id="G4">2.33</td>
+							<td class="td-label-centered data-col-2" id="G5">3.00</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_decel_time">
+								减速时间/次
+							</td>
+							<td class="td-label-centered data-col-1" id="H4">2.33</td>
+							<td class="td-label-centered data-col-2" id="H5">3.00</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_accel_dist">
+								加速距离/m
+							</td>
+							<td class="td-label-centered data-col-1" id="I4">1.63</td>
+							<td class="td-label-centered data-col-2" id="I5">2.25</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_decel_dist">
+								减速距离/m
+							</td>
+							<td class="td-label-centered data-col-1" id="J4">1.63</td>
+							<td class="td-label-centered data-col-2" id="J5">2.25</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_turn90_time">
+								转90度时间/s
+							</td>
+							<td class="td-label-centered data-col-1" id="K4">4.00</td>
+							<td class="td-label-centered data-col-2" id="K5">4.00</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_turn180_time">
+								转180度时间/s
+							</td>
+							<td class="td-label-centered data-col-1" id="L4">8.00</td>
+							<td class="td-label-centered data-col-2" id="L5">8.00</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_stop_time">
+								交界点启停时间/s
+							</td>
+							<td class="td-label-centered data-col-1" id="M4">4.67</td>
+							<td class="td-label-centered data-col-2" id="M5">6.00</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_extra_lift_time">
+								额外顶升时间/s
+							</td>
+							<td class="td-label-centered data-col-1" id="N4">7.00</td>
+							<td class="td-label-centered data-col-2" id="N5">10.50</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_lift_time">
+								顶升时间/s
+							</td>
+							<td class="td-label-centered data-col-1" id="O4">7.00</td>
+							<td class="td-label-centered data-col-2" id="O5">10.50</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_charge_eff">
+								充电效率%
+							</td>
+							<td class="td-label-centered data-col-1" id="P4">85</td>
+							<td class="td-label-centered data-col-2" id="P5">85</td>
+						</tr>
+						<tr>
+							<td
+								class="td-label-centered"
+								data-i18n="acrec_charger_utilization"
+							>
+								充电桩利用率%
+							</td>
+							<td class="td-label-centered data-col-1" id="Q4">85</td>
+							<td class="td-label-centered data-col-2" id="Q5">85</td>
+						</tr>
+						<tr>
+							<td class="td-label-centered" data-i18n="acrec_availability">
+								稼动率
+							</td>
+							<td class="td-label-centered data-col-1" id="R4">80</td>
+							<td class="td-label-centered data-col-2" id="R5">80</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div class="flex space-x-4 mb-4">
+					<h1 class="h1" data-i18n="acrec_step2"></h1>
+					<h1 class="h1" id="currentchoicedmodel"></h1>
+				</div>
+
+				<div class="content_frame w-full overflow-x-auto h-full max-h-full">
+					<table class="table_basic w-full border-collapse table-auto" id="data-table">
+						<thead>
+							<tr>
+								<th class="th-group" data-i18n="tablehead_1">序号</th>
+								<th class="th-group" data-i18n="tablehead_2">环节</th>
+								<th class="th-group" data-i18n="tablehead_3">AGV要求搬运箱数/箱/h</th>
+								<th class="th-group" data-i18n="tablehead_4">使用背篓层数</th>
+								<th class="th-group" data-i18n="tablehead_5">单任务直线路程/m</th>
+								<th class="th-group" data-i18n="tablehead_6">单任务直线路程时间/s</th>
+								<th class="th-group" data-i18n="tablehead_7">路程转弯数/个</th>
+								<th class="th-group" data-i18n="tablehead_8">路程转弯时间/s</th>
+								<th class="th-group" data-i18n="tablehead_9">路程时间/s</th>
+								<th class="th-group" data-i18n="tablehead_10">装+卸次数/次</th>
+								<th class="th-group" data-i18n="tablehead_11">取放箱时间/s</th>
+								<th class="th-group" data-i18n="tablehead_12">排队时间/s</th>
+								<th class="th-group" data-i18n="tablehead_13">一次任务时间/s</th>
+								<th class="th-group" data-i18n="tablehead_14">单AGV搬运效率/箱/h</th>
+								<th class="th-group" data-i18n="tablehead_15">含充电AGV搬运效率/箱/h</th>
+								<th class="th-group" data-i18n="tablehead_16">理论AGV数/台</th>
+								<th class="th-group" data-i18n="tablehead_17">充电桩数/台</th>
+								<th class="th-group" data-i18n="tablehead_18">补足数据</th>
+							</tr>
+						</thead>
+						<tbody id="calculateTableBody">
+							<tr>
+								<td class="data-cell td-label-centered td-row-number">1</td>
+								<td class="data-cell td-input" contenteditable="true">Inbound</td>
+								<td class="data-cell td-input" contenteditable="true">37.5</td>
+								<td class="data-cell td-input" contenteditable="true">6</td>
+								<td class="data-cell td-input" contenteditable="true">60</td>
+								<td class="data-cell td-label-centered">45.2</td>
+								<td class="data-cell td-input" contenteditable="true">4</td>
+								<td class="data-cell td-label-centered">34.67</td>
+								<td class="data-cell td-label-centered">79.9</td>
+								<td class="data-cell td-input" contenteditable="true">2</td>
+								<td class="data-cell td-label-centered">37.3</td>
+								<td class="data-cell td-input" contenteditable="true">10.00</td>
+								<td class="data-cell td-label-centered">127.2</td>
+								<td class="data-cell td-label-centered">135.9</td>
+								<td class="data-cell td-label-centered">115.5</td>
+								<td class="data-cell td-label-centered">0.3</td>
+								<td class="data-cell td-label-centered">0.1</td>
+								<td class="data-cell td-label-centered"></td>
+							</tr>
+							<tr>
+								<td class="data-cell td-label-centered td-row-number">2</td>
+								<td class="data-cell td-input" contenteditable="true">Outbound</td>
+								<td class="data-cell td-input" contenteditable="true">187.5</td>
+								<td class="data-cell td-input" contenteditable="true">6</td>
+								<td class="data-cell td-input" contenteditable="true">60</td>
+								<td class="data-cell td-label-centered">45.2</td>
+								<td class="data-cell td-input" contenteditable="true">4</td>
+								<td class="data-cell td-label-centered">34.67</td>
+								<td class="data-cell td-label-centered">79.9</td>
+								<td class="data-cell td-input" contenteditable="true">2</td>
+								<td class="data-cell td-label-centered">37.3</td>
+								<td class="data-cell td-input" contenteditable="true">10.00</td>
+								<td class="data-cell td-label-centered">127.2</td>
+								<td class="data-cell td-label-centered">135.9</td>
+								<td class="data-cell td-label-centered">115.5</td>
+								<td class="data-cell td-label-centered">1.6</td>
+								<td class="data-cell td-label-centered">0.3</td>
+								<td class="data-cell td-label-centered"></td>
+							</tr>
+							<tr>
+								<td class="data-cell td-label-centered td-row-number">3</td>
+								<td class="data-cell td-input" contenteditable="true">A->B</td>
+								<td class="data-cell td-input" contenteditable="true">0.0</td>
+								<td class="data-cell td-input" contenteditable="true">6</td>
+								<td class="data-cell td-input" contenteditable="true">0</td>
+								<td class="data-cell td-label-centered">2.3</td>
+								<td class="data-cell td-input" contenteditable="true">2</td>
+								<td class="data-cell td-label-centered">34.67</td>
+								<td class="data-cell td-label-centered">37.0</td>
+								<td class="data-cell td-input" contenteditable="true">2</td>
+								<td class="data-cell td-label-centered">37.3</td>
+								<td class="data-cell td-input" contenteditable="true">0.0</td>
+								<td class="data-cell td-label-centered">74.3</td>
+								<td class="data-cell td-label-centered">232.5</td>
+								<td class="data-cell td-label-centered">197.6</td>
+								<td class="data-cell td-label-centered">0.0</td>
+								<td class="data-cell td-label-centered">0.0</td>
+								<td class="data-cell td-label-centered"></td>
+							</tr>
+							<tr>
+								<td class="data-cell td-label-centered td-row-number">4</td>
+								<td class="data-cell td-input" contenteditable="true">A->B</td>
+								<td class="data-cell td-input" contenteditable="true">0.0</td>
+								<td class="data-cell td-input" contenteditable="true">6</td>
+								<td class="data-cell td-input" contenteditable="true">0</td>
+								<td class="data-cell td-label-centered">2.3</td>
+								<td class="data-cell td-input" contenteditable="true">2</td>
+								<td class="data-cell td-label-centered">34.67</td>
+								<td class="data-cell td-label-centered">37.0</td>
+								<td class="data-cell td-input" contenteditable="true">2</td>
+								<td class="data-cell td-label-centered">37.3</td>
+								<td class="data-cell td-input" contenteditable="true">0.0</td>
+								<td class="data-cell td-label-centered">74.3</td>
+								<td class="data-cell td-label-centered">232.5</td>
+								<td class="data-cell td-label-centered">197.6</td>
+								<td class="data-cell td-label-centered">0.0</td>
+								<td class="data-cell td-label-centered">0.0</td>
+								<td class="data-cell td-label-centered"></td>
+							</tr>
+						</tbody>
+						<tfoot id="calculateTableFoot">
+							<tr>
+								<td class="data-cell td-label-centered">SUM</td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-label-centered"></td>
+								<td class="data-cell td-display font-bold text-red-600"></td>
+								<td class="data-cell td-display font-bold text-red-600"></td>
+								<td class="data-cell td-label-centered"></td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+				<button
+					class="btn-primary"
+					id="button-addline"
+					data-i18n="button-addline"
+				>
+					addline
+				</button>
+				<button
+					class="btn-primary"
+					id="button-deleteline"
+					data-i18n="button-deleteline"
+				>
+					deleteline
+				</button>
+				
+				<button class="btn-primary" id="button-test" data-i18n="liftcv-calculatebutton">计算</button>
+				<a href="../pages/AGVconclusion.html" class="btn-secondary" data-i18n="AGV-returnOVERVIEW"></a>
+				<a href="../pages/dashboard.html" class="btn-secondary" data-i18n="AGV-returnOVERVIEW2"></a>
+			</div>
+		</div>
+		<div id="hot-container"></div>
+		<!-- 业务逻辑js，请确保您的JS文件路径正确 -->
+		<script src="../js/table_persistence.js"></script>
+		<script src="../js/AGVacrec.js"></script>
+	</body>
+</html>
